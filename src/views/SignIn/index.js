@@ -16,7 +16,7 @@ import {
   Statistic,
 } from "semantic-ui-react";
 import * as ROUTES from "../../constants/routes";
-import logot from "./file.svg";
+// import logot from "./file.svg";
 import "./style.scss";
 
 const INITIAL_STATE = {
@@ -40,13 +40,12 @@ const SignInPage = () => (
     <Grid.Row>
       <Grid.Column className="left-side-sign">
         <Header className="left-side-header form-header" as="h2">
-          IN ENGLISH WITH <span>LOVE</span>
+          IN ENGLISH WITH <span className="style-love">LOVE</span>
         </Header>
         <Image
           className="left-logo-size"
           /* src={LOGO_LINK} */
-
-          src={logot}
+          src={LOGO_LINK}
         />
         <Header className="left-side-header form-header" as="h2">
           LEARN NATRALLY.
@@ -114,9 +113,11 @@ class SignInFormBase extends Component {
           {error && <p>{error.message}</p>}
         </form> */}
         <Form className="sign-in-form" onSubmit={this.onSubmit}>
-          <Header className="form-header" as="h2">
-            SIGN IN
-          </Header>
+          <div className="container-form-header">
+            <Header className="form-header" as="h2">
+              SIGN IN
+            </Header>
+          </div>
           <Form.Field>
             <label className="form-label">Login</label>
             <input className="form-input" placeholder="Login" />
@@ -125,7 +126,9 @@ class SignInFormBase extends Component {
             <label className="form-label">Password</label>
             <input className="form-input" placeholder="Password" />
           </Form.Field>
-          <Button type="submit">Submit</Button>
+          <Button className="sign-button" type="submit">
+            <span className="button-text">SIGN IN</span>
+          </Button>
           <PasswordForgetLink />
           <SignUpLink />
         </Form>
