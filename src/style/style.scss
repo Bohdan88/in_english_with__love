@@ -1,0 +1,49 @@
+body {
+  margin: 0;
+  //   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  //     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  //     sans-serif;
+  font-family: "Amantic SC";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// navbar
+.menu-logo {
+  margin-left: 30px;
+  margin-right: 50px;
+  width: 50px;
+  height: 50px;
+}
+
+.logo-container:hover {
+  background-color: #fff !important;
+}
+
+.main-menu,
+.sign-menu {
+  font-family: "Amatic SC", cursive;
+  font-size: 30px;
+}
+
+.sign-menu > .item > a,
+.main-menu > .item > a {
+  color: #000 !important;
+}
+
+.sign-menu > .item:hover,
+.main-menu > .item:hover {
+  background: #fff !important;
+}
+
+.sign-menu > .active.item,
+.main-menu > .active.item {
+  background: #fff !important;
+}
+
+.sign-menu > .active > a,
+.main-menu > .active > a {
+  cursor: default !important;
+  text-decoration-color: #33cccc !important;
+  text-decoration-line: underline !important;
+}
