@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./components/App";
+import App from "./views/App";
 import * as serviceWorker from "./serviceWorker";
-import Firebase, { FirebaseContext } from "./components/Firebase";
+import Firebase, { FirebaseContext } from "./views/Firebase";
 
 // style
 import "./style/style.scss";
@@ -11,6 +11,7 @@ import "semantic-ui-css/semantic.min.css";
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>
     {/* <React.StrictMode> */}
+   
     <App />
     {/* </React.StrictMode> */}
   </FirebaseContext.Provider>,
