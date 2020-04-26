@@ -1,0 +1,16 @@
+@import "../../style/variables.scss";
+
+.container-forgot-password {
+  position: relative !important;
+  top:-20px;
+  p > a {
+    font-size: 18px;
+    color: $red !important;
+    letter-spacing: 1px;
+    font-weight: bold;
+
+    &:hover {
+      text-shadow: 2px 2px 4px $light-grey;
+    }
+  }
+}

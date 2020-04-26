@@ -58,44 +58,20 @@ body {
 .sign-menu > .active > a,
 .main-menu > .active > a {
   cursor: default !important;
-  text-decoration-color: #33cccc !important;
-  text-decoration-line: underline !important;
+  // text-decoration-color: #33cccc !important;
+  // text-decoration-line: underline !important;
+  border-bottom: 4px solid $light-green !important;
 }
 
 // form
 
-.form-label {
-  font-size: 25px !important;
-  // margin-top: 10% !important;
-  padding-bottom: 10px !important;
-  letter-spacing: 2px;
-}
-
-.form-input,
-.sign-button {
-  height: 50px !important;
-  border-radius: 10px !important;
-  margin-bottom: 10% !important;
-  width: 100%;
-}
-
 .style-love {
   font-family: "Lobster";
-  color: #33cccc;
+  color: $light-green;
 }
 
-.sign-button {
-  background-color: #585555 !important;
-}
-
-.sign-button:hover {
-  box-shadow: 5px 5px 5px rgba(180, 180, 180, 1) !important;
-}
-
-.button-text {
-  font-family: "Amatic SC", cursive !important;
-  letter-spacing: 2px;
-  color: #fff;
-  font-size: 30px;
-  vertical-align: middle !important;
+.container-another-account {
+  color: $dark-green;
+  font-size: 18px;
+  font-weight: bold;
 }

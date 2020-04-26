@@ -19,6 +19,7 @@ import * as ROUTES from "../../constants/routes";
 // import logot from "./file.svg";
 import "./style.scss";
 
+import { SignButton, FormInput, AnotherAccount } from "../Shared";
 const INITIAL_STATE = {
   //   username: "",
   email: "",
@@ -42,13 +43,9 @@ const SignInPage = () => (
         <Header className="left-side-header form-header" as="h2">
           IN ENGLISH WITH <span className="style-love">LOVE</span>
         </Header>
-        <Image
-          className="left-logo-size"
-          /* src={LOGO_LINK} */
-          src={LOGO_LINK}
-        />
+        <Image className="left-logo-size" src={LOGO_LINK} />
         <Header className="left-side-header form-header" as="h2">
-          LEARN NATRALLY.
+          LEARN NATURALLY.
         </Header>
       </Grid.Column>
       <Grid.Column>
@@ -82,6 +79,7 @@ class SignInFormBase extends Component {
   };
 
   onChange = (event) => {
+    console.log("ALO", event.target.name);
     this.setState({ [event.target.name]: event.target.value });
   };
   render() {
@@ -118,19 +116,28 @@ class SignInFormBase extends Component {
               SIGN IN
             </Header>
           </div>
-          <Form.Field>
-            <label className="form-label">Login</label>
-            <input className="form-input" placeholder="Login" />
-          </Form.Field>
-          <Form.Field>
-            <label className="form-label">Password</label>
-            <input className="form-input" placeholder="Password" />
-          </Form.Field>
-          <Button className="sign-button" type="submit">
-            <span className="button-text">SIGN IN</span>
-          </Button>
+
+          <FormInput
+            error={error}
+            type="email"
+            value="email"
+            onChange={this.onChange}
+          />
+          <FormInput
+            error={error}
+            onChange={this.onChange}
+            type="password"
+            value="password"
+          />
           <PasswordForgetLink />
-          <SignUpLink />
+          <SignButton value="SIGN IN" />
+          <AnotherAccount actionType="SIGN IN" />
+          <div className="container-account-ask">
+            <p className="">
+              Don't have an account? <span className="sign-word">Sign up</span>
+            </p>
+          </div>
+          {/* {error && <p>{error.message}</p>} */}
         </Form>
       </div>
     );

@@ -1,0 +1,21 @@
+@import "../../../style/variables.scss";
+
+.sign-button {
+  height: 50px !important;
+  border-radius: 10px !important;
+  margin-bottom: 5% !important;
+  width: 100%;
+  background-color: $dark-grey !important;
+}
+
+.sign-button:hover {
+  box-shadow: 5px 5px 5px $light-grey !important;
+}
+
+.button-text {
+  font-family: "Amatic SC", cursive !important;
+  letter-spacing: 2px;
+  color: $white;
+  font-size: 30px;
+  vertical-align: middle !important;
+}

@@ -1,0 +1,43 @@
+.form-label {
+  font-size: 25px !important;
+  // margin-top: 10% !important;
+  padding-bottom: 10px !important;
+  letter-spacing: 2px;
+}
+
+.form-input > .input > input {
+  height: 50px !important;
+  border-radius: 10px !important;
+  margin-bottom: 5% !important;
+  width: 100%;
+  text-transform: capitalize;
+  vertical-align: middle !important;
+}
+
+.sign-in-form > .field > .error > .prompt.label {
+  position: absolute;
+  font-size: 19px;
+  padding: 5px;
+  border-radius: 8px !important;
+  right: 4% !important;
+  &:before {
+    display: none !important;
+  }
+}
+
+.sign-in-form > .field > .error.email > .prompt.label {
+  top: 20% !important;
+}
+
+.sign-in-form > .field > .error.password > .prompt.label {
+  top: 39.8% !important;
+}
+
+@media only screen and (max-width: 1919px) {
+  .sign-in-form > .field > .error > .prompt.label {
+    font-size: 15px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+}
