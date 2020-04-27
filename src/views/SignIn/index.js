@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { SignUpLink } from "../SignUp";
 import { PasswordForgetLink } from "../PasswordForget";
-import { LOGO_LEFT_SIDE, LOGO_LINK } from "../../constants/shared";
+import { LOGO_LEFT_SIDE, LOGO_LINK, SIGN_IN } from "../../constants/shared";
 import {
   Grid,
   Image,
@@ -79,7 +79,6 @@ class SignInFormBase extends Component {
   };
 
   onChange = (event) => {
-    console.log("ALO", event.target.name);
     this.setState({ [event.target.name]: event.target.value });
   };
   render() {
@@ -89,32 +88,18 @@ class SignInFormBase extends Component {
 
     return (
       <div>
-        {/* background: #55C2Ad; */}
-        {/* <form onSubmit={this.onSubmit}>
-          <input
-            name="email"
-            value={email}
-            onChange={this.onChange}
-            type="text"
-            placeholder="Email Address"
-          />
-          <input
-            name="password"
-            value={password}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Password"
-          />
-          <button disabled={isInvalid} type="submit">
-            Sign In
-          </button>
-          {error && <p>{error.message}</p>}
-        </form> */}
         <Form className="sign-in-form" onSubmit={this.onSubmit}>
           <div className="container-form-header">
             <Header className="form-header" as="h2">
               SIGN IN
             </Header>
+            {error &&
+              !error.message.includes("password") &&
+              !error.message.includes("email") && (
+                <p className="error-no-user">{`${
+                  error.message.split(".")[0]
+                }.`}</p>
+              )}
           </div>
 
           <FormInput
@@ -131,13 +116,17 @@ class SignInFormBase extends Component {
           />
           <PasswordForgetLink />
           <SignButton value="SIGN IN" />
-          <AnotherAccount actionType="SIGN IN" />
+          <AnotherAccount
+            type={SIGN_IN}
+            history={this.props.history}
+            firebase={this.props.firebase}
+            actionType="SIGN IN"
+          />
           <div className="container-account-ask">
             <p className="">
               Don't have an account? <span className="sign-word">Sign up</span>
             </p>
           </div>
-          {/* {error && <p>{error.message}</p>} */}
         </Form>
       </div>
     );

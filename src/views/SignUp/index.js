@@ -4,7 +4,10 @@ import { withFirebase } from "../Firebase";
 import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import * as ROLES from "../../constants/roles";
-
+import {
+  ERROR_CODE_ACCOUNT_EXISTS,
+  ERROR_MSG_ACCOUNT_EXISTS,
+} from "../../constants/shared";
 import * as ROUTES from "../../constants/routes";
 
 const INITIAL_STATE = {
@@ -52,6 +55,9 @@ class SignUpFormBase extends Component {
         this.props.history.push(ROUTES.HOME);
       })
       .catch((error) => {
+        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
+          error.message = ERROR_MSG_ACCOUNT_EXISTS;
+        }
         this.setState({ error });
       });
 
