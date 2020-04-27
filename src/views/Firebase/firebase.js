@@ -41,6 +41,11 @@ class Firebase {
     this.auth = app.auth();
     //
     this.db = app.database();
+    this.googleProvider = new app.auth.GoogleAuthProvider();
+    this.facebookProvider = new app.auth.FacebookAuthProvider();
+    this.twitterProvider = new app.auth.TwitterAuthProvider();
+    this.emailAuthProvider = app.auth.EmailAuthProvider;
+
   }
 
   // *** Auth API ***
@@ -51,6 +56,12 @@ class Firebase {
   doSignInWithEmailAndPassword = (email, password) => {
     return this.auth.signInWithEmailAndPassword(email, password);
   };
+
+  doSignInWithGoogle = () => this.auth.signInWithPopup(this.googleProvider);
+
+  doSignInWithFacebook = () => this.auth.signInWithPopup(this.facebookProvider);
+
+  doSignInWithTwitter = () => this.auth.signInWithPopup(this.twitterProvider);
 
   doSignOut = () => this.auth.signOut();
 
@@ -73,7 +84,6 @@ class Firebase {
   posts = () => this.db.ref("posts");
 
   // *** Merge Auth and DB User API *** //
-
   onAuthUserListener = (next, fallback) =>
     this.auth.onAuthStateChanged((authUser) => {
       if (authUser) {
@@ -85,6 +95,7 @@ class Firebase {
             // default empty roles
             if (!dbUser.roles) {
               dbUser.roles = {};
+              // dbUser = {};
             }
 
             // merge auth and db user
