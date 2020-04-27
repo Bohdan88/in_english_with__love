@@ -37,7 +37,8 @@ class LoginManagementBase extends Component {
     );
 
     this.props.firebase.auth.currentUser
-      .linkAndRetrieveDataWithCredential(credential)
+      // .linkAndRetrieveDataWithCredential(credential)
+      .linkWithCredential(credential)
       .then(this.fetchSignInMethods)
       .catch((error) => this.setState({ error }));
   };
@@ -46,6 +47,7 @@ class LoginManagementBase extends Component {
     this.fetchSignInMethods();
   }
 
+  // all social networks you already linked to ur account
   fetchSignInMethods = () => {
     this.props.firebase.auth
       .fetchSignInMethodsForEmail(this.props.authUser.email)
@@ -71,7 +73,6 @@ class LoginManagementBase extends Component {
 
   render() {
     const { activeSignInMethods, error } = this.state;
-
     return (
       <div>
         Sign In Methods:
@@ -132,13 +133,11 @@ const SocialLoginToggle = ({
 class DefaultLoginToggle extends Component {
   constructor(props) {
     super(props);
-
     this.state = { passwordOne: "", passwordTwo: "" };
   }
 
   onSubmit = (event) => {
     event.preventDefault();
-
     this.props.onLink(this.state.passwordOne);
     this.setState({ passwordOne: "", passwordTwo: "" });
   };
@@ -149,9 +148,7 @@ class DefaultLoginToggle extends Component {
 
   render() {
     const { onlyOneLeft, isEnabled, signInMethod, onUnlink } = this.props;
-
     const { passwordOne, passwordTwo } = this.state;
-
     const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
 
     return isEnabled ? (
