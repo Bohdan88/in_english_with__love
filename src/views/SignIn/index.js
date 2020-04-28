@@ -37,7 +37,7 @@ const INITIAL_STATE = {
 }
 
 const SignInPage = () => (
-  <Grid columns={2} className="sign-in-grid">
+  <Grid columns={2} className="sign-grid">
     <Grid.Row>
       <Grid.Column className="left-side-sign">
         <Header className="left-side-header form-header" as="h2">
@@ -83,12 +83,9 @@ class SignInFormBase extends Component {
   };
   render() {
     const { username, email, password, passwordTwo, error } = this.state;
-
-    const isInvalid = password === "" || email === "";
-
     return (
       <div>
-        <Form className="sign-in-form" onSubmit={this.onSubmit}>
+        <Form className="sign-form" onSubmit={this.onSubmit}>
           <div className="container-form-header">
             <Header className="form-header" as="h2">
               SIGN IN
@@ -103,12 +100,14 @@ class SignInFormBase extends Component {
           </div>
 
           <FormInput
+            styleVal="email-signin"
             error={error}
             type="email"
             value="email"
             onChange={this.onChange}
           />
           <FormInput
+            styleVal="password-signin"
             error={error}
             onChange={this.onChange}
             type="password"
@@ -124,7 +123,10 @@ class SignInFormBase extends Component {
           />
           <div className="container-account-ask">
             <p className="">
-              Don't have an account? <span className="sign-word">Sign up</span>
+              Don't have an account?
+              <span className="sign-word">
+                <Link to={ROUTES.SIGN_UP}>Sign up</Link>
+              </span>
             </p>
           </div>
         </Form>

@@ -42,12 +42,12 @@ body {
 
 .sign-menu > .item > a,
 .main-menu > .item > a {
-  color: #000 !important;
+  color: $black !important;
 }
 
 .sign-menu > .item:hover,
 .main-menu > .item:hover {
-  background: #fff !important;
+  background: $white !important;
 }
 
 .sign-menu > .active.item,
@@ -76,7 +76,19 @@ body {
   font-weight: bold;
 }
 
-.error-no-user {
+.container-form-header {
+  margin-bottom: 11% !important;
+}
+
+.form-header {
+  font-size: 40px !important;
+  font-family: "Amatic SC", cursive !important;
+  letter-spacing: 5px;
+  text-align: center !important;
+}
+
+.error-no-user,
+.error-no-user-sign-up {
   position: absolute;
   white-space: normal;
   background: #fff !important;
@@ -85,7 +97,61 @@ body {
   font-size: 20px;
   font-weight: bold;
   text-align: center;
-  top: 12%;
   padding: 1px !important;
   width: 90%;
+}
+
+.error-no-user {
+  top: 12%;
+}
+
+.error-no-user-sign-up {
+  top: 9%;
+}
+
+.sign-word > a {
+  color: $dark-blue !important;
+  font-weight: bold !important;
+  padding-left: 10px;
+
+  &:hover {
+    cursor: pointer !important;
+    text-shadow: 2px 2px 12px $light-grey !important;
+  }
+}
+
+.container-account-ask {
+  padding-top: 15px;
+  font-size: 25px;
+  color: $dark-grey;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+@media only screen and (max-width: 1919px) {
+  .container-form-header {
+    margin-bottom: 8% !important;
+  }
+
+  .form-header {
+    font-size: 25px !important;
+  }
+
+  .sign-word > a {
+    color: $dark-blue !important;
+    font-weight: bold !important;
+    padding-left: 10px;
+
+    &:hover {
+      cursor: pointer !important;
+      text-shadow: 2px 2px 12px $light-grey !important;
+    }
+  }
+
+  .container-account-ask {
+    font-size: 18px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
 }
