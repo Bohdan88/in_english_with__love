@@ -1,0 +1,17 @@
+@import "../../../style/variables.scss";
+
+.left-logo-size {
+  width: 75%;
+  height: 75%;
+  margin: auto;
+}
+
+.left-side-sign {
+  text-align: center !important;
+  letter-spacing: 5px;
+}
+
+.style-love {
+  font-family: "Lobster";
+  color: $light-green;
+}

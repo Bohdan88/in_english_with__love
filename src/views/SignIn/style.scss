@@ -1,43 +1,8 @@
 @import "../../style/variables.scss";
 
-// sign-in
-.sign-grid {
-  margin-top: 2% !important;
-}
-
-.left-logo-size {
-  width: 75%;
-  height: 75%;
-  margin: auto;
-}
-
-
-.sign-form {
-  box-shadow: 10px 10px 10px 10px $light-grey;
-  background: $grey;
-  width: 55%;
-  height: 100%;
-  border-radius: 30px;
-  padding: 20px;
-  margin: auto;
-}
-
-.left-side-sign {
-  text-align: center !important;
-  letter-spacing: 5px;
-}
-
-
-
 
 @media only screen and (max-width: 1919px) {
-  .sign-form {
-    width: 65% !important;
-  }
 
-  .sign-grid {
-    margin-top: 1% !important;
-  }
 }
 
 @media only screen and (max-width: 1199px) {

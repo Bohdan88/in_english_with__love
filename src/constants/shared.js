@@ -9,6 +9,19 @@ export const FACEBOOK_LINK =
 // "https://firebasestorage.googleapis.com/v0/b/in-english-with-love.appspot.com/o/facebook.png?alt=media&token=9a01f538-8c5c-4920-b04e-7d4a60014fef";
 //  error message
 
+export const PASSWORD_FORGET_INIT = {
+  email: "",
+  error: null,
+};
+export const INITIAL_FORM_STATE = {
+  username: "",
+  email: "",
+  password: "",
+  "repeat password": "",
+  passwordTwo: "",
+  isAdmin: false,
+  error: null,
+};
 export const ERROR_CODE_ACCOUNT_EXISTS =
   "auth/account-exists-with-different-credential";
 
@@ -16,6 +29,13 @@ export const ERROR_MSG_ACCOUNT_EXISTS = `
   An account with an E-Mail address to
   this social account already exists. 
 `;
+
+export const ERROR_MESSAGES = {
+  username: "The username must be 4 characters long or more.",
+  confirmPassword: "The passwords don't much",
+  accountExist:
+    "An account with an E-Mail address tothis social account already exists. ",
+};
 export const SIGN_IN = "SIGN_IN";
 export const SIGN_UP = "SIGN_UP";
 

@@ -3,24 +3,31 @@ import { Link } from "react-router-dom";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
+import { PASSWORD_FORGET_INIT, LOGO_LINK } from "../../constants/shared";
+import { Grid, Header, Image, Form } from "semantic-ui-react";
+import { LeftGridAuth, FormInput, SignButton } from "../Shared";
 import "./style.scss";
+
 const PasswordForgetPage = () => (
-  <div>
-    <h1>PasswordForget</h1>
-    <PasswordForgetForm />
-  </div>
+  <Grid columns={2} className="sign-grid">
+    <Grid.Row>
+      <LeftGridAuth />
+      <Grid.Column verticalAlign="top">
+        <PasswordForgetForm />
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
 );
 
-const INITIAL_STATE = {
-  email: "",
-  error: null,
-};
+// const INITIAL_STATE = {
+//   email: "",
+//   error: null,
+// };
 
 class PasswordForgetFormBase extends Component {
   constructor(props) {
     super(props);
-
-    this.state = { ...INITIAL_STATE };
+    this.state = { ...PASSWORD_FORGET_INIT };
   }
 
   onSubmit = (event) => {
@@ -29,7 +36,7 @@ class PasswordForgetFormBase extends Component {
     this.props.firebase
       .doPasswordReset(email)
       .then(() => {
-        this.setState({ ...INITIAL_STATE });
+        this.setState({ ...PASSWORD_FORGET_INIT });
       })
       .catch((error) => {
         this.setState({ error });
@@ -48,7 +55,31 @@ class PasswordForgetFormBase extends Component {
     const isInvalid = email === "";
 
     return (
-      <form onSubmit={this.onSubmit}>
+      <Form className="forget-password-form" onSubmit={this.onSubmit}>
+        <div className="container-form-header">
+          <Header className="form-header" as="h2">
+            Forgot your password?
+          </Header>
+          {error && error.message && (
+            <p className="error-no-user">{`${error.message.split(".")[0]}.`}</p>
+          )}
+        </div>
+
+        <FormInput
+          styleVal="email-signin"
+          error={error}
+          type="email"
+          value="email"
+          onChange={this.onChange}
+        />
+        <SignButton value="RESET MY PASSWORD" />
+      </Form>
+    );
+  }
+}
+
+{
+  /* <form onSubmit={this.onSubmit}>
         <input
           name="email"
           value={this.state.email}
@@ -61,9 +92,7 @@ class PasswordForgetFormBase extends Component {
         </button>
 
         {error && <p>{error.message}</p>}
-      </form>
-    );
-  }
+      </form> */
 }
 
 const PasswordForgetLink = () => (

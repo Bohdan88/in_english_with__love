@@ -3,9 +3,11 @@ import { Form } from "semantic-ui-react";
 import "./style.scss";
 
 const FormInput = ({ styleVal, error, type, value, onChange }) => {
-  // console.log(error)
-  const isError = error && error.message && error.message.includes(value);
-  // console.log(isError,'isError')
+  const isError =
+    error &&
+    error.message &&
+    (error.message.toUpperCase().includes(value.toUpperCase()) ||
+      error.message.toUpperCase().includes(type.toUpperCase()));
   return (
     <Form.Field>
       <label className="form-label">{value && value.toUpperCase()}</label>

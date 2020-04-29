@@ -4,40 +4,34 @@ import { withFirebase } from "../Firebase";
 import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import * as ROLES from "../../constants/roles";
-import {
-  ERROR_CODE_ACCOUNT_EXISTS,
-  ERROR_MSG_ACCOUNT_EXISTS,
-} from "../../constants/shared";
+import { ERROR_CODE_ACCOUNT_EXISTS } from "../../constants/shared";
 import * as ROUTES from "../../constants/routes";
 import { Grid, Header, Image, Form } from "semantic-ui-react";
-import { LOGO_LINK } from "../../constants/shared";
-import { SignButton, FormInput, AnotherAccount } from "../Shared";
+import {
+  LOGO_LINK,
+  ERROR_MESSAGES,
+  INITIAL_FORM_STATE,
+} from "../../constants/shared";
+import { SignButton, FormInput, AnotherAccount, LeftGridAuth } from "../Shared";
 
-const INITIAL_STATE = {
-  username: "",
-  email: "",
-  password: "",
-  "repeat password": "",
-  passwordTwo: "",
-  isAdmin: false,
-  error: null,
-};
+const checkIfIncludes = (error, ...rest) =>
+  error &&
+  error.message &&
+  [...rest].every(
+    (el) => !error.message.toUpperCase().includes(el.toUpperCase())
+  );
+
+//   {error &&
+//     error.message &&
+//     !error.message.toUpperCase().includes("password".toUpperCase()) &&
+//     !error.message.toUpperCase().includes("username".toUpperCase()) &&
+//     !error.message.toUpperCase().includes("email".toUpperCase())
+// }
 
 const SignUpPage = () => (
-  /* <div>
-    {/* <h1>SignUp</h1>
-    <SignUpForm /> */
   <Grid columns={2} className="sign-grid">
     <Grid.Row>
-      <Grid.Column className="left-side-sign">
-        <Header className="left-side-header form-header" as="h2">
-          IN ENGLISH WITH <span className="style-love">LOVE</span>
-        </Header>
-        <Image className="left-logo-size" src={LOGO_LINK} />
-        <Header className="left-side-header form-header" as="h2">
-          LEARN NATURALLY.
-        </Header>
-      </Grid.Column>
+      <LeftGridAuth />
       <Grid.Column>
         <SignUpForm />
       </Grid.Column>
@@ -48,18 +42,24 @@ const SignUpPage = () => (
 class SignUpFormBase extends Component {
   constructor(props) {
     super(props);
-    this.state = { ...INITIAL_STATE };
+    this.state = { ...INITIAL_FORM_STATE };
   }
 
   onSubmit = (event) => {
     const { username, email, password, isAdmin, error } = this.state;
-    if (username === "") {
+    // check userName and password match
+    if (username.length < 4) {
       this.setState({
         error: {
-          message: "A username should have at least 4 characters.",
+          message: ERROR_MESSAGES.username,
         },
       });
-      // error.message = "OK"
+    } else if (password != this.state["repeat password"]) {
+      this.setState({
+        error: {
+          message: ERROR_MESSAGES.confirmPassword,
+        },
+      });
     } else {
       const roles = {};
 
@@ -77,13 +77,13 @@ class SignUpFormBase extends Component {
           });
         })
         .then(() => {
-          this.setState({ ...INITIAL_STATE });
+          this.setState({ ...INITIAL_FORM_STATE });
           // // props from the router
           this.props.history.push(ROUTES.HOME);
         })
         .catch((error) => {
           if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
-            error.message = ERROR_MSG_ACCOUNT_EXISTS;
+            error.message = ERROR_MESSAGES.accountExist;
           }
           this.setState({ error });
         });
@@ -101,21 +101,7 @@ class SignUpFormBase extends Component {
   };
 
   render() {
-    const {
-      username,
-      email,
-      password,
-      passwordTwo,
-      error,
-      isAdmin,
-    } = this.state;
-    // console.log(this.state["repeat password"], 'this.stae')
-    const isInvalid =
-      password !== this.state["repeat password"] ||
-      password === "" ||
-      email === "" ||
-      username === "";
-
+    const { username, email, password, error, isAdmin } = this.state;
     return (
       <div>
         <Form className="sign-form" onSubmit={this.onSubmit}>
@@ -123,15 +109,11 @@ class SignUpFormBase extends Component {
             <Header className="form-header" as="h2">
               SIGN UP
             </Header>
-            {error &&
-              error.message &&
-              !error.message.includes("password") &&
-              !error.message.includes("username") &&
-              !error.message.includes("email") && (
-                <p className="error-no-user-sign-up">{`${
-                  error.message.split(".")[0]
-                }.`}</p>
-              )}
+            {checkIfIncludes(error, "password", "username", "email") && (
+              <p className="error-no-user-sign-up">{`${
+                error.message.split(".")[0]
+              }.`}</p>
+            )}
           </div>
           <FormInput
             styleVal="username"
@@ -147,13 +129,6 @@ class SignUpFormBase extends Component {
             value="email"
             onChange={this.onChange}
           />
-          {/* <input
-            name="passwordOne"
-            value={passwordOne}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Password"
-          />{" "} */}
           <FormInput
             styleVal="password-signup"
             error={error}
@@ -170,25 +145,10 @@ class SignUpFormBase extends Component {
             onChange={this.onChange}
           />
           <SignButton value="SIGN UP" />
-          <br />
-          {/* <input
-            name="passwordTwo"
-            value={passwordTwo}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Confirm Password"
-          /> */}
-          <br />
-
-          {/* <button
-             disabled={isInvalid}  
-            type="submit"
-          >
-            Sign Up
-          </button>  */}
           <AnotherAccount
             history={this.props.history}
             firebase={this.props.firebase}
+            noUser={"error-no-user-sign-up"}
             actionType="SIGN UP"
           />
           <div className="container-account-ask">
@@ -199,10 +159,14 @@ class SignUpFormBase extends Component {
               </span>
             </p>
           </div>
-          {/* {error && <p>{error.message}</p>} */}
         </Form>
-        {/* </form> */}
-        {/* <label>
+      </div>
+    );
+  }
+}
+
+/* check if admin
+<label>
             Admin:
             <input
               name="isAdmin"
@@ -210,15 +174,9 @@ class SignUpFormBase extends Component {
               checked={isAdmin}
               onChange={this.onChangeCheckbox}
             />
-          </label> */}
-      </div>
-    );
-  }
-}
+          </label> */
 
 const SignUpLink = () => (
-  /* <p>
-    Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link> */
   <p>
     Already have an account?? <Link to={ROUTES.SIGN_IN}>Sign In</Link>
   </p>

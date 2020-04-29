@@ -14,7 +14,13 @@ import { withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { withFirebase } from "../../Firebase";
 
-const AnotherAccountBase = ({ type, firebase, actionType, history }) => {
+const AnotherAccountBase = ({
+  type,
+  firebase,
+  actionType,
+  history,
+  noUser,
+}) => {
   const [error, setError] = useState(null);
   // let onSubmit = () => null;
   // switch (type) {
@@ -103,7 +109,7 @@ const AnotherAccountBase = ({ type, firebase, actionType, history }) => {
           className="social-image-facebook"
           src={FACEBOOK_LINK}
         />
-        {error && <p className="error-no-user"> {error}</p>}
+        {error && <p className={noUser}> {error}</p>}
         {/* <Image
           onClick={onSubmitTwitter}
           className="social-image-facebook"

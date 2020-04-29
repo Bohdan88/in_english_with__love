@@ -6,20 +6,12 @@ import { compose } from "recompose";
 import { SignUpLink } from "../SignUp";
 import { PasswordForgetLink } from "../PasswordForget";
 import { LOGO_LEFT_SIDE, LOGO_LINK, SIGN_IN } from "../../constants/shared";
-import {
-  Grid,
-  Image,
-  Form,
-  Button,
-  Header,
-  Label,
-  Statistic,
-} from "semantic-ui-react";
+import { Grid, Image, Form, Button, Header, Label } from "semantic-ui-react";
 import * as ROUTES from "../../constants/routes";
 // import logot from "./file.svg";
 import "./style.scss";
 
-import { SignButton, FormInput, AnotherAccount } from "../Shared";
+import { SignButton, FormInput, AnotherAccount, LeftGridAuth } from "../Shared";
 const INITIAL_STATE = {
   //   username: "",
   email: "",
@@ -39,15 +31,7 @@ const INITIAL_STATE = {
 const SignInPage = () => (
   <Grid columns={2} className="sign-grid">
     <Grid.Row>
-      <Grid.Column className="left-side-sign">
-        <Header className="left-side-header form-header" as="h2">
-          IN ENGLISH WITH <span className="style-love">LOVE</span>
-        </Header>
-        <Image className="left-logo-size" src={LOGO_LINK} />
-        <Header className="left-side-header form-header" as="h2">
-          LEARN NATURALLY.
-        </Header>
-      </Grid.Column>
+      <LeftGridAuth />
       <Grid.Column>
         <SignInForm />
       </Grid.Column>
@@ -119,6 +103,7 @@ class SignInFormBase extends Component {
             type={SIGN_IN}
             history={this.props.history}
             firebase={this.props.firebase}
+            noUser={"error-no-user"}
             actionType="SIGN IN"
           />
           <div className="container-account-ask">

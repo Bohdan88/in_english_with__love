@@ -1,3 +1,5 @@
+@import "../../../style/variables.scss";
+
 .form-label {
   font-size: 25px !important;
   // margin-top: 10% !important;
@@ -56,15 +58,11 @@
   .error.username > .prompt.label {
     top: 14% !important;
   }
+
+  .error.repeat-password-signup > .prompt.label {
+    display: none;
+  }
 }
-
-// .sign-form > .field > .error.email-signin > .prompt.label {
-//   top: 20% !important;
-// }
-
-// .sign-form > .field > .error.password-signin > .prompt.label {
-//   top: 37.8% !important;
-// }
 
 @media only screen and (max-width: 1919px) {
   .sign-form > .field > .error > .prompt.label {
@@ -82,14 +80,66 @@
     height: 40px !important;
   }
 
-  .sign-form > .field > .error.email-signin > .prompt.label {
-    top: 17% !important;
-  }
+  .sign-form > .field {
+    .error.email-signin > .prompt.label {
+      top: 19% !important;
+    }
 
-  .sign-form > .field > .error.password-signin > .prompt.label {
-    top: 35.8% !important;
+    .error.email-signup > .prompt.label {
+      top: 27.5% !important;
+    }
+
+    .error.password-signin > .prompt.label {
+      top: 37% !important;
+    }
+
+    .error.password-signup > .prompt.label {
+      top: 42% !important;
+    }
+
+    .error.username > .prompt.label {
+      top: 14% !important;
+    }
+
+    .error.repeat-password-signup > .prompt.label {
+      display: none;
+    }
   }
 }
 
 @media only screen and (max-width: 1199px) {
+  .sign-form > .field {
+    .error.email-signin > .prompt.label {
+      font-size:12px;
+      top: 16% !important;
+    }
+
+    .error.email-signup > .prompt.label {
+      font-size:12px;
+      padding:3px;
+      top: 27.5% !important;
+    }
+
+    .error.password-signin > .prompt.label {
+      font-size:12px;
+      padding:3px;
+      top: 37% !important;
+    }
+
+    .error.password-signup > .prompt.label {
+      font-size:12px;
+      padding:3px;
+      top: 42% !important;
+    }
+
+    .error.username > .prompt.label {
+      font-size:12px;
+      padding:3px;
+      top: 13% !important;
+    }
+
+    .error.repeat-password-signup > .prompt.label {
+      display: none;
+    }
+  }
 }

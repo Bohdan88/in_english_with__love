@@ -7,9 +7,6 @@ html {
 
 body {
   margin: 0;
-  //   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  //     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  //     sans-serif;
   overflow: hidden;
   font-family: "Amatic SC", cursive;
   -webkit-font-smoothing: antialiased;
@@ -19,7 +16,6 @@ body {
 
 .land-container {
   font-family: "Amatic SC", cursive !important;
-  // background: #fbfafb;
 }
 
 // navbar
@@ -31,7 +27,7 @@ body {
 }
 
 .logo-container:hover {
-  background-color: #fff !important;
+  background-color: $white !important;
 }
 
 .main-menu,
@@ -52,7 +48,7 @@ body {
 
 .sign-menu > .active.item,
 .main-menu > .active.item {
-  background: #fff !important;
+  background: $white !important;
 }
 
 .sign-menu > .active > a,
@@ -64,10 +60,8 @@ body {
 }
 
 // form
-
-.style-love {
-  font-family: "Lobster";
-  color: $light-green;
+.sign-grid {
+  margin-top: 2% !important;
 }
 
 .container-another-account {
@@ -106,7 +100,7 @@ body {
 }
 
 .error-no-user-sign-up {
-  top: 9%;
+  top: 9% !important;
 }
 
 .sign-word > a {
@@ -128,9 +122,40 @@ body {
   letter-spacing: 1px;
 }
 
+.sign-form,
+.forget-password-form {
+  box-shadow: 10px 10px 10px 10px $light-grey;
+  background: $grey;
+  width: 55%;
+  border-radius: 30px;
+  padding: 20px;
+  margin: auto;
+}
+
+.sign-form {
+  height: 100%;
+  
+}
+//
+.forget-password-form {
+  vertical-align: top !important;
+}
 @media only screen and (max-width: 1919px) {
+  .sign-form {
+    width: 65% !important;
+  }
+
+  .sign-grid {
+    margin-top: 1% !important;
+  }
+
+  .error-no-user,
+  .error-no-user-sign-up {
+    font-size: 18px;
+  }
+
   .container-form-header {
-    margin-bottom: 8% !important;
+    margin-bottom: 12% !important;
   }
 
   .form-header {
@@ -154,4 +179,8 @@ body {
 }
 
 @media only screen and (max-width: 1199px) {
+  .error-no-user,
+  .error-no-user-sign-up {
+    font-size: 12px;
+  }
 }
