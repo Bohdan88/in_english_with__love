@@ -2,11 +2,17 @@ import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 import ReactDOM from "react-dom";
-import { Editor, EditorState } from "draft-js";
+import { Editor, EditorState, RichUtils, getDefaultKeyBinding } from "draft-js";
 import { withAuthorization } from "../Session";
 import * as ROLES from "../../constants/roles";
+import DraftEditor  from "../Editor";
+// styles
+import "./style.scss";
 
-// Admin
+
+
+
+
 class AdminPage extends Component {
   constructor(props) {
     super(props);
@@ -15,11 +21,55 @@ class AdminPage extends Component {
       loading: false,
       users: [],
       posts: [],
+      editorState: EditorState.createEmpty(),
+      content: [],
     };
 
-    this.state = { editorState: EditorState.createEmpty() };
-    this.onChange = (editorState) => this.setState({ editorState });
+    // this.state = { editorState: EditorState.createEmpty() };
+    // this.focus = () => this.refs.editor.focus();
+    // this.onChange = (editorState) => this.setState({ editorState });
+    // this.handleKeyCommand = this._handleKeyCommand.bind(this);
+    // this.mapKeyToEditorCommand = this._mapKeyToEditorCommand.bind(this);
+    // this.toggleBlockType = this._toggleBlockType.bind(this);
+    // this.toggleInlineStyle = this._toggleInlineStyle.bind(this);
   }
+
+  // _onBoldClick() {
+  //   console.log("IM HERE");
+  //   this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, "BOLD"));
+  // }
+  // _handleKeyCommand(command, editorState) {
+  //   const newState = RichUtils.handleKeyCommand(editorState, command);
+  //   if (newState) {
+  //     this.onChange(newState);
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
+  // _mapKeyToEditorCommand(e) {
+  //   if (e.keyCode === 9 /* TAB */) {
+  //     const newEditorState = RichUtils.onTab(
+  //       e,
+  //       this.state.editorState,
+  //       4 /* maxDepth */
+  //     );
+  //     if (newEditorState !== this.state.editorState) {
+  //       this.onChange(newEditorState);
+  //     }
+  //     return;
+  //   }
+  //   return getDefaultKeyBinding(e);
+  // }
+
+  // _toggleBlockType(blockType) {
+  //   this.onChange(RichUtils.toggleBlockType(this.state.editorState, blockType));
+  // }
+  // _toggleInlineStyle(inlineStyle) {
+  //   this.onChange(
+  //     RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
+  //   );
+  // }
 
   componentDidMount() {
     this.setState({ loading: true });
@@ -59,7 +109,8 @@ class AdminPage extends Component {
 
   render() {
     const { users, loading, posts } = this.state;
-    console.log(this.state, "posts");
+    const { editorState } = this.state;
+
     return (
       <div>
         <h1>Admin</h1>
@@ -68,9 +119,21 @@ class AdminPage extends Component {
         <p>The Admin Page is accessible by every signed in admin user.</p>
         {/* <AddPost firebase={this.props.firebase} />
         <PostsList posts={posts} firebase={this.props.firebase} /> */}
-        <Editor
-         editorState={this.state.editorState} onChange={this.onChange} />
+        <div className="editor-container">
+          {/* <span>ALo</span>
+          <button onClick={this._onBoldClick.bind(this)}>Bold</button>
+          <Editor
+            handleKeyCommand={this.handleKeyCommand}
+            editorState={this.state.editorState}
+            onChange={this.onChange}
+          /> */}
+          <DraftEditor firebase={this.props.firebase}/>
+          <AddPost firebase={this.props.firebase} />
+        </div>
         {/* <UserList users={users} /> */}
+
+        <hr/>
+        <PostsList posts={posts} firebase={this.props.firebase} />
       </div>
     );
   }
@@ -154,10 +217,12 @@ const editPostFromDb = (post, firebase) => {
   });
 };
 const PostsList = ({ posts, firebase }) => (
+  <>
   <ul>
     {posts.map((post) => (
+      <>
       <li key={post.uid}>
-        <span>
+        {/* <span>
           <strong>ID:</strong> {post.uid}
         </span>
         <br />
@@ -168,7 +233,8 @@ const PostsList = ({ posts, firebase }) => (
         <span>
           <strong>Type:</strong> {post.type}
         </span>
-        <br />
+        <br /> */}
+          {post.post}
         <span>
           <button onClick={() => removePostFromDb(post, firebase)}>
             Remove post from db
@@ -178,8 +244,15 @@ const PostsList = ({ posts, firebase }) => (
           </button>
         </span>
       </li>
+      </>
     ))}
+    
   </ul>
+  <br/>
+  <br/>
+  {posts.map((post) => post.post)}
+  </>
+  
 );
 
 const condition = (authUser) => authUser && !!authUser.roles[ROLES.ADMIN];
