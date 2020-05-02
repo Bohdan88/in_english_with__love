@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
-
+import ReactDOM from "react-dom";
+import { Editor, EditorState } from "draft-js";
 import { withAuthorization } from "../Session";
 import * as ROLES from "../../constants/roles";
 
@@ -15,6 +16,9 @@ class AdminPage extends Component {
       users: [],
       posts: [],
     };
+
+    this.state = { editorState: EditorState.createEmpty() };
+    this.onChange = (editorState) => this.setState({ editorState });
   }
 
   componentDidMount() {
@@ -55,15 +59,17 @@ class AdminPage extends Component {
 
   render() {
     const { users, loading, posts } = this.state;
-    // console.log(posts, "posts");
+    console.log(this.state, "posts");
     return (
       <div>
         <h1>Admin</h1>
 
         {loading && <div>Loading ...</div>}
         <p>The Admin Page is accessible by every signed in admin user.</p>
-        <AddPost firebase={this.props.firebase} />
-        <PostsList posts={posts} firebase={this.props.firebase} />
+        {/* <AddPost firebase={this.props.firebase} />
+        <PostsList posts={posts} firebase={this.props.firebase} /> */}
+        <Editor
+         editorState={this.state.editorState} onChange={this.onChange} />
         {/* <UserList users={users} /> */}
       </div>
     );

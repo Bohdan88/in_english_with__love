@@ -15,3 +15,9 @@
   font-family: "Lobster";
   color: $light-green;
 }
+
+@media only screen and (max-width: 1199px) {
+  .left-side-sign {
+    display: none !important;
+  }
+}

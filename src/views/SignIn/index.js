@@ -30,9 +30,9 @@ const INITIAL_STATE = {
 
 const SignInPage = () => (
   <Grid columns={2} className="sign-grid">
-    <Grid.Row>
+    <Grid.Row >
       <LeftGridAuth />
-      <Grid.Column>
+      <Grid.Column className="sign-column">
         <SignInForm />
       </Grid.Column>
     </Grid.Row>

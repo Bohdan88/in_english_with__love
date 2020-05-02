@@ -13,8 +13,8 @@ import {
   MenuItem,
 } from "semantic-ui-react";
 import { LOGO_LINK } from "../../constants/shared";
+import MobileMenu from "./MobileMenu";
 import "./style.scss";
-
 // const Navigation = () => (
 //   <div>
 //     <AuthUserContext.Consumer>
@@ -77,7 +77,8 @@ const NavigationNonAuth = () => {
     <div>
       <Sticky className="nav-bar-sticky">
         <Container fluid>
-          <Menu borderless>
+          <MobileMenu routes={ROUTES.NON_AUTH_ROUTES} />
+          <Menu className="nav-bar-menu" borderless>
             <Menu.Menu className="main-menu">
               <Menu.Item className="logo-container">
                 <Link
