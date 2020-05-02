@@ -77,7 +77,10 @@ const NavigationNonAuth = () => {
     <div>
       <Sticky className="nav-bar-sticky">
         <Container fluid>
-          <MobileMenu routes={ROUTES.NON_AUTH_ROUTES} />
+          <MobileMenu
+            signRoutes={[ROUTES.SIGN_IN, ROUTES.SIGN_UP]}
+            routes={ROUTES.NON_AUTH_ROUTES}
+          />
           <Menu className="nav-bar-menu" borderless>
             <Menu.Menu className="main-menu">
               <Menu.Item className="logo-container">

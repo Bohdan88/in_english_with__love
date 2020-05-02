@@ -191,6 +191,10 @@ body {
   .sign-menu {
     font-size: 25px;
   }
+
+  .sign-form {
+    width: 80% !important;
+  }
 }
 
 @media only screen and (max-width: 992px) {
@@ -208,10 +212,18 @@ body {
   .sign-form {
     position: relative !important;
     z-index: -1 !important;
-    width:100%!important;
+    width: 100% !important;
   }
 
   .nav-bar-sticky > .ui.sticky {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media only screen and(max-width: 767px) {
+  .sign-form,
+  .forget-password-form {
+    box-shadow: none;
+    background: none;
   }
 }

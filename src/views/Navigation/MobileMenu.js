@@ -1,7 +1,25 @@
 import React, { useState } from "react";
 import { List } from "semantic-ui-react";
+import { SIGN_IN } from "../../constants/routes";
+import SignButton from "../Shared/SignButton";
 
-const MobileMenu = ({ routes }) => {
+const BuildRoutes = ({ routes }) =>
+  routes &&
+  routes.map((item, key) => {
+    return (
+      <List.Item
+        name={"error"}
+        key={key}
+        as="a"
+        href={item}
+        className="mobile-sidebar-menu"
+      >
+        <List.Content>{item.slice(1)}</List.Content>
+      </List.Item>
+    );
+  });
+
+const MobileMenu = ({ routes, signRoutes }) => {
   const [menu, toggleMenu] = useState(false);
   const hamburgerClass = menu ? "open" : "";
   const menuClass = menu ? "mobile-open-menu" : "mobile-close-menu";
@@ -22,19 +40,25 @@ const MobileMenu = ({ routes }) => {
       </div>
 
       <div className={menuClass}>
-        {routes.map((item, key) => {
-          return (
-            <List.Item
-              name={"error"}
-              key={key}
-              as="a"
-              href={item}
-              className="mobile-sidebar-menu"
-            >
-              <List.Content>{item.slice(1)}</List.Content>
-            </List.Item>
-          );
-        })}
+        <BuildRoutes routes={routes} />
+        {/* <BuildRoutes routes={signRoutes} /> */}
+        {signRoutes &&
+          signRoutes.map((item, key) => {
+            return (
+              <List.Item
+                name={"error"}
+                key={key}
+                as="a"
+                href={item}
+                className="mobile-sidebar-menu"
+              >
+                <List.Content>
+                  {/* <SignButton value={item === SIGN_IN ? "Sign In" : "Sign Up"}/> */}
+                  {item === SIGN_IN ? "Sign In" : "Sign Up"}
+                </List.Content>
+              </List.Item>
+            );
+          })}
       </div>
     </div>
   );

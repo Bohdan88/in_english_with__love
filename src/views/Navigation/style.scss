@@ -4,6 +4,10 @@
   display: none;
 }
 
+.nav-bar-menu {
+  margin: 0px !important;
+}
+
 @media only screen and (max-width: 767px) {
   .nav-bar-menu {
     display: none !important;
@@ -146,7 +150,7 @@
     top: 55px;
     margin: auto;
     // background: #ededef !important;
-    background: white!important;
+    background: white !important;
     overflow-x: hidden;
     transition: 0.3s;
     transition: cubic-bezier(0.6, -0.28, 0.735, 0.045);
@@ -161,5 +165,10 @@
     background-color: $white !important;
     margin: 0 0.5rem;
     padding: 1rem 0;
+    color: #747888;
+    font-family: "Amatic SC", cursive;
+    font-size:20px;
+    font-weight: bold;
+    letter-spacing: 2px;
   }
 }

@@ -44,7 +44,7 @@
   }
 
   .error.email-signup > .prompt.label {
-    top: 27.5% !important;
+    top: 28.5% !important;
   }
 
   .error.password-signin > .prompt.label {
@@ -52,7 +52,7 @@
   }
 
   .error.password-signup > .prompt.label {
-    top: 41% !important;
+    top: 42% !important;
   }
 
   .error.username > .prompt.label {
@@ -110,31 +110,31 @@
 @media only screen and (max-width: 1199px) {
   .sign-form > .field {
     .error.email-signin > .prompt.label {
-      font-size:12px;
+      font-size: 12px;
       top: 16% !important;
     }
 
     .error.email-signup > .prompt.label {
-      font-size:12px;
-      padding:3px;
+      font-size: 12px;
+      padding: 3px;
       top: 27.5% !important;
     }
 
     .error.password-signin > .prompt.label {
-      font-size:12px;
-      padding:3px;
+      font-size: 12px;
+      padding: 3px;
       top: 37% !important;
     }
 
     .error.password-signup > .prompt.label {
-      font-size:12px;
-      padding:3px;
+      font-size: 12px;
+      padding: 3px;
       top: 42% !important;
     }
 
     .error.username > .prompt.label {
-      font-size:12px;
-      padding:3px;
+      font-size: 12px;
+      padding: 3px;
       top: 13% !important;
     }
 
@@ -142,4 +142,8 @@
       display: none;
     }
   }
+}
+
+@media screen and (max-width: 767px) {
+
 }

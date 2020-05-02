@@ -12,7 +12,7 @@ const PasswordForgetPage = () => (
   <Grid columns={2} className="sign-grid">
     <Grid.Row>
       <LeftGridAuth />
-      <Grid.Column verticalAlign="top">
+      <Grid.Column  mobile={16} tablet={9} computer={8} verticalAlign="top">
         <PasswordForgetForm />
       </Grid.Column>
     </Grid.Row>

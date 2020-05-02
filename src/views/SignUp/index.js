@@ -32,7 +32,7 @@ const SignUpPage = () => (
   <Grid columns={2} className="sign-grid">
     <Grid.Row>
       <LeftGridAuth />
-      <Grid.Column>
+      <Grid.Column  mobile={16} tablet={9} computer={8}>
         <SignUpForm />
       </Grid.Column>
     </Grid.Row>
