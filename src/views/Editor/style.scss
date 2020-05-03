@@ -1,0 +1,21 @@
+@import "../../style/variables.scss";
+
+
+.editor-component {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+.container-editor {
+  margin:2% 0;
+}
+
+.editor-area {
+  border: 1px solid $white-smoke;
+}
+
+.editor-toolbar {
+  background-color: $light-sea;
+}
+
+.container-preview { 
+  margin-top:2%;
+}

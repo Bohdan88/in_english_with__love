@@ -15,19 +15,6 @@ import {
 import { LOGO_LINK } from "../../constants/shared";
 import MobileMenu from "./MobileMenu";
 import "./style.scss";
-// const Navigation = () => (
-//   <div>
-//     <AuthUserContext.Consumer>
-//       {(authUser) =>
-//         authUser ? (
-//           <NavigationAuth authUser={authUser} />
-//         ) : (
-//           <NavigationNonAuth />
-//         )
-//       }
-//     </AuthUserContext.Consumer>
-//   </div>
-// );
 
 const NavigationAuth = ({ authUser }) => {
   const [activeItem, setActiveItem] = useState(ROUTES.SIGN_IN);
@@ -36,37 +23,43 @@ const NavigationAuth = ({ authUser }) => {
       <Sticky className="nav-bar-sticky">
         <Container fluid>
           <Menu className="nav-bar-menu" borderless>
-            <Menu.Menu className="logo-menu-item">
-              <Menu.Item
-                as={"a"}
-                href={`${ROUTES.HOME}`}
-                /* className="logo-container" */
-              >
-                {/* <Image src={logo} /> */}
-                <span className="logo-name">LOGO</span>
+            <Menu.Menu className="main-menu">
+              <Menu.Item className="logo-container">
+                <Link
+                  onClick={() => setActiveItem(ROUTES.READ)}
+                  to={ROUTES.READ}
+                >
+                  <Image className="menu-logo" src={LOGO_LINK} />
+                </Link>
               </Menu.Item>
-            </Menu.Menu>
-            <Menu.Menu position={"right"}>
-              <Menu.Item as="a" href={ROUTES.HOME}>
-                Read
-              </Menu.Item>
-              <Menu.Item as="a" href={ROUTES.ACCOUNT}>
-                Account
-              </Menu.Item>
-
+              {ROUTES.SHARED_AUTH_ROUTES.map((route) => (
+                <Menu.Item key={route} active={activeItem === route}>
+                  <Link onClick={() => setActiveItem(route)} to={route}>
+                    {route.slice(1)}
+                  </Link>
+                </Menu.Item>
+              ))}
               {!!authUser.roles[ROLES.ADMIN] && (
                 <Menu.Item as="a" href={ROUTES.ADMIN}>
                   Admin
                 </Menu.Item>
               )}
-              <SignOutButton />
+            </Menu.Menu>
+
+            <Menu.Menu className="sign-menu" position={"right"}>
+              <Menu.Item active={activeItem === ROUTES.SIGN_UP}>
+                {/* <Link
+                  onClick={() => setActiveItem(ROUTES.SIGN_UP)}
+                  to={ROUTES.SIGN_UP}
+                >
+                  SIGN UP
+                </Link> */}
+                <SignOutButton />
+              </Menu.Item>
             </Menu.Menu>
           </Menu>
         </Container>
       </Sticky>
-      <li>
-        <SignOutButton />
-      </li>
     </div>
   );
 };
@@ -79,7 +72,7 @@ const NavigationNonAuth = () => {
         <Container fluid>
           <MobileMenu
             signRoutes={[ROUTES.SIGN_IN, ROUTES.SIGN_UP]}
-            routes={ROUTES.NON_AUTH_ROUTES}
+            routes={ROUTES.SHARED_AUTH_ROUTES}
           />
           <Menu className="nav-bar-menu" borderless>
             <Menu.Menu className="main-menu">
@@ -91,7 +84,7 @@ const NavigationNonAuth = () => {
                   <Image className="menu-logo" src={LOGO_LINK} />
                 </Link>
               </Menu.Item>
-              {ROUTES.NON_AUTH_ROUTES.map((route) => (
+              {ROUTES.SHARED_AUTH_ROUTES.map((route) => (
                 <Menu.Item key={route} active={activeItem === route}>
                   <Link onClick={() => setActiveItem(route)} to={route}>
                     {route.slice(1)}

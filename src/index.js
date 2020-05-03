@@ -7,6 +7,7 @@ import Firebase, { FirebaseContext } from "./views/Firebase";
 // style
 import "./style/style.scss";
 import "semantic-ui-css/semantic.min.css";
+import "sweetalert2/src/sweetalert2.scss";
 
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>

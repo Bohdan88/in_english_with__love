@@ -38,6 +38,7 @@ export const ERROR_MESSAGES = {
 };
 export const SIGN_IN = "SIGN_IN";
 export const SIGN_UP = "SIGN_UP";
+export const SIGN_OUT = "SIGN OUT";
 
 export const SIGN_IN_METHODS = [
   {
@@ -53,3 +54,27 @@ export const SIGN_IN_METHODS = [
     provider: "facebookProvider",
   },
 ];
+
+// admin page
+
+export const ADMIN_TABS = {
+  lessons: "LESSONS",
+  users: "USERS",
+};
+
+// editor page
+
+export const LESSON_STATUS = {
+  icon: {
+    success: "sucess",
+    error: "error"
+  },
+  text: {
+    success: "A lesson has been created!",
+    error: "Something went wrong!",
+  },
+  title: {
+    success: "Success!",
+    error: "Oops...",
+  },
+};

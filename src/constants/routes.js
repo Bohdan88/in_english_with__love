@@ -12,5 +12,4 @@ export const ACCOUNT = "/account";
 export const ADMIN = "/admin";
 export const PASSWORD_FORGET = "/pw-forget";
 export const ADMIN_DETAILS = "/admin/:id";
-
-export const NON_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT, BLOG, CONTACT];
+export const SHARED_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT, BLOG, CONTACT];
