@@ -58,16 +58,22 @@ export const SIGN_IN_METHODS = [
 // admin page
 
 export const ADMIN_TABS = {
-  lessons: "LESSONS",
+  create_lesson: "CREATE A LESSON",
+  all_lessons: "ALL LESSONS",
   users: "USERS",
 };
+
+export const CATEGORIES = [
+  { key: "read", text: "Read", value: "read " },
+  { key: "listen", text: "Listen", value: "liten" },
+];
 
 // editor page
 
 export const LESSON_STATUS = {
   icon: {
     success: "sucess",
-    error: "error"
+    error: "error",
   },
   text: {
     success: "A lesson has been created!",

@@ -3,5 +3,11 @@
 }
 
 .grid-admin {
+  font-family: Arial, Helvetica, sans-serif !important;
   margin: 2% !important;
+}
+
+
+.ui.selection.active.dropdown:hover .menu  {
+  text-transform: capitalize!important;
 }

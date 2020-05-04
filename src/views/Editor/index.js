@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import Swal from "sweetalert2";
-import { Button } from "semantic-ui-react";
+import { Button, Dropdown, Input } from "semantic-ui-react";
 import { LESSON_STATUS } from "../../constants/shared";
 // style
 import "./style.scss";
@@ -96,12 +96,42 @@ const fireAlert = (state) => {
   setTimeout(() => Swal.close(), 4000);
 };
 
+class AnswerTemplate extends Component {
+  render() {
+    return (
+      <div>
+        <Input type="text" placeholder="Add answer...">
+          <input />
+          <Button
+            onClick={this.props.onUpdateQuantity}
+            color="teal"
+            type="submit"
+          >
+            Add answer {` ${this.props.quantity}`}
+          </Button>
+        </Input>
+      </div>
+    );
+  }
+}
+
+/* <Input
+      action={{
+        color: "teal",
+        labelPosition: "right",
+        icon: "plus",
+        content: `Add Answer ${index}`,
+      }}
+      defaultValue=""
+    /> */
+
 class CustomEditor extends Component {
   constructor(props) {
     super(props);
     // const contentState = convertFromRaw(content);
     const html = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
     const contentBlock = htmlToDraft(html);
+
     if (contentBlock) {
       const contentState = ContentState.createFromBlockArray(
         contentBlock.contentBlocks
@@ -114,26 +144,47 @@ class CustomEditor extends Component {
 
     this.state = {
       editorState: EditorState.createEmpty(),
+      editorTextContent: true,
+      quantity: 1,
+      answers: [],
+      templateNumber: [
+        <AnswerTemplate
+          quantity={this.state.quantity}
+          onUpdateQuantity={this.updateQuantity}
+        />,
+      ],
+      // answers: <AnswerTemplate index={1} />,
     };
   }
 
+  updateQuantity = () => {
+    let arr = this.state.templateNumber;
+    arr.push(this.state.templateNumber);
+    this.setState({ quantity: this.state.quantity + 1, templateNumber: arr });
+  };
+
   onEditorStateChange = (editorState) => {
+    const blocks = convertToRaw(this.state.editorState.getCurrentContent())
+      .blocks;
+
+    const checkIfcontainsJustSpaces =
+      blocks
+        .map((block) => (!block.text.trim() && "\n" && "") || block.text)
+        .join("\n") === "";
+
     this.setState({
       editorState,
+      editorTextContent: checkIfcontainsJustSpaces,
     });
   };
 
   onSubmit = () => {
-    // draftToHtml(convertToRaw(editorState.getCurrentContent()))
-    // console.log(this.props.firebase.posts());
-    // console.log(draftToHtml(convertToRaw(this.state.editorState.getCurrentContent())))
-
+    const { editorState } = this.state;
     const post =
-      this.state.editorState &&
-      this.state.editorState.getCurrentContent() &&
-      draftToHtml(convertToRaw(this.state.editorState.getCurrentContent()));
+      editorState &&
+      editorState.getCurrentContent() &&
+      draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
-      console.log(convertToRaw(this.state.editorState.getCurrentContent()))
     if (post) {
       // this.props.firebase.posts().push().set({
       //   post: post,
@@ -156,8 +207,18 @@ class CustomEditor extends Component {
   };
 
   render() {
-    const { editorState, preview } = this.state;
+    const { editorState, preview, editorTextContent } = this.state;
+    // console.log(editorTextContent, "editorTextContent");
     // console.log(editorState,'editorState')
+    // console.log(this.props.firebase, 'FirebeAads')
+    // this.props.firebase.posts().on("value", (snapshot) => {
+    //   const postsObject = snapshot.val();
+
+    //   console.log(postsObject, 'postsObj')
+    // });
+
+    console.log(this.state.templateNumber, "this.state.quantity");
+
     return (
       <div className="editor-component">
         <div className="container-editor">
@@ -187,11 +248,30 @@ class CustomEditor extends Component {
         </div>
         {/* <button onClick={this.onSubmit}> Submit to DB</button> */}
 
-        <Button onClick={this.onPreview}>
+        <div className="answers-container">
+          <AnswerTemplate
+            quantity={this.state.quantity}
+            onUpdateQuantity={this.updateQuantity}
+          />
+        </div>
+        <Button
+          disabled={editorTextContent ? true : false}
+          onClick={this.onPreview}
+        >
           {preview ? "Close Preview" : "Open Preview"}
         </Button>
-        <Button onClick={this.onSubmit}>Create</Button>
-        <Button onClick={this.onEdit}>Edit</Button>
+        <Button
+          disabled={editorTextContent ? true : false}
+          onClick={this.onSubmit}
+        >
+          Create
+        </Button>
+        <Button
+          disabled={editorTextContent ? true : false}
+          onClick={this.onEdit}
+        >
+          Edit
+        </Button>
 
         {preview && editorState && (
           <div className="container-preview">

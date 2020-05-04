@@ -6,7 +6,7 @@ import { Editor, EditorState } from "draft-js";
 import { withAuthorization } from "../Session";
 import * as ROLES from "../../constants/roles";
 import CustomEditor from "../Editor";
-import { ADMIN_TABS } from "../../constants/shared";
+import { ADMIN_TABS, CATEGORIES } from "../../constants/shared";
 import {
   Dimmer,
   Segment,
@@ -15,10 +15,20 @@ import {
   Grid,
   Container,
   Header,
+  Dropdown,
+  Form,
 } from "semantic-ui-react";
 
 import "./style.scss";
 // Admin
+
+const transformToOptions = (arr) =>
+  arr &&
+  arr.map((el, key) => ({
+    key: el,
+    text: el,
+    value: el,
+  }));
 
 class AdminPage extends Component {
   constructor(props) {
@@ -30,9 +40,19 @@ class AdminPage extends Component {
       posts: [],
     };
 
-    this.state = { editorState: EditorState.createEmpty() };
+    this.state = {
+      editorState: EditorState.createEmpty(),
+      subCategories: [],
+      categories: CATEGORIES,
+    };
     this.onChange = (editorState) => this.setState({ editorState });
   }
+
+  handleAddition = (e, { value }) => {
+    this.setState((prevState) => ({
+      subCategories: [{ text: value, value }, ...prevState.subCategories],
+    }));
+  };
 
   componentDidMount() {
     this.setState({ loading: true });
@@ -70,18 +90,58 @@ class AdminPage extends Component {
     // this.listener()
   }
 
+  componentDidUpdate() {
+    const { subCategories, posts } = this.state;
+    if (posts && !subCategories.length) {
+      this.setState({
+        subCategories: transformToOptions([
+          ...new Set(posts.map((obj, key) => obj.type)),
+        ]),
+      });
+    }
+  }
   render() {
-    const { users, loading, posts } = this.state;
-    console.log(this.state.posts, "posts");
-
+    const { users, loading, posts, categories, subCategories } = this.state;
+    // console.log(categories, "categories");
+    console.log(this.state, 'this.state')
     const panes = [
       {
-        menuItem: ADMIN_TABS.lessons,
+        menuItem: ADMIN_TABS.create_lesson,
         render: () => (
           <Tab.Pane attached={false}>
+            <Form>
+              <Form.Group widths="equal">
+                <Form.Field width={2}>
+                  <Form.Dropdown
+                    className="capitalize"
+                    label="Category"
+                    selection
+                    search
+                    options={categories}
+                    placeholder="Select Category"
+                  />
+                </Form.Field>
+                <Form.Field width={2}>
+                  <Form.Dropdown
+                    className="capitalize"
+                    label="Subcategory"
+                    selection
+                    search
+                    allowAdditions
+                    options={subCategories}
+                    placeholder="Select Subcategory"
+                    onAddItem={this.handleAddition}
+                  />
+                </Form.Field>
+              </Form.Group>
+            </Form>
             <CustomEditor firebase={this.props.firebase} />
           </Tab.Pane>
         ),
+      },
+      {
+        menuItem: ADMIN_TABS.all_lessons,
+        render: () => <Tab.Pane attached={false}>All LEsonst</Tab.Pane>,
       },
       {
         menuItem: ADMIN_TABS.users,
