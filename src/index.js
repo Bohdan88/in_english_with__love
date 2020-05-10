@@ -8,11 +8,12 @@ import Firebase, { FirebaseContext } from "./views/Firebase";
 import "./style/style.scss";
 import "semantic-ui-css/semantic.min.css";
 import "sweetalert2/src/sweetalert2.scss";
+import "../node_modules/font-awesome/css/font-awesome.min.css";
 
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>
     {/* <React.StrictMode> */}
-   
+
     <App />
     {/* </React.StrictMode> */}
   </FirebaseContext.Provider>,

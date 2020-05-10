@@ -42,8 +42,9 @@ class AdminPage extends Component {
 
     this.state = {
       editorState: EditorState.createEmpty(),
-      subCategories: [],
       categories: CATEGORIES,
+      subCategories: [],
+      bias: [],
     };
     this.onChange = (editorState) => this.setState({ editorState });
   }
@@ -55,6 +56,7 @@ class AdminPage extends Component {
   };
 
   componentDidMount() {
+    const { subCategories, posts, bias } = this.state;
     this.setState({ loading: true });
 
     this.listener = this.props.firebase.users().on("value", (snapshot) => {
@@ -83,6 +85,16 @@ class AdminPage extends Component {
         posts: postsList,
         loading: false,
       });
+
+      // set posts
+      this.setState({
+        subCategories: transformToOptions([
+          ...new Set(postsList.map((obj, key) => obj.type)),
+        ]),
+        bias: transformToOptions([
+          ...new Set(postsList.map((obj, key) => obj.bias)),
+        ]),
+      });
     });
   }
 
@@ -91,19 +103,34 @@ class AdminPage extends Component {
   }
 
   componentDidUpdate() {
-    const { subCategories, posts } = this.state;
-    if (posts && !subCategories.length) {
-      this.setState({
-        subCategories: transformToOptions([
-          ...new Set(posts.map((obj, key) => obj.type)),
-        ]),
-      });
-    }
+    const { subCategories, posts, bias } = this.state;
+    // if (posts && !subCategories.length) {
+    //   this.setState({
+    //     subCategories: transformToOptions([
+    //       ...new Set(posts.map((obj, key) => obj.type)),
+    //     ]),
+    //   });
+    // }
+
+    // if (posts && !bias.length) {
+    //   this.setState({
+    //     bias: transformToOptions([
+    //       ...new Set(posts.map((obj, key) => obj.type)),
+    //     ]),
+    //   });
+    // }
   }
   render() {
-    const { users, loading, posts, categories, subCategories } = this.state;
+    const {
+      users,
+      loading,
+      posts,
+      categories,
+      subCategories,
+      bias,
+    } = this.state;
     // console.log(categories, "categories");
-    console.log(this.state, 'this.state')
+    console.log(this.state, "this.state");
     const panes = [
       {
         menuItem: ADMIN_TABS.create_lesson,
@@ -111,7 +138,7 @@ class AdminPage extends Component {
           <Tab.Pane attached={false}>
             <Form>
               <Form.Group widths="equal">
-                <Form.Field width={2}>
+                <Form.Field>
                   <Form.Dropdown
                     className="capitalize"
                     label="Category"
@@ -121,7 +148,7 @@ class AdminPage extends Component {
                     placeholder="Select Category"
                   />
                 </Form.Field>
-                <Form.Field width={2}>
+                <Form.Field>
                   <Form.Dropdown
                     className="capitalize"
                     label="Subcategory"
@@ -132,6 +159,21 @@ class AdminPage extends Component {
                     placeholder="Select Subcategory"
                     onAddItem={this.handleAddition}
                   />
+                </Form.Field>
+                <Form.Field>
+                  <Form.Dropdown
+                    className="capitalize"
+                    label="Bias"
+                    selection
+                    search
+                    allowAdditions
+                    options={bias}
+                    placeholder="Select Bias"
+                  />
+                </Form.Field>
+                <Form.Field required>
+                  <label>Title</label>
+                  <Form.Input placeholder="Title" />
                 </Form.Field>
               </Form.Group>
             </Form>

@@ -5,10 +5,11 @@ import {
   convertToRaw,
   ContentState,
   convertFromRaw,
+  RichUtils,
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { BlockPicker } from "react-color";
+import { CompactPicker } from "react-color";
 import PropTypes from "prop-types";
 
 import draftToHtml from "draftjs-to-html";
@@ -16,6 +17,7 @@ import htmlToDraft from "html-to-draftjs";
 import Swal from "sweetalert2";
 import { Button, Dropdown, Input } from "semantic-ui-react";
 import { LESSON_STATUS } from "../../constants/shared";
+import FontAwesome from "react-fontawesome";
 // style
 import "./style.scss";
 
@@ -56,8 +58,9 @@ class ColorPic extends Component {
   renderModal = () => {
     const { color } = this.props.currentState;
     return (
-      <div onClick={this.stopPropagation}>
-        <BlockPicker color={color} onChangeComplete={this.onChange} />
+      <div className="container-compact-picker" onClick={this.stopPropagation}>
+        {/* <BlockPicker color={color} onChangeComplete={this.onChange} /> */}
+        <CompactPicker color={color} onChangeComplete={this.onChange} />
       </div>
     );
   };
@@ -70,9 +73,10 @@ class ColorPic extends Component {
         aria-expanded={expanded}
         aria-label="rdw-color-picker"
       >
-        <div onClick={onExpandEvent}>
+        <div className="rdw-option-wrapper" onClick={onExpandEvent}>
           {/* <img src={icon} alt="" /> */}
-          ICON
+          {/* <i className="fas fa-eye-dropper"></i> */}
+          <FontAwesome className="fas fa-eye-dropper" name="eyedropper" />
         </div>
         {expanded ? this.renderModal() : undefined}
       </div>
@@ -128,6 +132,7 @@ class AnswerTemplate extends Component {
 class CustomEditor extends Component {
   constructor(props) {
     super(props);
+    this.editorRef = React.createRef();
     // const contentState = convertFromRaw(content);
     const html = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
     const contentBlock = htmlToDraft(html);
@@ -146,6 +151,7 @@ class CustomEditor extends Component {
       editorState: EditorState.createEmpty(),
       editorTextContent: true,
       quantity: 1,
+
       answers: [],
       templateNumber: [
         <AnswerTemplate
@@ -208,21 +214,22 @@ class CustomEditor extends Component {
 
   render() {
     const { editorState, preview, editorTextContent } = this.state;
-    // console.log(editorTextContent, "editorTextContent");
-    // console.log(editorState,'editorState')
-    // console.log(this.props.firebase, 'FirebeAads')
+
     // this.props.firebase.posts().on("value", (snapshot) => {
     //   const postsObject = snapshot.val();
 
     //   console.log(postsObject, 'postsObj')
     // });
 
-    console.log(this.state.templateNumber, "this.state.quantity");
+    // console.log(this.state.templateNumber, "this.state.quantity");
+    const editorNode = this.editorRef.current;
 
+    console.log(editorNode, "editorNode");
     return (
       <div className="editor-component">
         <div className="container-editor">
           <Editor
+            ref={this.editorRef}
             editorState={editorState}
             onEditorStateChange={this.onEditorStateChange}
             toolbarClassName="toolbar-class"
@@ -235,9 +242,13 @@ class CustomEditor extends Component {
           }} */
             editorClassName="editor-area"
             toolbarClassName="editor-toolbar"
+            /* onEditorStateChange={(e,v) => console.log(e,v,"onEditorStateChange")} */
+            /* onChange={(e,v) => console.log(e,v,"onChange")}   */
+            /* onContentStateChange={(e,v) => console.log(e,v,"onContentStateChange")} */
             toolbar={{
               colorPicker: { component: ColorPic },
             }}
+
             /* toolbarCustomButtons={[<CustomOption />]} */
           />
 
@@ -260,6 +271,8 @@ class CustomEditor extends Component {
         >
           {preview ? "Close Preview" : "Open Preview"}
         </Button>
+        <i className="fas fa-eye-dropper"></i>
+
         <Button
           disabled={editorTextContent ? true : false}
           onClick={this.onSubmit}

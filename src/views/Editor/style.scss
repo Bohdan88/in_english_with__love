@@ -1,11 +1,18 @@
 @import "../../style/variables.scss";
 
-
 // .editor-component {
 //   font-family: Arial, Helvetica, sans-serif !important;
 // }
+
+.container-compact-picker {
+  position: absolute;
+  // right: 5px !important;
+  top: 48%;
+  z-index: 2;
+}
+
 .container-editor {
-  margin:2% 0;
+  margin: 2% 0;
 }
 
 .editor-area {
@@ -16,11 +23,25 @@
   background-color: $light-sea;
 }
 
-.container-preview { 
-  margin-top:2%;
+.editor-toolbar {
+  .rdw-block-wrapper,
+  .rdw-fontfamily-wrapper,
+  .rdw-fontsize-wrapper {
+    .rdw-dropdown-wrapper > .rdw-dropdown-selectedtext {
+      color: $black !important;
+    }
+  }
 }
 
+.editor-toolbar > * > .rdw-option-active {
+  background: $corn-silk !important;
+  border: 1px solid $light-grey;
+}
 
-.answers-container  > * > * {
-  border-radius: 0px!important;
+.container-preview {
+  margin-top: 2%;
+}
+
+.answers-container > * > * {
+  border-radius: 0px !important;
 }
