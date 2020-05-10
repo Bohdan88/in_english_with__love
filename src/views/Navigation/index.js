@@ -45,7 +45,6 @@ const NavigationAuth = ({ authUser }) => {
                 </Menu.Item>
               )}
             </Menu.Menu>
-
             <Menu.Menu className="sign-menu" position={"right"}>
               <Menu.Item active={activeItem === ROUTES.SIGN_UP}>
                 {/* <Link

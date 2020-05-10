@@ -30,7 +30,7 @@ class Blog extends Component {
   }
 
   render() {
-      console.log(this.state)
+      // console.log(this.state)
     return <div>Blog</div>;
   }
 }

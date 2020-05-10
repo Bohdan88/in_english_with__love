@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 import ReactDOM from "react-dom";
@@ -102,8 +104,7 @@ class AdminPage extends Component {
   }
   render() {
     const { users, loading, posts, categories, subCategories } = this.state;
-    // console.log(categories, "categories");
-    console.log(this.state, 'this.state')
+
     const panes = [
       {
         menuItem: ADMIN_TABS.create_lesson,
@@ -293,4 +294,10 @@ const PostsList = ({ posts, firebase }) => (
 
 const condition = (authUser) => authUser && !!authUser.roles[ROLES.ADMIN];
 
-export default compose(withAuthorization(condition), withFirebase)(AdminPage);
+const mapStateToProps = () => {};
+const mapDispatchToProps = () => {};
+export default compose(
+  connect(null, null),
+  withAuthorization(condition),
+  withFirebase
+)(AdminPage);

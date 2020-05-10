@@ -217,7 +217,7 @@ class CustomEditor extends Component {
     //   console.log(postsObject, 'postsObj')
     // });
 
-    console.log(this.state.templateNumber, "this.state.quantity");
+    // console.log(this.state.templateNumber, "this.state.quantity");
 
     return (
       <div className="editor-component">
