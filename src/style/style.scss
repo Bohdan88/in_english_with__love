@@ -8,7 +8,8 @@ html {
 body {
   margin: 0;
   overflow: hidden;
-  font-family: "Amatic SC", cursive;
+  // font-family: "Amatic SC", cursive;
+  font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #fbfafb !important;
@@ -16,12 +17,13 @@ body {
 
 // shared selectors
 .capitalize {
-  text-transform: capitalize!important;
+  text-transform: capitalize !important;
 }
 
 //
 .land-container {
-  font-family: "Amatic SC", cursive !important;
+  // font-family: "Amatic SC", cursive !important;
+  font-family: "Roboto", sans-serif;
 }
 
 // navbar
@@ -38,8 +40,8 @@ body {
 
 .main-menu,
 .sign-menu {
-  font-family: "Amatic SC", cursive;
-  font-size: 30px;
+  // font-family: "Amatic SC", cursive;
+  font-size: 15px;
 }
 
 .sign-menu > .item > a,
