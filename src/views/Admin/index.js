@@ -102,11 +102,7 @@ class AdminPage extends Component {
   }
 
   render() {
-<<<<<<< HEAD
-    const { users, loading, posts, categories, subCategories } = this.state;
-=======
     const { loading } = this.state;
->>>>>>> feature/draftWyswyg
 
     const panes = [
       {
