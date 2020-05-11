@@ -9,7 +9,7 @@ class CustomColorPicker extends Component {
 
   onChange = (color) => {
     const { onChange } = this.props;
-    // onChange("color", color.hex);
+    onChange("color", color.hex);
   };
 
   renderModal = () => {

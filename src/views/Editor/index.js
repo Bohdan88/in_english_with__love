@@ -18,6 +18,7 @@ import Swal from "sweetalert2";
 import { Button, Dropdown, Input } from "semantic-ui-react";
 import { LESSON_STATUS } from "../../constants/shared";
 import { CustomColorPicker } from "./CutomComponents";
+import sanitizeHtml from "sanitize-html-react";
 // style
 import "./style.scss";
 
@@ -173,7 +174,12 @@ class CustomEditor extends Component {
     // console.log(this.state.templateNumber, "this.state.quantity");
     const editorNode = this.editorRef.current;
 
-    // console.log(editorNode, "editorNode");
+    // console.log(
+    //   sanitizeHtml(
+    //     draftToHtml(convertToRaw(editorState.getCurrentContent())),
+    //     "editorTextContent"
+    //   )
+    // );
     return (
       <div className="editor-component">
         <div className="container-editor">
@@ -242,8 +248,9 @@ class CustomEditor extends Component {
           <div className="container-preview">
             <div
               dangerouslySetInnerHTML={{
-                __html: draftToHtml(
-                  convertToRaw(editorState.getCurrentContent())
+                __html: sanitizeHtml(
+                  draftToHtml(convertToRaw(editorState.getCurrentContent())),
+                  "editorTextContent"
                 ),
               }}
             />
