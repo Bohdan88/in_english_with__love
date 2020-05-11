@@ -17,7 +17,6 @@
     "react-color": "^2.18.1",
     "react-dom": "^16.13.1",
     "react-draft-wysiwyg": "^1.14.5",
-<<<<<<< HEAD
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
@@ -25,13 +24,8 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-=======
     "react-fontawesome": "^1.7.1",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1",
-    "recompose": "^0.30.0",
     "sanitize-html-react": "^1.13.0",
->>>>>>> feature/draftWyswyg
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
     "sweetalert": "^2.1.2",
