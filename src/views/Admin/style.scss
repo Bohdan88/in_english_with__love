@@ -1,3 +1,5 @@
+@import "../../style/variables.scss";
+
 .loader-admin {
   height: 100vh;
 }
@@ -7,7 +9,15 @@
   margin: 2% !important;
 }
 
+.ui.selection.active.dropdown:hover .menu {
+  text-transform: capitalize !important;
+}
 
-.ui.selection.active.dropdown:hover .menu  {
-  text-transform: capitalize!important;
+.admin-button-group {
+  z-index: 2 !important;
+  cursor: pointer !important;
+}
+
+.admin-icon-popup {
+  top: -50px;
 }

@@ -9,15 +9,15 @@ import {
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { CompactPicker } from "react-color";
-import PropTypes from "prop-types";
 
+import PropTypes from "prop-types";
+import { EDITOR_OPTIONS } from "../../constants/shared";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import Swal from "sweetalert2";
 import { Button, Dropdown, Input } from "semantic-ui-react";
 import { LESSON_STATUS } from "../../constants/shared";
-import FontAwesome from "react-fontawesome";
+import { CustomColorPicker } from "./CutomComponents";
 // style
 import "./style.scss";
 
@@ -42,45 +42,6 @@ class CustomOption extends Component {
 
   render() {
     return <div onClick={this.addStar}>⭐</div>;
-  }
-}
-
-class ColorPic extends Component {
-  stopPropagation = (event) => {
-    event.stopPropagation();
-  };
-
-  onChange = (color) => {
-    const { onChange } = this.props;
-    onChange("color", color.hex);
-  };
-
-  renderModal = () => {
-    const { color } = this.props.currentState;
-    return (
-      <div className="container-compact-picker" onClick={this.stopPropagation}>
-        {/* <BlockPicker color={color} onChangeComplete={this.onChange} /> */}
-        <CompactPicker color={color} onChangeComplete={this.onChange} />
-      </div>
-    );
-  };
-
-  render() {
-    const { expanded, onExpandEvent } = this.props;
-    return (
-      <div
-        aria-haspopup="true"
-        aria-expanded={expanded}
-        aria-label="rdw-color-picker"
-      >
-        <div className="rdw-option-wrapper" onClick={onExpandEvent}>
-          {/* <img src={icon} alt="" /> */}
-          {/* <i className="fas fa-eye-dropper"></i> */}
-          <FontAwesome className="fas fa-eye-dropper" name="eyedropper" />
-        </div>
-        {expanded ? this.renderModal() : undefined}
-      </div>
-    );
   }
 }
 
@@ -118,17 +79,6 @@ class AnswerTemplate extends Component {
     );
   }
 }
-
-/* <Input
-      action={{
-        color: "teal",
-        labelPosition: "right",
-        icon: "plus",
-        content: `Add Answer ${index}`,
-      }}
-      defaultValue=""
-    /> */
-
 class CustomEditor extends Component {
   constructor(props) {
     super(props);
@@ -214,7 +164,6 @@ class CustomEditor extends Component {
 
   render() {
     const { editorState, preview, editorTextContent } = this.state;
-
     // this.props.firebase.posts().on("value", (snapshot) => {
     //   const postsObject = snapshot.val();
 
@@ -224,7 +173,7 @@ class CustomEditor extends Component {
     // console.log(this.state.templateNumber, "this.state.quantity");
     const editorNode = this.editorRef.current;
 
-    console.log(editorNode, "editorNode");
+    // console.log(editorNode, "editorNode");
     return (
       <div className="editor-component">
         <div className="container-editor">
@@ -245,11 +194,14 @@ class CustomEditor extends Component {
             /* onEditorStateChange={(e,v) => console.log(e,v,"onEditorStateChange")} */
             /* onChange={(e,v) => console.log(e,v,"onChange")}   */
             /* onContentStateChange={(e,v) => console.log(e,v,"onContentStateChange")} */
-            toolbar={{
-              colorPicker: { component: ColorPic },
-            }}
+            /* toolbar={{
+              colorPicker: { component: CustomColorPicker },
+            }} */
 
-            /* toolbarCustomButtons={[<CustomOption />]} */
+            toolbar={{
+              fontFamily: { options: EDITOR_OPTIONS.fontFamily },
+              colorPicker: { component: CustomColorPicker },
+            }}
           />
 
           {/* <textarea

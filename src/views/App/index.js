@@ -13,7 +13,7 @@ import Read from "../Read";
 import Listen from "../Listen";
 import Write from "../Write";
 import { withAuthentication } from "../Session";
-import Blog from "../Blog";
+// import Blog from "../Blog";
 import About from "../About";
 import { createBrowserHistory } from "history";
 import * as ROUTES from "../../constants/routes";
@@ -40,7 +40,7 @@ const App = () => {
             <Route path={ROUTES.WRITE} component={Write} />
             <Route path={ROUTES.READ} component={Read} />
             <Route path={ROUTES.LISTEN} component={Listen} />
-            <Route path={ROUTES.BLOG} component={Blog} />
+            {/* <Route path={ROUTES.BLOG} component={Blog} /> */}
             <Route path={ROUTES.ABOUT} component={About} />
           </div>
           {/* </Switch> */}

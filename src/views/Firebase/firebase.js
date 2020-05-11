@@ -38,15 +38,23 @@ const config = {
 class Firebase {
   constructor() {
     app.initializeApp(config);
+    // console.log(app,'app')
     this.auth = app.auth();
     //
     this.db = app.database();
+    // console.log(this.db,'thisdb')
+    this.storage = app.storage();
+
+    // console.log(app,'app.storage')
     this.googleProvider = new app.auth.GoogleAuthProvider();
     this.facebookProvider = new app.auth.FacebookAuthProvider();
     this.twitterProvider = new app.auth.TwitterAuthProvider();
     this.emailAuthProvider = app.auth.EmailAuthProvider;
-
   }
+
+  // get storage
+
+  // getStorage = () =>
 
   // *** Auth API ***
   doCreateUserWithEmailAndPassword = (email, password) => {
@@ -82,6 +90,8 @@ class Firebase {
 
   post = (uid) => this.db.ref(`posts/${uid}`);
   posts = () => this.db.ref("posts");
+
+  // media = () => this.db.ref("images");
 
   // *** Merge Auth and DB User API *** //
   onAuthUserListener = (next, fallback) =>

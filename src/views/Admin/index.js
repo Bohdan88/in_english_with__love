@@ -6,7 +6,12 @@ import { Editor, EditorState } from "draft-js";
 import { withAuthorization } from "../Session";
 import * as ROLES from "../../constants/roles";
 import CustomEditor from "../Editor";
-import { ADMIN_TABS, CATEGORIES } from "../../constants/shared";
+import "firebase/storage";
+import {
+  ADMIN_TABS,
+  CATEGORIES,
+  ADMIN_DROPDOWN_TITLES,
+} from "../../constants/shared";
 import {
   Dimmer,
   Segment,
@@ -17,23 +22,30 @@ import {
   Header,
   Dropdown,
   Form,
+  Button,
+  Popup,
+  Image,
 } from "semantic-ui-react";
+import axios, { put } from "axios";
 
 import "./style.scss";
 // Admin
 
-const transformToOptions = (arr) =>
-  arr &&
-  arr.map((el, key) => ({
-    key: el,
-    text: el,
-    value: el,
-  }));
+const transformToOptions = (arr) => {
+  // console.log(arr, "arr");
+  return arr && arr[0] !== undefined
+    ? arr.map((el) => ({
+        key: el,
+        text: el,
+        value: el,
+      }))
+    : [];
+};
 
 class AdminPage extends Component {
   constructor(props) {
     super(props);
-
+    this.fileInputRef = React.createRef();
     this.state = {
       loading: false,
       users: [],
@@ -45,18 +57,19 @@ class AdminPage extends Component {
       categories: CATEGORIES,
       subCategories: [],
       bias: [],
+      files: null,
+      iconSrc: "",
     };
     this.onChange = (editorState) => this.setState({ editorState });
   }
 
-  handleAddition = (e, { value }) => {
+  handleAddition = (data, type) => {
     this.setState((prevState) => ({
-      subCategories: [{ text: value, value }, ...prevState.subCategories],
+      [type]: [{ text: data.value, value: data.value }, ...prevState[type]],
     }));
   };
 
   componentDidMount() {
-    const { subCategories, posts, bias } = this.state;
     this.setState({ loading: true });
 
     this.listener = this.props.firebase.users().on("value", (snapshot) => {
@@ -98,39 +111,83 @@ class AdminPage extends Component {
     });
   }
 
+  assignDefaultValue = (arr, defaultValue) => {
+    if (!this.state[defaultValue] && arr[0]) {
+      this.setState({
+        [defaultValue]: arr[0].text,
+      });
+    }
+  };
+
+  componentDidUpdate() {
+    this.assignDefaultValue(
+      this.state.categories,
+      ADMIN_DROPDOWN_TITLES.category.defaultVal
+    );
+    this.assignDefaultValue(
+      this.state.subCategories,
+      ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
+    );
+    this.assignDefaultValue(
+      this.state.bias,
+      ADMIN_DROPDOWN_TITLES.bias.defaultVal
+    );
+  }
+
+  onDropDownChange = (data, dropDownType) => {
+    this.setState({
+      [dropDownType]: data.value,
+    });
+  };
+
   componentWillMount() {
     // this.listener()
   }
 
-  componentDidUpdate() {
-    const { subCategories, posts, bias } = this.state;
-    // if (posts && !subCategories.length) {
-    //   this.setState({
-    //     subCategories: transformToOptions([
-    //       ...new Set(posts.map((obj, key) => obj.type)),
-    //     ]),
-    //   });
-    // }
+  //-----------------  icon upload handler
 
-    // if (posts && !bias.length) {
-    //   this.setState({
-    //     bias: transformToOptions([
-    //       ...new Set(posts.map((obj, key) => obj.type)),
-    //     ]),
-    //   });
-    // }
-  }
+  handleChangeInput = (files) =>
+    this.setState({
+      files: files,
+    });
+
+  handleSaveImage = () => {
+    if (this.state.files) {
+      let bucketName = "posts";
+      let file = this.state.files[0];
+      let storageRef = this.props.firebase.storage.ref(
+        `${bucketName}/${file.name}`
+      );
+      storageRef.put(file);
+    }
+  };
+
+  showImage = () => {
+    let storageRef = this.props.firebase.storage.ref();
+    let spaceRef = storageRef.child(`posts/${this.state.files[0].name}`);
+    storageRef
+      .child(`posts/${this.state.files[0].name}`)
+      .getDownloadURL()
+      .then((url) => {
+        this.setState({ iconSrc: url });
+      });
+  };
   render() {
     const {
-      users,
       loading,
       posts,
       categories,
       subCategories,
       bias,
+      categoryValue,
+      subCategoryValue,
+      biasValue,
+      files,
+      iconSrc
     } = this.state;
-    // console.log(categories, "categories");
-    console.log(this.state, "this.state");
+    // console.log(this.props.firebase.storage, "firebase");
+    // console.log(this.state, "this.state");
+
     const panes = [
       {
         menuItem: ADMIN_TABS.create_lesson,
@@ -141,42 +198,105 @@ class AdminPage extends Component {
                 <Form.Field>
                   <Form.Dropdown
                     className="capitalize"
-                    label="Category"
+                    label={ADMIN_DROPDOWN_TITLES.category.label}
                     selection
                     search
+                    value={categoryValue}
                     options={categories}
+                    onChange={(e, data) =>
+                      this.onDropDownChange(
+                        data,
+                        ADMIN_DROPDOWN_TITLES.category.defaultVal
+                      )
+                    }
                     placeholder="Select Category"
                   />
                 </Form.Field>
                 <Form.Field>
                   <Form.Dropdown
                     className="capitalize"
-                    label="Subcategory"
+                    label={ADMIN_DROPDOWN_TITLES.subCategory.label}
                     selection
                     search
                     allowAdditions
                     options={subCategories}
-                    placeholder="Select Subcategory"
-                    onAddItem={this.handleAddition}
+                    value={subCategoryValue}
+                    placeholder={ADMIN_DROPDOWN_TITLES.subCategory.placeholder}
+                    onChange={(e, data) =>
+                      this.onDropDownChange(
+                        data,
+                        ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
+                      )
+                    }
+                    onAddItem={(e, d) =>
+                      this.handleAddition(d, "subCategories")
+                    }
                   />
                 </Form.Field>
                 <Form.Field>
                   <Form.Dropdown
                     className="capitalize"
-                    label="Bias"
+                    label={ADMIN_DROPDOWN_TITLES.bias.label}
                     selection
                     search
                     allowAdditions
                     options={bias}
-                    placeholder="Select Bias"
+                    value={biasValue}
+                    placeholder={ADMIN_DROPDOWN_TITLES.bias.label}
+                    onChange={(e, data) =>
+                      this.onDropDownChange(
+                        data,
+                        ADMIN_DROPDOWN_TITLES.bias.defaultVal
+                      )
+                    }
+                    onAddItem={(e, d) => this.handleAddition(d, "bias")}
                   />
                 </Form.Field>
+              </Form.Group>
+            </Form>
+            <Form widths="equal" onSubmit={this.handleSaveImage}>
+              <Form.Group widths="equal">
                 <Form.Field required>
                   <label>Title</label>
                   <Form.Input placeholder="Title" />
                 </Form.Field>
+                <Form.Field>
+                  <label>Icon Settings</label>
+                  <input
+                    ref={this.fileInputRef}
+                    type="file"
+                    hidden
+                    onChange={(e) => this.handleChangeInput(e.target.files)}
+                  />
+                  <Button.Group className="admin-button-group" basic fluid>
+                    <Button
+                      content="Choose Icon"
+                      labelPosition="left"
+                      icon="file"
+                      onClick={() => this.fileInputRef.current.click()}
+                    />
+                    <Button disabled={files ? false : true} type="submit">
+                      Upload
+                    </Button>
+                    <Popup
+                    className="admin-icon-popup"
+                      content={<Image src={iconSrc}   alt="PRIVET" size="small"  />}
+                      on="click"
+                      pinned
+                      trigger={
+                        <Button
+                          disabled={files ? false : true}
+                          onClick={this.showImage}
+                        >
+                          Show image
+                        </Button>
+                      }
+                    />
+                  </Button.Group>
+                </Form.Field>
               </Form.Group>
             </Form>
+
             <CustomEditor firebase={this.props.firebase} />
           </Tab.Pane>
         ),
@@ -255,7 +375,7 @@ class AddPost extends Component {
     // console.log(post, "post");
     return this.props.firebase.posts().push().set({
       post: textArea,
-      type: "history",
+      type: "History",
     });
     // });
   };
