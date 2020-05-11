@@ -11,6 +11,7 @@ import {
   ADMIN_TABS,
   CATEGORIES,
   ADMIN_DROPDOWN_TITLES,
+  POSTS_BUCKET_NAME,
 } from "../../constants/shared";
 import {
   Dimmer,
@@ -18,15 +19,13 @@ import {
   Loader,
   Tab,
   Grid,
-  Container,
-  Header,
-  Dropdown,
   Form,
   Button,
   Popup,
   Image,
+  Icon,
+  Transition,
 } from "semantic-ui-react";
-import axios, { put } from "axios";
 
 import "./style.scss";
 // Admin
@@ -59,6 +58,7 @@ class AdminPage extends Component {
       bias: [],
       files: null,
       iconSrc: "",
+      iconVisibility: false,
     };
     this.onChange = (editorState) => this.setState({ editorState });
   }
@@ -152,25 +152,30 @@ class AdminPage extends Component {
     });
 
   handleSaveImage = () => {
-    if (this.state.files) {
-      let bucketName = "posts";
-      let file = this.state.files[0];
+    if (this.state.files && this.state.files[0]) {
+      const file = this.state.files[0];
       let storageRef = this.props.firebase.storage.ref(
-        `${bucketName}/${file.name}`
+        `${POSTS_BUCKET_NAME}/${file.name}`
       );
       storageRef.put(file);
     }
   };
 
+  toggleIconVisibility = () =>
+    this.setState({ iconVisibility: !this.state.iconVisibility });
+
   showImage = () => {
-    let storageRef = this.props.firebase.storage.ref();
-    let spaceRef = storageRef.child(`posts/${this.state.files[0].name}`);
-    storageRef
-      .child(`posts/${this.state.files[0].name}`)
-      .getDownloadURL()
-      .then((url) => {
-        this.setState({ iconSrc: url });
-      });
+    if (this.state.iconSrc === "") {
+      this.props.firebase.storage
+        .ref()
+        .child(`${POSTS_BUCKET_NAME}/${this.state.files[0].name}`)
+        .getDownloadURL()
+        .then((url) => {
+          this.setState({
+            iconSrc: url,
+          });
+        });
+    }
   };
   render() {
     const {
@@ -183,10 +188,9 @@ class AdminPage extends Component {
       subCategoryValue,
       biasValue,
       files,
-      iconSrc
+      iconSrc,
+      iconVisibility,
     } = this.state;
-    // console.log(this.props.firebase.storage, "firebase");
-    // console.log(this.state, "this.state");
 
     const panes = [
       {
@@ -261,7 +265,15 @@ class AdminPage extends Component {
                   <Form.Input placeholder="Title" />
                 </Form.Field>
                 <Form.Field>
-                  <label>Icon Settings</label>
+                  <label>
+                    Icon Settings
+                    <Popup
+                      inverted
+                      className="icon-settings-popup"
+                      content="Please click Upload after you've selected an icon."
+                      trigger={<Icon name="question circle" />}
+                    ></Popup>
+                  </label>
                   <input
                     ref={this.fileInputRef}
                     type="file"
@@ -278,25 +290,29 @@ class AdminPage extends Component {
                     <Button disabled={files ? false : true} type="submit">
                       Upload
                     </Button>
-                    <Popup
-                    className="admin-icon-popup"
-                      content={<Image src={iconSrc}   alt="PRIVET" size="small"  />}
-                      on="click"
-                      pinned
-                      trigger={
-                        <Button
-                          disabled={files ? false : true}
-                          onClick={this.showImage}
-                        >
-                          Show image
-                        </Button>
-                      }
+                    <Button
+                      disabled={files ? false : true}
+                      onClick={() => {
+                        this.showImage();
+                        this.toggleIconVisibility();
+                      }}
+                      content={iconVisibility ? "Hide image" : " Show image"}
                     />
+                    <Transition
+                      visible={iconVisibility}
+                      animation="scale"
+                      duration={3000}
+                    >
+                      <Image
+                        size="small"
+                        className="admin-icon-transition"
+                        src={iconSrc}
+                      />
+                    </Transition>
                   </Button.Group>
                 </Form.Field>
               </Form.Group>
             </Form>
-
             <CustomEditor firebase={this.props.firebase} />
           </Tab.Pane>
         ),

@@ -86,6 +86,8 @@ export const ADMIN_DROPDOWN_TITLES = {
   },
 };
 
+export const POSTS_BUCKET_NAME = "posts";
+
 // editor page
 export const LESSON_STATUS = {
   icon: {
