@@ -5,17 +5,20 @@ import {
   convertToRaw,
   ContentState,
   convertFromRaw,
+  RichUtils,
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { BlockPicker } from "react-color";
-import PropTypes from "prop-types";
 
+import PropTypes from "prop-types";
+import { EDITOR_OPTIONS } from "../../constants/shared";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import Swal from "sweetalert2";
 import { Button, Dropdown, Input } from "semantic-ui-react";
 import { LESSON_STATUS } from "../../constants/shared";
+import { CustomColorPicker } from "./CutomComponents";
+import sanitizeHtml from "sanitize-html-react";
 // style
 import "./style.scss";
 
@@ -40,43 +43,6 @@ class CustomOption extends Component {
 
   render() {
     return <div onClick={this.addStar}>⭐</div>;
-  }
-}
-
-class ColorPic extends Component {
-  stopPropagation = (event) => {
-    event.stopPropagation();
-  };
-
-  onChange = (color) => {
-    const { onChange } = this.props;
-    onChange("color", color.hex);
-  };
-
-  renderModal = () => {
-    const { color } = this.props.currentState;
-    return (
-      <div onClick={this.stopPropagation}>
-        <BlockPicker color={color} onChangeComplete={this.onChange} />
-      </div>
-    );
-  };
-
-  render() {
-    const { expanded, onExpandEvent } = this.props;
-    return (
-      <div
-        aria-haspopup="true"
-        aria-expanded={expanded}
-        aria-label="rdw-color-picker"
-      >
-        <div onClick={onExpandEvent}>
-          {/* <img src={icon} alt="" /> */}
-          ICON
-        </div>
-        {expanded ? this.renderModal() : undefined}
-      </div>
-    );
   }
 }
 
@@ -114,20 +80,10 @@ class AnswerTemplate extends Component {
     );
   }
 }
-
-/* <Input
-      action={{
-        color: "teal",
-        labelPosition: "right",
-        icon: "plus",
-        content: `Add Answer ${index}`,
-      }}
-      defaultValue=""
-    /> */
-
 class CustomEditor extends Component {
   constructor(props) {
     super(props);
+    this.editorRef = React.createRef();
     // const contentState = convertFromRaw(content);
     const html = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
     const contentBlock = htmlToDraft(html);
@@ -146,6 +102,7 @@ class CustomEditor extends Component {
       editorState: EditorState.createEmpty(),
       editorTextContent: true,
       quantity: 1,
+
       answers: [],
       templateNumber: [
         <AnswerTemplate
@@ -208,9 +165,6 @@ class CustomEditor extends Component {
 
   render() {
     const { editorState, preview, editorTextContent } = this.state;
-    // console.log(editorTextContent, "editorTextContent");
-    // console.log(editorState,'editorState')
-    // console.log(this.props.firebase, 'FirebeAads')
     // this.props.firebase.posts().on("value", (snapshot) => {
     //   const postsObject = snapshot.val();
 
@@ -218,11 +172,19 @@ class CustomEditor extends Component {
     // });
 
     // console.log(this.state.templateNumber, "this.state.quantity");
+    const editorNode = this.editorRef.current;
 
+    // console.log(
+    //   sanitizeHtml(
+    //     draftToHtml(convertToRaw(editorState.getCurrentContent())),
+    //     "editorTextContent"
+    //   )
+    // );
     return (
       <div className="editor-component">
         <div className="container-editor">
           <Editor
+            ref={this.editorRef}
             editorState={editorState}
             onEditorStateChange={this.onEditorStateChange}
             toolbarClassName="toolbar-class"
@@ -235,10 +197,17 @@ class CustomEditor extends Component {
           }} */
             editorClassName="editor-area"
             toolbarClassName="editor-toolbar"
+            /* onEditorStateChange={(e,v) => console.log(e,v,"onEditorStateChange")} */
+            /* onChange={(e,v) => console.log(e,v,"onChange")}   */
+            /* onContentStateChange={(e,v) => console.log(e,v,"onContentStateChange")} */
+            /* toolbar={{
+              colorPicker: { component: CustomColorPicker },
+            }} */
+
             toolbar={{
-              colorPicker: { component: ColorPic },
+              fontFamily: { options: EDITOR_OPTIONS.fontFamily },
+              colorPicker: { component: CustomColorPicker },
             }}
-            /* toolbarCustomButtons={[<CustomOption />]} */
           />
 
           {/* <textarea
@@ -260,6 +229,8 @@ class CustomEditor extends Component {
         >
           {preview ? "Close Preview" : "Open Preview"}
         </Button>
+        <i className="fas fa-eye-dropper"></i>
+
         <Button
           disabled={editorTextContent ? true : false}
           onClick={this.onSubmit}
@@ -277,8 +248,9 @@ class CustomEditor extends Component {
           <div className="container-preview">
             <div
               dangerouslySetInnerHTML={{
-                __html: draftToHtml(
-                  convertToRaw(editorState.getCurrentContent())
+                __html: sanitizeHtml(
+                  draftToHtml(convertToRaw(editorState.getCurrentContent())),
+                  "editorTextContent"
                 ),
               }}
             />

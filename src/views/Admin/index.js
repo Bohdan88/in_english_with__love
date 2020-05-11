@@ -8,34 +8,34 @@ import { Editor, EditorState } from "draft-js";
 import { withAuthorization } from "../Session";
 import * as ROLES from "../../constants/roles";
 import CustomEditor from "../Editor";
-import { ADMIN_TABS, CATEGORIES } from "../../constants/shared";
+import { CreateLesson } from "./Components";
+import "firebase/storage";
 import {
-  Dimmer,
-  Segment,
-  Loader,
-  Tab,
-  Grid,
-  Container,
-  Header,
-  Dropdown,
-  Form,
-} from "semantic-ui-react";
+  ADMIN_TABS,
+  CATEGORIES,
+  ADMIN_DROPDOWN_TITLES,
+  POSTS_BUCKET_NAME,
+} from "../../constants/shared";
+import { Dimmer, Segment, Loader, Tab, Grid } from "semantic-ui-react";
 
 import "./style.scss";
 // Admin
 
-const transformToOptions = (arr) =>
-  arr &&
-  arr.map((el, key) => ({
-    key: el,
-    text: el,
-    value: el,
-  }));
+const transformToOptions = (arr) => {
+  // console.log(arr, "arr");
+  return arr && arr[0] !== undefined
+    ? arr.map((el) => ({
+        key: el,
+        text: el,
+        value: el,
+      }))
+    : [];
+};
 
 class AdminPage extends Component {
   constructor(props) {
     super(props);
-
+    this.fileInputRef = React.createRef();
     this.state = {
       loading: false,
       users: [],
@@ -44,17 +44,15 @@ class AdminPage extends Component {
 
     this.state = {
       editorState: EditorState.createEmpty(),
-      subCategories: [],
       categories: CATEGORIES,
+      subCategories: [],
+      bias: [],
+      files: null,
+      iconSrc: "",
+      iconVisibility: false,
     };
     this.onChange = (editorState) => this.setState({ editorState });
   }
-
-  handleAddition = (e, { value }) => {
-    this.setState((prevState) => ({
-      subCategories: [{ text: value, value }, ...prevState.subCategories],
-    }));
-  };
 
   componentDidMount() {
     this.setState({ loading: true });
@@ -85,58 +83,37 @@ class AdminPage extends Component {
         posts: postsList,
         loading: false,
       });
+
+      // set posts
+      this.setState({
+        subCategories: transformToOptions([
+          ...new Set(postsList.map((obj, key) => obj.type)),
+        ]),
+        bias: transformToOptions([
+          ...new Set(postsList.map((obj, key) => obj.bias)),
+        ]),
+      });
     });
   }
 
-  componentWillMount() {
-    // this.listener()
+  componentWillUnmount() {
+    this.listener();
+    this.listener2();
   }
 
-  componentDidUpdate() {
-    const { subCategories, posts } = this.state;
-    if (posts && !subCategories.length) {
-      this.setState({
-        subCategories: transformToOptions([
-          ...new Set(posts.map((obj, key) => obj.type)),
-        ]),
-      });
-    }
-  }
   render() {
+<<<<<<< HEAD
     const { users, loading, posts, categories, subCategories } = this.state;
+=======
+    const { loading } = this.state;
+>>>>>>> feature/draftWyswyg
 
     const panes = [
       {
         menuItem: ADMIN_TABS.create_lesson,
         render: () => (
           <Tab.Pane attached={false}>
-            <Form>
-              <Form.Group widths="equal">
-                <Form.Field width={2}>
-                  <Form.Dropdown
-                    className="capitalize"
-                    label="Category"
-                    selection
-                    search
-                    options={categories}
-                    placeholder="Select Category"
-                  />
-                </Form.Field>
-                <Form.Field width={2}>
-                  <Form.Dropdown
-                    className="capitalize"
-                    label="Subcategory"
-                    selection
-                    search
-                    allowAdditions
-                    options={subCategories}
-                    placeholder="Select Subcategory"
-                    onAddItem={this.handleAddition}
-                  />
-                </Form.Field>
-              </Form.Group>
-            </Form>
-            <CustomEditor firebase={this.props.firebase} />
+            <CreateLesson />
           </Tab.Pane>
         ),
       },
@@ -214,7 +191,7 @@ class AddPost extends Component {
     // console.log(post, "post");
     return this.props.firebase.posts().push().set({
       post: textArea,
-      type: "history",
+      type: "History",
     });
     // });
   };

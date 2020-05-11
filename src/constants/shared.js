@@ -64,12 +64,31 @@ export const ADMIN_TABS = {
 };
 
 export const CATEGORIES = [
-  { key: "read", text: "Read", value: "read " },
-  { key: "listen", text: "Listen", value: "liten" },
+  { key: "Read", text: "Read", value: "Read" },
+  { key: "Listen", text: "Listen", value: "Listen" },
 ];
 
-// editor page
+export const ADMIN_DROPDOWN_TITLES = {
+  category: {
+    label: "Category",
+    placeholder: "Select Category",
+    defaultVal: "categoryValue",
+  },
+  subCategory: {
+    label: "Subcategory",
+    placeholder: "Select Subcategory",
+    defaultVal: "subCategoryValue",
+  },
+  bias: {
+    label: "Bias",
+    placeholder: "Select Bias",
+    defaultVal: "biasValue",
+  },
+};
 
+export const POSTS_BUCKET_NAME = "posts";
+
+// editor page
 export const LESSON_STATUS = {
   icon: {
     success: "sucess",
@@ -83,4 +102,16 @@ export const LESSON_STATUS = {
     success: "Success!",
     error: "Oops...",
   },
+};
+
+export const EDITOR_OPTIONS = {
+  fontFamily: [
+    "Arial",
+    "Lato",
+    "Georgia",
+    "Impact",
+    "Tahoma",
+    "Times New Roman",
+    "Verdana",
+  ],
 };

@@ -35,13 +35,13 @@ const NavigationAuth = ({ authUser }) => {
               {ROUTES.SHARED_AUTH_ROUTES.map((route) => (
                 <Menu.Item key={route} active={activeItem === route}>
                   <Link onClick={() => setActiveItem(route)} to={route}>
-                    {route.slice(1)}
+                    {route.slice(1).toUpperCase()}
                   </Link>
                 </Menu.Item>
               ))}
               {!!authUser.roles[ROLES.ADMIN] && (
                 <Menu.Item as="a" href={ROUTES.ADMIN}>
-                  Admin
+                  ADMIN
                 </Menu.Item>
               )}
             </Menu.Menu>
