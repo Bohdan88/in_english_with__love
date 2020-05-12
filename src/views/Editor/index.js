@@ -19,6 +19,8 @@ import { Button, Dropdown, Input } from "semantic-ui-react";
 import { LESSON_STATUS } from "../../constants/shared";
 import { CustomColorPicker } from "./CutomComponents";
 import sanitizeHtml from "sanitize-html-react";
+import { setNewPostValues } from "../../redux/actions";
+import { connect } from "react-redux";
 // style
 import "./style.scss";
 
@@ -133,6 +135,13 @@ class CustomEditor extends Component {
       editorState,
       editorTextContent: checkIfcontainsJustSpaces,
     });
+
+    this.props.onSetNewPostValues({
+      post: sanitizeHtml(
+        draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      ),
+      isPostEmpty: checkIfcontainsJustSpaces,
+    });
   };
 
   onSubmit = () => {
@@ -165,20 +174,10 @@ class CustomEditor extends Component {
 
   render() {
     const { editorState, preview, editorTextContent } = this.state;
-    // this.props.firebase.posts().on("value", (snapshot) => {
-    //   const postsObject = snapshot.val();
-
-    //   console.log(postsObject, 'postsObj')
-    // });
-
-    // console.log(this.state.templateNumber, "this.state.quantity");
     const editorNode = this.editorRef.current;
-
     // console.log(
-    //   sanitizeHtml(
-    //     draftToHtml(convertToRaw(editorState.getCurrentContent())),
-    //     "editorTextContent"
-    //   )
+    //   editorTextContent,
+    //   "editorTextContenteditorTextContenteditorTextContent"
     // );
     return (
       <div className="editor-component">
@@ -217,7 +216,7 @@ class CustomEditor extends Component {
         </div>
         {/* <button onClick={this.onSubmit}> Submit to DB</button> */}
 
-        <div className="answers-container">
+        {/* <div className="answers-container">
           <AnswerTemplate
             quantity={this.state.quantity}
             onUpdateQuantity={this.updateQuantity}
@@ -254,11 +253,22 @@ class CustomEditor extends Component {
                 ),
               }}
             />
-          </div>
-        )}
+          </div> */}
+        {/* )} */}
       </div>
     );
   }
 }
 
-export default CustomEditor;
+const mapStateToProps = (state) => {
+  const { newPostState } = state;
+  return { newPostState };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSetNewPostValues: (values) => dispatch(setNewPostValues(values)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomEditor);

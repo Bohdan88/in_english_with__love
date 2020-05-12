@@ -1,19 +1,26 @@
-// import { GET_ALL_POSTS } from "../constants/actionTypes";
+import {
+  SET_NEW_POST_VALUES,
+  GET_ALL_CATEGORIES,
+} from "../constants/actionTypes";
+import { CATEGORIES } from "../../constants/shared";
 
-// const initState = {
-//   loading: false,
-//   error: false,
-//   bias: [],
-//   subCategories: [],
-//   categories: [],
-//   categoryValue: [],
-  
+const initState = {
+  category: CATEGORIES[0].text,
+  subCategory: "",
+  bias: "",
+  post: "",
+  isPostEmpty: true,
+};
 
-// };
-
-// export const posts = (state = initState, action) => {
-//   switch (action.type) {
-//     default:
-//       return state;
-//   }
-// };
+export const newPostReducer = (state = initState, action) => {
+  switch (action.type) {
+    case SET_NEW_POST_VALUES:
+      console.log(action.payload, "NEST POSTs");
+      return {
+        ...state,
+        ...action.payload,
+      };
+    default:
+      return state;
+  }
+};

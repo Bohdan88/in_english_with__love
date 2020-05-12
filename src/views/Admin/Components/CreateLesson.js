@@ -19,8 +19,9 @@ import {
   Image,
   Icon,
   Transition,
+  Input,
 } from "semantic-ui-react";
-import { getAllPostsValues } from "../../../redux/actions";
+import { getAllPostsValues, setNewPostValues } from "../../../redux/actions";
 
 const transformToOptions = (arr) => {
   // console.log(arr, "arr");
@@ -33,6 +34,25 @@ const transformToOptions = (arr) => {
     : [];
 };
 
+class AnswerTemplate extends Component {
+  render() {
+    return (
+      <div>
+        <Input type="text" placeholder="Add answer...">
+          <input />
+          <Button
+            onClick={this.props.onUpdateQuantity}
+            color="teal"
+            type="submit"
+          >
+            Add answer {` ${this.props.quantity}`}
+          </Button>
+        </Input>
+      </div>
+    );
+  }
+}
+
 class CreateLesson extends Component {
   constructor(props) {
     super(props);
@@ -41,16 +61,23 @@ class CreateLesson extends Component {
       loading: false,
       users: [],
       posts: [],
-    };
-
-    this.state = {
-      editorState: EditorState.createEmpty(),
       categories: CATEGORIES,
       subCategories: [],
       bias: [],
       files: null,
       iconSrc: "",
       iconVisibility: false,
+      onPreview: false,
+      editorState: EditorState.createEmpty(),
+      editorTextContent: true,
+      quantity: 1,
+      answers: [],
+      // templateNumber: [
+      //   <AnswerTemplate
+      //     quantity={this.state.quantity}
+      //     onUpdateQuantity={this.updateQuantity}
+      //   />,
+      // ],
     };
     this.onChange = (editorState) => this.setState({ editorState });
   }
@@ -59,6 +86,19 @@ class CreateLesson extends Component {
     this.setState((prevState) => ({
       [type]: [{ text: data.value, value: data.value }, ...prevState[type]],
     }));
+
+    // console.log(data, type)
+
+    // console.log(
+    //   this.props.newPostState,
+    //   "this.props.newPostState.subCategories"
+    // );
+    // this.props.onSetNewPostValues({
+    //   [type]: [
+    //     { text: data.value, value: data.value },
+    //     ...this.props.newPostState.subCategory,
+    //   ],
+    // });
   };
 
   componentDidMount() {
@@ -79,31 +119,6 @@ class CreateLesson extends Component {
     //   }
     // });
 
-    // this.listener2 = this.props.firebase.posts().on("value", (snapshot) => {
-    //   const postsObject = snapshot && snapshot.val();
-    //   if (postsObject) {
-    //     const postsList = Object.keys(postsObject).map((key) => ({
-    //       ...postsObject[key],
-    //       uid: key,
-    //     }));
-
-    //     this.setState({
-    //       posts: postsList,
-    //       loading: false,
-    //     });
-
-    //     // set posts
-    //     this.setState({
-    //       subCategories: transformToOptions([
-    //         ...new Set(postsList.map((obj, key) => obj.type)),
-    //       ]),
-    //       bias: transformToOptions([
-    //         ...new Set(postsList.map((obj, key) => obj.bias)),
-    //       ]),
-    //     });
-    //   }
-    // });
-
     // on posts
     this.props.firebase.posts().on("value", (snapshot) => {
       const postsObject = snapshot && snapshot.val();
@@ -117,8 +132,6 @@ class CreateLesson extends Component {
           posts: postsList,
           loading: false,
         });
-
-        // this.props.onGetAllPostsValues({posts: postsList});
 
         let setSubCategories = transformToOptions([
           ...new Set(postsList.map((obj, key) => obj.type)),
@@ -138,36 +151,21 @@ class CreateLesson extends Component {
           subCategories: setSubCategories,
           bias: setBias,
         });
+
+        this.props.onSetNewPostValues({
+          subCategory: setSubCategories[0] && setSubCategories[0].text,
+          bias: setBias[0] && setBias[0].text,
+        });
       }
-      // this.props.onGetAllPostsValues(snapshot.val());
     });
-  }
-
-  assignDefaultValue = (arr, defaultValue) => {
-    if (!this.state[defaultValue] && arr[0]) {
-      this.setState({
-        [defaultValue]: arr[0].text,
-      });
-    }
-  };
-
-  componentDidUpdate() {
-    this.assignDefaultValue(
-      this.state.categories,
-      ADMIN_DROPDOWN_TITLES.category.defaultVal
-    );
-    this.assignDefaultValue(
-      this.state.subCategories,
-      ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
-    );
-    this.assignDefaultValue(
-      this.state.bias,
-      ADMIN_DROPDOWN_TITLES.bias.defaultVal
-    );
   }
 
   onDropDownChange = (data, dropDownType) => {
     this.setState({
+      [dropDownType]: data.value,
+    });
+
+    this.props.onSetNewPostValues({
       [dropDownType]: data.value,
     });
   };
@@ -175,6 +173,7 @@ class CreateLesson extends Component {
   componentWillUnmount() {
     // this.listener();
     // this.listener2();
+    this.props.firebase.posts().off();
   }
 
   //-----------------  icon upload handler
@@ -211,22 +210,34 @@ class CreateLesson extends Component {
     }
   };
 
+  onPreview = () => {
+    this.setState({
+      preview: !this.state.preview,
+    });
+  };
+
   render() {
     const {
       loading,
-      posts,
-      categories,
-      subCategories,
-      bias,
-      categoryValue,
-      subCategoryValue,
       biasValue,
       files,
       iconSrc,
       iconVisibility,
+      preview,
+      editorTextContent,
+      editorState,
     } = this.state;
+    const { category, subCategory, isPostEmpty, post } = this.props.newPostState;
+    // console.log(this.props, "PROPSAZAVRI");
+    // console.log(editorState, "editorINLESLS");
+    const {
+      allPosts,
+      categories,
+      bias,
+      subCategories,
+    } = this.props.posts;
 
-    console.log(this.props, "PROPSELI");
+    // console.log(isPostEmpty,'isPostEmptyisPostEmpty')
     return (
       <div>
         <Form>
@@ -237,7 +248,8 @@ class CreateLesson extends Component {
                 label={ADMIN_DROPDOWN_TITLES.category.label}
                 selection
                 search
-                value={categoryValue}
+                /* value={categoryValue} */
+                value={category}
                 options={categories}
                 onChange={(e, data) =>
                   this.onDropDownChange(
@@ -256,7 +268,7 @@ class CreateLesson extends Component {
                 search
                 allowAdditions
                 options={subCategories}
-                value={subCategoryValue}
+                value={subCategory}
                 placeholder={ADMIN_DROPDOWN_TITLES.subCategory.placeholder}
                 onChange={(e, data) =>
                   this.onDropDownChange(
@@ -344,6 +356,50 @@ class CreateLesson extends Component {
           </Form.Group>
         </Form>
         <CustomEditor firebase={this.props.firebase} />
+
+        {/*  */}
+
+        <div className="answers-container">
+          {/* <AnswerTemplate
+            quantity={this.state.quantity}
+            onUpdateQuantity={this.updateQuantity}
+          /> */}
+        </div>
+        <Button
+          /* disabled={editorTextContent ? true : false} */
+          disabled={isPostEmpty ? true : false}
+          onClick={this.onPreview}
+        >
+          {preview ? "Close Preview" : "Open Preview"}
+        </Button>
+        <i className="fas fa-eye-dropper"></i>
+
+        <Button
+          disabled={editorTextContent ? true : false}
+          onClick={this.onSubmit}
+        >
+          Create
+        </Button>
+        <Button
+          disabled={editorTextContent ? true : false}
+          onClick={this.onEdit}
+        >
+          Edit
+        </Button>
+
+        {preview && editorState && (
+          <div className="container-preview">
+            {/* <div
+              dangerouslySetInnerHTML={{
+                __html: sanitizeHtml(
+                  draftToHtml(convertToRaw(editorState.getCurrentContent())),
+                  "editorTextContent"
+                ),
+              }}
+            /> */}
+            <div dangerouslySetInnerHTML={{ __html: post }} />
+          </div>
+        )}
       </div>
     );
   }
@@ -367,14 +423,15 @@ const mapStateToProps = (state) => {
   //   uid: key,
   // })),
   // console.log(state, "STATE");
-  const { posts } = state;
-  return { posts };
+  const { posts, newPostState } = state;
+  return { posts, newPostState };
 };
 
 const mapDispatchToProps = (dispatch) => {
   // console.log("DISPATCH");
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
+    onSetNewPostValues: (values) => dispatch(setNewPostValues(values)),
     // onSetUsers: (users) => dispatch({ type: "USERS_SET", users }),
   };
 };

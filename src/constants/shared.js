@@ -72,17 +72,17 @@ export const ADMIN_DROPDOWN_TITLES = {
   category: {
     label: "Category",
     placeholder: "Select Category",
-    defaultVal: "categoryValue",
+    defaultVal: "category",
   },
   subCategory: {
     label: "Subcategory",
     placeholder: "Select Subcategory",
-    defaultVal: "subCategoryValue",
+    defaultVal: "subCategory",
   },
   bias: {
     label: "Bias",
     placeholder: "Select Bias",
-    defaultVal: "biasValue",
+    defaultVal: "bias",
   },
 };
 
