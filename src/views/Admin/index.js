@@ -18,6 +18,8 @@ import {
 } from "../../constants/shared";
 import { Dimmer, Segment, Loader, Tab, Grid } from "semantic-ui-react";
 
+import { getAllPostsValues } from "../../redux/actions";
+
 import "./style.scss";
 // Admin
 
@@ -54,56 +56,83 @@ class AdminPage extends Component {
     this.onChange = (editorState) => this.setState({ editorState });
   }
 
+  // handleAllPostsValues = () => this.props.onGetAllPostsValues("THIS");
   componentDidMount() {
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
+    // this.props.onGetAllPostsValues("THIS");
+    // this.listener = this.props.firebase.users().on("value", (snapshot) => {
+    //   const usersObject = snapshot.val();
 
-    this.listener = this.props.firebase.users().on("value", (snapshot) => {
-      const usersObject = snapshot.val();
+    //   const usersList = Object.keys(usersObject).map((key) => ({
+    //     ...usersObject[key],
+    //     uid: key,
+    //   }));
 
-      const usersList = Object.keys(usersObject).map((key) => ({
-        ...usersObject[key],
-        uid: key,
-      }));
+    //   this.setState({
+    //     users: usersList,
+    //     // loading: false,
+    //   });
+    // });
 
-      this.setState({
-        users: usersList,
-        // loading: false,
-      });
+    // //------
+    // // this.handleAllPostsValues();
+    // this.listener2 = this.props.firebase.posts().on("value", (snapshot) => {
+    //   const postsObject = snapshot.val();
+
+    //   const postsList = Object.keys(postsObject).map((key) => ({
+    //     ...postsObject[key],
+    //     uid: key,
+    //   }));
+
+    //   this.setState({
+    //     posts: postsList,
+    //     loading: false,
+    //   });
+
+    //   // set posts
+    //   this.setState({
+    //     subCategories: transformToOptions([
+    //       ...new Set(postsList.map((obj, key) => obj.type)),
+    //     ]),
+    //     bias: transformToOptions([
+    //       ...new Set(postsList.map((obj, key) => obj.bias)),
+    //     ]),
+    //   });
+    // });
+
+    // redux stuff
+
+    if (!this.props.users.length) {
+      this.setState({ loading: true });
+    }
+
+    // set userochkov
+    this.props.firebase.users().on("value", (snapshot) => {
+      this.props.onSetUsers(snapshot.val());
+
+      this.setState({ loading: false });
     });
 
-    this.listener2 = this.props.firebase.posts().on("value", (snapshot) => {
-      const postsObject = snapshot.val();
+    // set posts
 
-      const postsList = Object.keys(postsObject).map((key) => ({
-        ...postsObject[key],
-        uid: key,
-      }));
-
-      this.setState({
-        posts: postsList,
-        loading: false,
-      });
-
-      // set posts
-      this.setState({
-        subCategories: transformToOptions([
-          ...new Set(postsList.map((obj, key) => obj.type)),
-        ]),
-        bias: transformToOptions([
-          ...new Set(postsList.map((obj, key) => obj.bias)),
-        ]),
-      });
-    });
+    // this.props.firebase.posts().on("value", (snapshot) => {
+    //   this.props.onGetAllPostsValues(snapshot.val());
+    // });
   }
 
   componentWillUnmount() {
-    this.listener();
-    this.listener2();
+    this.props.firebase.users().off();
   }
+
+  // componentWillUnmount() {
+  //   this.listener();
+  //   this.listener2();
+  // }
 
   render() {
     const { loading } = this.state;
-
+    // console.log(this.state,'this.state')
+    // console.log(this.props.users,'usersusersusers')
     const panes = [
       {
         menuItem: ADMIN_TABS.create_lesson,
@@ -265,12 +294,29 @@ const PostsList = ({ posts, firebase }) => (
   </ul>
 );
 
+const mapStateToProps = (state) => ({
+  posts: state.posts,
+  users: Object.keys(state.userState.users || {}).map((key) => ({
+    ...state.userState.users[key],
+    uid: key,
+  })),
+  // console.log(state, "STATE");
+  // const { posts } = state;
+  // return { posts };
+});
+
+const mapDispatchToProps = (dispatch) => {
+  // console.log("DISPATCH");
+  return {
+    // onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
+    onSetUsers: (users) => dispatch({ type: "USERS_SET", users }),
+  };
+};
+
 const condition = (authUser) => authUser && !!authUser.roles[ROLES.ADMIN];
 
-const mapStateToProps = () => {};
-const mapDispatchToProps = () => {};
 export default compose(
-  connect(null, null),
   withAuthorization(condition),
-  withFirebase
+  withFirebase,
+  connect(mapStateToProps, mapDispatchToProps)
 )(AdminPage);

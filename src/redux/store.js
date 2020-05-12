@@ -5,11 +5,12 @@ import thunk from "redux-thunk";
 import logger from "redux-logger";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-let middleware = [apiMiddleware, thunk];
+// let middleware = [apiMiddleware, thunk];
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(...middleware))
+  composeEnhancers()
+  // composeEnhancers(applyMiddleware(...middleware))
 );
 
 window.store = store; // makes the sore available globally

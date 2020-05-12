@@ -30,7 +30,7 @@ class CustomColorPicker extends Component {
         aria-label="rdw-color-picker"
       >
         <div className="rdw-option-wrapper" onClick={onExpandEvent}>
-          <FontAwesome className="fas fa-eye-dropper" name="picker" />
+          <FontAwesome className="fas fa-eye-dropper" name="eyedropper" />
         </div>
         {expanded ? this.renderModal() : undefined}
       </div>

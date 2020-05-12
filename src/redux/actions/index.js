@@ -1,4 +1,8 @@
-import { API_REQUEST, GET_ALL_POSTS } from "../constants/actionTypes";
+import {
+  API_REQUEST,
+  GET_ALL_POSTS,
+  GET_ALL_CATEGORIES,
+} from "../constants/actionTypes";
 
 export const fetchPosts = () => ({
   type: API_REQUEST,
@@ -7,3 +11,13 @@ export const fetchPosts = () => ({
     next: GET_ALL_POSTS,
   }),
 });
+
+export const getAllPostsValues = (firebase) => {
+  // console.log(GET_ALL_CATEGORIES,'firebase')
+  return {
+    type: GET_ALL_CATEGORIES,
+    payload: {
+      firebase,
+    },
+  };
+};

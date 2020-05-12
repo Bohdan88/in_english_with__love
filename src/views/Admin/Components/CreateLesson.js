@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withFirebase } from "../../Firebase";
 import CustomEditor from "../../Editor";
 import { compose } from "recompose";
+import { connect } from "react-redux";
 import { withAuthorization } from "../../Session";
 import * as ROLES from "../../../constants/roles";
 import {
@@ -19,6 +20,7 @@ import {
   Icon,
   Transition,
 } from "semantic-ui-react";
+import { getAllPostsValues } from "../../../redux/actions";
 
 const transformToOptions = (arr) => {
   // console.log(arr, "arr");
@@ -60,7 +62,7 @@ class CreateLesson extends Component {
   };
 
   componentDidMount() {
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
 
     // this.listener = this.props.firebase.users().on("value", (snapshot) => {
     //   const usersObject = snapshot && snapshot.val();
@@ -101,6 +103,45 @@ class CreateLesson extends Component {
     //     });
     //   }
     // });
+
+    // on posts
+    this.props.firebase.posts().on("value", (snapshot) => {
+      const postsObject = snapshot && snapshot.val();
+      if (postsObject) {
+        const postsList = Object.keys(postsObject).map((key) => ({
+          ...postsObject[key],
+          uid: key,
+        }));
+
+        this.setState({
+          posts: postsList,
+          loading: false,
+        });
+
+        // this.props.onGetAllPostsValues({posts: postsList});
+
+        let setSubCategories = transformToOptions([
+          ...new Set(postsList.map((obj, key) => obj.type)),
+        ]);
+
+        let setBias = transformToOptions([
+          ...new Set(postsList.map((obj, key) => obj.bias)),
+        ]);
+        // set posts
+        this.setState({
+          subCategories: setSubCategories,
+          bias: setBias,
+        });
+
+        this.props.onGetAllPostsValues({
+          posts: postsList,
+          subCategories: setSubCategories,
+          bias: setBias,
+        });
+      }
+
+      // this.props.onGetAllPostsValues(snapshot.val());
+    });
   }
 
   assignDefaultValue = (arr, defaultValue) => {
@@ -111,20 +152,20 @@ class CreateLesson extends Component {
     }
   };
 
-  //   componentDidUpdate() {
-  //     this.assignDefaultValue(
-  //       this.state.categories,
-  //       ADMIN_DROPDOWN_TITLES.category.defaultVal
-  //     );
-  //     this.assignDefaultValue(
-  //       this.state.subCategories,
-  //       ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
-  //     );
-  //     this.assignDefaultValue(
-  //       this.state.bias,
-  //       ADMIN_DROPDOWN_TITLES.bias.defaultVal
-  //     );
-  //   }
+  componentDidUpdate() {
+    this.assignDefaultValue(
+      this.state.categories,
+      ADMIN_DROPDOWN_TITLES.category.defaultVal
+    );
+    this.assignDefaultValue(
+      this.state.subCategories,
+      ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
+    );
+    this.assignDefaultValue(
+      this.state.bias,
+      ADMIN_DROPDOWN_TITLES.bias.defaultVal
+    );
+  }
 
   onDropDownChange = (data, dropDownType) => {
     this.setState({
@@ -185,6 +226,8 @@ class CreateLesson extends Component {
       iconSrc,
       iconVisibility,
     } = this.state;
+
+    console.log(this.state, "this.state");
     return (
       <div>
         <Form>
@@ -307,9 +350,29 @@ class CreateLesson extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  posts: state.posts,
+  // users: Object.keys(state.userState.users || {}).map((key) => ({
+  //   ...state.userState.users[key],
+  //   uid: key,
+  // })),
+  // console.log(state, "STATE");
+  // const { posts } = state;
+  // return { posts };
+});
+
+const mapDispatchToProps = (dispatch) => {
+  // console.log("DISPATCH");
+  return {
+    onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
+    // onSetUsers: (users) => dispatch({ type: "USERS_SET", users }),
+  };
+};
+
 const condition = (authUser) => authUser && !!authUser.roles[ROLES.ADMIN];
 
 export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
   withAuthorization(condition),
   withFirebase
 )(CreateLesson);

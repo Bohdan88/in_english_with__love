@@ -9,7 +9,7 @@ import store from "./redux/store";
 import "./style/style.scss";
 import "semantic-ui-css/semantic.min.css";
 import "sweetalert2/src/sweetalert2.scss";
- 
+
 ReactDOM.render(
   <Provider store={store}>
     <FirebaseContext.Provider value={new Firebase()}>

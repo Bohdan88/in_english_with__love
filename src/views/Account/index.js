@@ -6,18 +6,29 @@ import PasswordChangeForm from "../PasswordChange";
 // import { withAuthorization } from "../Session";
 import { SIGN_IN_METHODS } from "../../constants/shared";
 import { withFirebase } from "../Firebase";
+import { connect } from "react-redux";
+import { compose } from 'recompose';
 
-const AccountPage = () => (
-  <AuthUserContext.Consumer>
-    {(authUser) => (
-      <div>
-        <h1>Account: {authUser.email}</h1>
-        <PasswordForgetForm />
-        <PasswordChangeForm />
-        <LoginManagement authUser={authUser} />
-      </div>
-    )}
-  </AuthUserContext.Consumer>
+// const AccountPage = () => (
+//   <AuthUserContext.Consumer>
+//     {(authUser) => (
+//       <div>
+//         <h1>Account: {authUser.email}</h1>
+//         <PasswordForgetForm />
+//         <PasswordChangeForm />
+//         <LoginManagement authUser={authUser} />
+//       </div>
+//     )}
+//   </AuthUserContext.Consumer>
+// );
+
+const AccountPage = ({ authUser }) => (
+  <div>
+    <h1>Account: {authUser.email}</h1>
+    <PasswordForgetForm />
+    <PasswordChangeForm />
+    <LoginManagement authUser={authUser} />
+  </div>
 );
 
 class LoginManagementBase extends Component {
@@ -186,7 +197,15 @@ class DefaultLoginToggle extends Component {
 
 const LoginManagement = withFirebase(LoginManagementBase);
 
+const mapStateToProps = (state) => ({
+  authUser: state.sessionState.authUser,
+});
+
 // which means true. authUser exits
 const condition = (authUser) => !!authUser;
 
-export default withAuthorization(condition)(AccountPage);
+// export default withAuthorization(condition)(AccountPage);
+export default compose(
+  connect(mapStateToProps),
+  withAuthorization(condition)
+)(AccountPage);

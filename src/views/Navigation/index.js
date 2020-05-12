@@ -1,4 +1,5 @@
 import React, { Component, useState } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import SignOutButton from "../SignOut";
@@ -116,18 +117,26 @@ const NavigationNonAuth = () => {
   );
 };
 
-const Navigation = () => (
-  <div>
-    <AuthUserContext.Consumer>
-      {(authUser) =>
-        authUser ? (
-          <NavigationAuth authUser={authUser} />
-        ) : (
-          <NavigationNonAuth />
-        )
-      }
-    </AuthUserContext.Consumer>
-  </div>
-);
+// const Navigation = () => (
+//   <div>
+//     <AuthUserContext.Consumer>
+//       {(authUser) =>
+//         authUser ? (
+//           <NavigationAuth authUser={authUser} />
+//         ) : (
+//           <NavigationNonAuth />
+//         )
+//       }
+//     </AuthUserContext.Consumer>
+//   </div>
+// );
 
-export default Navigation;
+const Navigation = ({ authUser }) =>
+  authUser ? <NavigationAuth authUser={authUser} /> : <NavigationNonAuth />;
+
+const mapStateToProps = (state) => ({
+  authUser: state.sessionState.authUser,
+});
+
+// export default Navigation;
+export default connect(mapStateToProps)(Navigation);
