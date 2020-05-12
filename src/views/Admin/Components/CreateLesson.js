@@ -134,12 +134,11 @@ class CreateLesson extends Component {
         });
 
         this.props.onGetAllPostsValues({
-          posts: postsList,
+          allPosts: postsList,
           subCategories: setSubCategories,
           bias: setBias,
         });
       }
-
       // this.props.onGetAllPostsValues(snapshot.val());
     });
   }
@@ -227,7 +226,7 @@ class CreateLesson extends Component {
       iconVisibility,
     } = this.state;
 
-    console.log(this.state, "this.state");
+    console.log(this.props, "PROPSELI");
     return (
       <div>
         <Form>
@@ -350,16 +349,27 @@ class CreateLesson extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  posts: state.posts,
+// const mapStateToProps = (state) => ({
+//   posts: state.allPosts,
+//   // users: Object.keys(state.userState.users || {}).map((key) => ({
+//   //   ...state.userState.users[key],
+//   //   uid: key,
+//   // })),
+//   // console.log(state, "STATE");
+//   // const { posts } = state;
+//   // return { posts };
+// });
+
+const mapStateToProps = (state) => {
+  // posts: state.allPosts,
   // users: Object.keys(state.userState.users || {}).map((key) => ({
   //   ...state.userState.users[key],
   //   uid: key,
   // })),
   // console.log(state, "STATE");
-  // const { posts } = state;
-  // return { posts };
-});
+  const { posts } = state;
+  return { posts };
+};
 
 const mapDispatchToProps = (dispatch) => {
   // console.log("DISPATCH");
