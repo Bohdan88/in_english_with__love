@@ -21,6 +21,9 @@ import { CustomColorPicker } from "./CutomComponents";
 import sanitizeHtml from "sanitize-html-react";
 import { setNewPostValues } from "../../redux/actions";
 import { connect } from "react-redux";
+import { withFirebase } from "../Firebase";
+import { compose } from "recompose";
+
 // style
 import "./style.scss";
 
@@ -123,6 +126,7 @@ class CustomEditor extends Component {
   };
 
   onEditorStateChange = (editorState) => {
+    // console.log(this.props.,'PROPS')
     const blocks = convertToRaw(this.state.editorState.getCurrentContent())
       .blocks;
 
@@ -136,37 +140,42 @@ class CustomEditor extends Component {
       isEditorEmpty: checkIfcontainsJustSpaces,
     });
 
+    const currentTextContent = draftToHtml(
+      convertToRaw(editorState.getCurrentContent())
+    );
+
     this.props.onSetNewPostValues({
-      post: sanitizeHtml(
-        draftToHtml(convertToRaw(editorState.getCurrentContent()))
-      ),
-      // isPostEmpty: checkIfcontainsJustSpaces,
+      post: {
+        ...this.props.onSetNewPostValues,
+        [this.props.sectionKey]: sanitizeHtml(currentTextContent, {
+          allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+        }),
+      },
     });
-
-    this.props.onEditorTextChange(checkIfcontainsJustSpaces);
+    // this.props.onEditorTextChange(checkIfcontainsJustSpaces);
   };
 
-  onSubmit = () => {
-    const { editorState } = this.state;
-    const post =
-      editorState &&
-      editorState.getCurrentContent() &&
-      draftToHtml(convertToRaw(editorState.getCurrentContent()));
+  // onSubmit = () => {
+  //   const { editorState } = this.state;
+  //   // const post =
+  //   //   editorState &&
+  //   //   editorState.getCurrentContent() &&
+  //   //   draftToHtml(convertToRaw(editorState.getCurrentContent()));
 
-    if (post) {
-      // this.props.firebase.posts().push().set({
-      //   post: post,
-      //   type: "history",
-      // });
+  //   if (post) {
+  //     // this.props.firebase.posts().push().set({
+  //     //   post: post,
+  //     //   type: "history",
+  //     // });
 
-      this.setState({
-        editorState: "",
-      });
-      fireAlert(true);
-    } else {
-      fireAlert(false);
-    }
-  };
+  //     this.setState({
+  //       editorState: "",
+  //     });
+  //     fireAlert(true);
+  //   } else {
+  //     fireAlert(false);
+  //   }
+  // };
 
   onPreview = () => {
     this.setState({
@@ -174,47 +183,31 @@ class CustomEditor extends Component {
     });
   };
 
+  componentDidMount() {
+    // console.log(this.props.firebase.users(), "FIRE");
+  }
   render() {
-    const { editorState, preview, isEditorEmpty } = this.state;
+    const { editorState } = this.state;
+    const { post } = this.props.newPostState;
     const editorNode = this.editorRef.current;
-    // console.log(
-    //   sanitizeHtml(draftToHtml(convertToRaw(editorState.getCurrentContent()))),
-    //   "withSANITAZE"
+    // console.log(editorState, "ost");
+    // // console.log(editorState, "editorState");
+    // localStorage.setItem(
+    //   "writtenContent",
+    //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
     // );
 
-    console.log(
-      draftToHtml(convertToRaw(editorState.getCurrentContent())),
-      "NO SANITIE"
-    );
-
-    var dirty = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    // var clean = sanitizeHtml(dirty);
-
-    let clean = sanitizeHtml(dirty, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-    });
-
-    console.log(dirty, "CLEEE");
-    // console.log(isEditorEmpty, "isEditorEmpty");
-    // console.log(
-    //   isEditorEmpty,
-    //   "isEditorEmptyisEditorEmptyisEditorEmpty"
-    // );
+    // console.log(localStorage.writtenContent);
     return (
       <div className="editor-component">
         <div className="container-editor">
           <Editor
             ref={this.editorRef}
+            /* editorState={editorState} */
+            /* editorState={post} */
             editorState={editorState}
             onEditorStateChange={this.onEditorStateChange}
             toolbarClassName="toolbar-class"
-            /* toolbar={{
-            inline: { inDropdown: false },
-            list: { inDropdown: false },
-            textAlign: { inDropdown: false },
-            link: { inDropdown: false },
-            history: { inDropdown: false },
-          }} */
             editorClassName="editor-area"
             toolbarClassName="editor-toolbar"
             /* onEditorStateChange={(e,v) => console.log(e,v,"onEditorStateChange")} */
@@ -244,15 +237,16 @@ class CustomEditor extends Component {
               }}
             />
           </div> */}
-          <textarea
+          {/* <textarea
             style={{ height: "300px", width: "300px" }}
             disabled
             value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
           />
-        </div>
-        {/* <button onClick={this.onSubmit}> Submit to DB</button> */}
+          
+        {/* </div> */}
+          {/* <button onClick={this.onSubmit}> Submit to DB</button> */}
 
-        {/* <div className="answers-container">
+          {/* <div className="answers-container">
           <AnswerTemplate
             quantity={this.state.quantity}
             onUpdateQuantity={this.updateQuantity}
@@ -290,7 +284,8 @@ class CustomEditor extends Component {
               }}
             />
           </div> */}
-        {/* )} */}
+          {/* )} */}
+        </div>
       </div>
     );
   }
@@ -307,4 +302,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CustomEditor);
+export default compose(
+  withFirebase,
+  connect(mapStateToProps, mapDispatchToProps)
+)(CustomEditor);

@@ -137,7 +137,7 @@ class AdminPage extends Component {
       {
         menuItem: ADMIN_TABS.create_lesson,
         render: () => (
-          <Tab.Pane attached={false}>
+          <Tab.Pane >
             <CreateLesson />
           </Tab.Pane>
         ),
@@ -165,7 +165,7 @@ class AdminPage extends Component {
             <Grid.Row>
               <Grid.Column className="column-admin">
                 {/* <Container> */}
-                <Tab menu={{ secondary: true }} panes={panes} />
+                <Tab  panes={panes} />
                 {/* </Container> */}
               </Grid.Column>
             </Grid.Row>

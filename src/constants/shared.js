@@ -57,9 +57,16 @@ export const SIGN_IN_METHODS = [
 
 // admin page
 export const ADMIN_TABS = {
-  create_lesson: "CREATE A LESSON",
-  all_lessons: "ALL LESSONS",
-  users: "USERS",
+  create_lesson: { key: "lesson ", content: "Create a lesson", icon: "add" },
+  all_lessons: { key: "all_lessons ", content: "All lessons", icon: "list" },
+  users: { key: "users ", content: "Users", icon: "users" },
+};
+
+export const CREATE_LESSON_STAGES = {
+  before: { key: "about", content: "About", icon: "info" },
+  practise: { key: "exercises", content: "Exercises", icon: "legal" }, //lab
+  after: { key: "conclusion", content: "Conclusion", icon: "law" },
+  content: { key: "content", content: "Content", icon: "picture" },
 };
 
 export const CATEGORIES = [
@@ -71,7 +78,12 @@ export const INIT_NEW_POST_VALUES = {
   category: "Read",
   subCategory: "",
   bias: "",
-  post: "",
+  post: {
+    before: "<p></p>",
+    after: "<p></p>",
+    content: "<p></p>",
+    practise: "",
+  },
   title: "",
   iconPath: "",
 };
@@ -124,6 +136,7 @@ export const ICON_POST_ADD_STATUS = {
   },
 };
 
+// db values
 export const POSTS_BUCKET_NAME = "posts";
 
 // editor page

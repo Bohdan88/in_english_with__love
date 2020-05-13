@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { withFirebase } from "../../Firebase";
-import CustomEditor from "../../Editor";
+import { withFirebase } from "../../../Firebase";
+import CustomEditor from "../../../Editor";
 import { compose } from "recompose";
 import { connect } from "react-redux";
-import { withAuthorization } from "../../Session";
-import * as ROLES from "../../../constants/roles";
+import { withAuthorization } from "../../../Session";
+import * as ROLES from "../../../../constants/roles";
 import {
   ADMIN_TABS,
   CATEGORIES,
@@ -12,9 +12,9 @@ import {
   POSTS_BUCKET_NAME,
   INIT_NEW_POST_VALUES,
   ICON_POST_STATUS,
-} from "../../../constants/shared";
+  CREATE_LESSON_STAGES,
+} from "../../../../constants/shared";
 import { EditorState, convertToRaw } from "draft-js";
-import draftToHtml from "draftjs-to-html";
 import {
   Form,
   Button,
@@ -23,15 +23,16 @@ import {
   Icon,
   Transition,
   Input,
+  Tab,
 } from "semantic-ui-react";
-import { getAllPostsValues, setNewPostValues } from "../../../redux/actions";
+import { getAllPostsValues, setNewPostValues } from "../../../../redux/actions";
 import Swal from "sweetalert2";
 import {
   LESSON_STATUS,
   ICON_POST_REMOVE_STATUS,
   ICON_POST_ADD_STATUS,
-} from "../../../constants/shared";
-import sanitizeHtml from "sanitize-html-react";
+} from "../../../../constants/shared";
+import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
 
 const transformToOptions = (arr) => {
   // console.log(arr, "arr");
@@ -73,7 +74,9 @@ const fireAlert = (state, values, error = null) => {
       confirmButton: "ui green basic button",
       container: "alert-container-class",
     },
+    position: "top-end",
     popup: "swal2-show",
+    className: "admit-sweet-alert",
   });
 
   setTimeout(() => Swal.close(), 4000);
@@ -173,7 +176,7 @@ class CreateLesson extends Component {
     const { iconPath } = this.props.newPostState;
     const { firebase } = this.props;
     // console.log(!iconPath.length, "ICON_PATH");
-    console.log(iconPath, "iconPathINIT");
+    // console.log(iconPath, "iconPathINIT");
 
     if (!iconPath.length && iconFile && iconFile[0]) {
       const storageRef = firebase.storage.ref(
@@ -269,9 +272,41 @@ class CreateLesson extends Component {
     } = this.props.newPostState;
     const { categories, biases, subCategories } = this.props.posts;
 
-    // console.log(iconPath, "iconPathiconPath");
-    // console.log(this.state.iconSrc, "ICON SRC");
-    // console.log(this.props.newPostState);
+    const panes = [
+      {
+        menuItem: CREATE_LESSON_STAGES.before,
+        render: () => (
+          <Tab.Pane attached={false}>
+            <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
+          </Tab.Pane>
+        ),
+      },
+      {
+        menuItem: CREATE_LESSON_STAGES.practise,
+        render: () => (
+          <Tab.Pane attached={false}>
+            <Practise />
+          </Tab.Pane>
+        ),
+      },
+      {
+        menuItem: CREATE_LESSON_STAGES.after,
+        render: () => (
+          <Tab.Pane attached={false}>
+            <AfterWatch />
+          </Tab.Pane>
+        ),
+      },
+      {
+        menuItem: CREATE_LESSON_STAGES.content,
+        render: () => (
+          <Tab.Pane>
+            <LessonContent />
+          </Tab.Pane>
+        ),
+      },
+    ];
+
     return (
       <div>
         <Form>
@@ -401,10 +436,11 @@ class CreateLesson extends Component {
           </Form.Group>
         </Form>
 
-        <CustomEditor
+        <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+        {/* <CustomEditor
           onEditorTextChange={this.onEditorTextChange}
           firebase={this.props.firebase}
-        />
+        /> */}
 
         {/*  */}
 
