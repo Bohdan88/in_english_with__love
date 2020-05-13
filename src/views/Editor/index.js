@@ -177,6 +177,24 @@ class CustomEditor extends Component {
   render() {
     const { editorState, preview, isEditorEmpty } = this.state;
     const editorNode = this.editorRef.current;
+    // console.log(
+    //   sanitizeHtml(draftToHtml(convertToRaw(editorState.getCurrentContent()))),
+    //   "withSANITAZE"
+    // );
+
+    console.log(
+      draftToHtml(convertToRaw(editorState.getCurrentContent())),
+      "NO SANITIE"
+    );
+
+    var dirty = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    // var clean = sanitizeHtml(dirty);
+
+    let clean = sanitizeHtml(dirty, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+    });
+
+    console.log(dirty, "CLEEE");
     // console.log(isEditorEmpty, "isEditorEmpty");
     // console.log(
     //   isEditorEmpty,
@@ -211,11 +229,26 @@ class CustomEditor extends Component {
               colorPicker: { component: CustomColorPicker },
             }}
           />
-
-          {/* <textarea
-          disabled
-          value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-        /> */}
+          {/* <Button
+            disabled={isEditorEmpty ? true : false}
+            onClick={this.onPreview}
+          >
+            {preview ? "Close Preview" : "Open Preview"}
+          </Button> */}
+          {/* <div className="container-preview">
+            <div
+              dangerouslySetInnerHTML={{
+                __html:
+                  (draftToHtml(convertToRaw(editorState.getCurrentContent())),
+                  "isEditorEmpty"),
+              }}
+            />
+          </div> */}
+          <textarea
+            style={{ height: "300px", width: "300px" }}
+            disabled
+            value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
+          />
         </div>
         {/* <button onClick={this.onSubmit}> Submit to DB</button> */}
 
