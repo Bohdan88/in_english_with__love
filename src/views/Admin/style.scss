@@ -32,6 +32,10 @@
   box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.67);
 }
 
+.icon-trigger {
+  margin-left: 3px !important;
+}
+
 .icon-settings-popup {
   margin-left: -10px !important;
   opacity: 0.9 !important;
@@ -39,4 +43,8 @@
 
 .container-compact-picker {
   z-index: 5 !important;
+}
+
+.upload-button {
+  opacity: 0.7 !important;
 }

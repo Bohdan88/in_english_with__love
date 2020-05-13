@@ -10,8 +10,11 @@ import {
   CATEGORIES,
   ADMIN_DROPDOWN_TITLES,
   POSTS_BUCKET_NAME,
+  INIT_NEW_POST_VALUES,
+  ICON_POST_STATUS,
 } from "../../../constants/shared";
-import { EditorState } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
 import {
   Form,
   Button,
@@ -22,6 +25,13 @@ import {
   Input,
 } from "semantic-ui-react";
 import { getAllPostsValues, setNewPostValues } from "../../../redux/actions";
+import Swal from "sweetalert2";
+import {
+  LESSON_STATUS,
+  ICON_POST_REMOVE_STATUS,
+  ICON_POST_ADD_STATUS,
+} from "../../../constants/shared";
+import sanitizeHtml from "sanitize-html-react";
 
 const transformToOptions = (arr) => {
   // console.log(arr, "arr");
@@ -53,6 +63,22 @@ class AnswerTemplate extends Component {
   }
 }
 
+const fireAlert = (state, values, error = null) => {
+  Swal.fire({
+    icon: state ? values.icon.success : values.icon.error,
+    heightAuto: false,
+    title: state ? values.title.success : values.title.error,
+    text: state ? values.text.success : error ? error : values.text.error,
+    customClass: {
+      confirmButton: "ui green basic button",
+      container: "alert-container-class",
+    },
+    popup: "swal2-show",
+  });
+
+  setTimeout(() => Swal.close(), 4000);
+};
+
 class CreateLesson extends Component {
   constructor(props) {
     super(props);
@@ -61,10 +87,7 @@ class CreateLesson extends Component {
       loading: false,
       users: [],
       posts: [],
-      categories: CATEGORIES,
-      subCategories: [],
-      bias: [],
-      files: null,
+      iconFile: null,
       iconSrc: "",
       iconVisibility: false,
       onPreview: false,
@@ -72,53 +95,22 @@ class CreateLesson extends Component {
       editorTextContent: true,
       quantity: 1,
       answers: [],
-      // templateNumber: [
-      //   <AnswerTemplate
-      //     quantity={this.state.quantity}
-      //     onUpdateQuantity={this.updateQuantity}
-      //   />,
-      // ],
+      title: "",
+      isEditorEmpty: true,
     };
     this.onChange = (editorState) => this.setState({ editorState });
   }
 
   handleAddition = (data, type) => {
-    this.setState((prevState) => ({
-      [type]: [{ text: data.value, value: data.value }, ...prevState[type]],
-    }));
-
-    // console.log(data, type)
-
-    // console.log(
-    //   this.props.newPostState,
-    //   "this.props.newPostState.subCategories"
-    // );
-    // this.props.onSetNewPostValues({
-    //   [type]: [
-    //     { text: data.value, value: data.value },
-    //     ...this.props.newPostState.subCategory,
-    //   ],
-    // });
+    this.props.onGetAllPostsValues({
+      [type]: [
+        { key: data.value, text: data.value, value: data.value },
+        ...this.props.posts.subCategories,
+      ],
+    });
   };
 
   componentDidMount() {
-    // this.setState({ loading: true });
-
-    // this.listener = this.props.firebase.users().on("value", (snapshot) => {
-    //   const usersObject = snapshot && snapshot.val();
-    //   if (usersObject) {
-    //     const usersList = Object.keys(usersObject).map((key) => ({
-    //       ...usersObject[key],
-    //       uid: key,
-    //     }));
-
-    //     this.setState({
-    //       users: usersList,
-    //       // loading: false,
-    //     });
-    //   }
-    // });
-
     // on posts
     this.props.firebase.posts().on("value", (snapshot) => {
       const postsObject = snapshot && snapshot.val();
@@ -133,23 +125,21 @@ class CreateLesson extends Component {
           loading: false,
         });
 
-        let setSubCategories = transformToOptions([
-          ...new Set(postsList.map((obj, key) => obj.type)),
+        const setSubCategories = transformToOptions([
+          ...new Set(postsList.map((obj, key) => obj.subCategory)),
         ]);
 
-        let setBias = transformToOptions([
+        const setBias = transformToOptions([
           ...new Set(postsList.map((obj, key) => obj.bias)),
         ]);
-        // set posts
-        this.setState({
-          subCategories: setSubCategories,
-          bias: setBias,
-        });
 
+        // console.log(setSubCategories, "setSubCategories");
+
+        // set posts
         this.props.onGetAllPostsValues({
           allPosts: postsList,
           subCategories: setSubCategories,
-          bias: setBias,
+          biases: setBias,
         });
 
         this.props.onSetNewPostValues({
@@ -161,35 +151,59 @@ class CreateLesson extends Component {
   }
 
   onDropDownChange = (data, dropDownType) => {
-    this.setState({
-      [dropDownType]: data.value,
-    });
-
     this.props.onSetNewPostValues({
       [dropDownType]: data.value,
     });
   };
 
+  changeTitle = (e, d) => this.props.onSetNewPostValues({ title: d.value });
   componentWillUnmount() {
-    // this.listener();
-    // this.listener2();
     this.props.firebase.posts().off();
   }
 
   //-----------------  icon upload handler
-
-  handleChangeInput = (files) =>
+  handleChangeInput = (files) => {
     this.setState({
-      files: files,
+      iconFile: files,
     });
+  };
 
   handleSaveImage = () => {
-    if (this.state.files && this.state.files[0]) {
-      const file = this.state.files[0];
-      let storageRef = this.props.firebase.storage.ref(
-        `${POSTS_BUCKET_NAME}/${file.name}`
+    const { iconFile } = this.state;
+    const { iconPath } = this.props.newPostState;
+    const { firebase } = this.props;
+    // console.log(!iconPath.length, "ICON_PATH");
+    console.log(iconPath, "iconPathINIT");
+
+    if (!iconPath.length && iconFile && iconFile[0]) {
+      const storageRef = firebase.storage.ref(
+        `${POSTS_BUCKET_NAME}/${iconFile[0].lastModified}-${iconFile[0].name}`
       );
-      storageRef.put(file);
+      storageRef
+        .put(iconFile[0])
+        .then(() => {
+          fireAlert(true, ICON_POST_ADD_STATUS);
+          this.props.onSetNewPostValues({
+            iconPath: storageRef.fullPath,
+          });
+        })
+        .catch((error) => {
+          fireAlert(false, ICON_POST_ADD_STATUS, error);
+        });
+    }
+    if (!!iconPath.length) {
+      firebase.storage
+        .ref()
+        .child(iconPath)
+        .delete()
+        .then(() => {
+          fireAlert(true, ICON_POST_REMOVE_STATUS);
+          this.props.onSetNewPostValues({ iconPath: "" });
+          this.setState({ iconFile: null });
+        })
+        .catch((error) => {
+          fireAlert(false, ICON_POST_REMOVE_STATUS, error);
+        });
     }
   };
 
@@ -197,18 +211,23 @@ class CreateLesson extends Component {
     this.setState({ iconVisibility: !this.state.iconVisibility });
 
   showImage = () => {
-    if (this.state.iconSrc === "") {
-      this.props.firebase.storage
-        .ref()
-        .child(`${POSTS_BUCKET_NAME}/${this.state.files[0].name}`)
-        .getDownloadURL()
-        .then((url) => {
-          this.setState({
-            iconSrc: url,
-          });
+    console.log("HANDLE SHOW IMAGE");
+    console.log(this.props.newPostState.iconPath, "ICONPATH");
+    console.log(`${POSTS_BUCKET_NAME}/${this.state.iconFile}`, " drufg");
+    // if (this.state.iconSrc === "") {
+    this.props.firebase.storage
+      .ref()
+      .child(`${POSTS_BUCKET_NAME}/${this.state.iconFile}`)
+      .getDownloadURL()
+      .then((url) => {
+        this.setState({
+          iconSrc: url,
         });
-    }
+      });
+    // }
   };
+
+  //
 
   onPreview = () => {
     this.setState({
@@ -216,28 +235,43 @@ class CreateLesson extends Component {
     });
   };
 
+  onSubmitPost = () => {
+    this.props.firebase.posts().push().set(this.props.newPostState);
+    this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
+    fireAlert(true, LESSON_STATUS);
+
+    //   fireAlert(true);
+    // } else {
+    //   fireAlert(false);
+    // }
+  };
+
+  onEditorTextChange = (value) => this.setState({ isEditorEmpty: value });
+
   render() {
     const {
       loading,
-      biasValue,
-      files,
+      iconFile,
       iconSrc,
       iconVisibility,
       preview,
       editorTextContent,
       editorState,
+      isEditorEmpty,
     } = this.state;
-    const { category, subCategory, isPostEmpty, post } = this.props.newPostState;
-    // console.log(this.props, "PROPSAZAVRI");
-    // console.log(editorState, "editorINLESLS");
     const {
-      allPosts,
-      categories,
+      category,
+      subCategory,
+      post,
       bias,
-      subCategories,
-    } = this.props.posts;
+      title,
+      iconPath,
+    } = this.props.newPostState;
+    const { categories, biases, subCategories } = this.props.posts;
 
-    // console.log(isPostEmpty,'isPostEmptyisPostEmpty')
+    // console.log(iconPath, "iconPathiconPath");
+    // console.log(this.state.iconSrc, "ICON SRC");
+    // console.log(this.props.newPostState);
     return (
       <div>
         <Form>
@@ -248,7 +282,6 @@ class CreateLesson extends Component {
                 label={ADMIN_DROPDOWN_TITLES.category.label}
                 selection
                 search
-                /* value={categoryValue} */
                 value={category}
                 options={categories}
                 onChange={(e, data) =>
@@ -286,8 +319,8 @@ class CreateLesson extends Component {
                 selection
                 search
                 allowAdditions
-                options={bias}
-                value={biasValue}
+                options={biases}
+                value={bias}
                 placeholder={ADMIN_DROPDOWN_TITLES.bias.label}
                 onChange={(e, data) =>
                   this.onDropDownChange(
@@ -295,7 +328,7 @@ class CreateLesson extends Component {
                     ADMIN_DROPDOWN_TITLES.bias.defaultVal
                   )
                 }
-                onAddItem={(e, d) => this.handleAddition(d, "bias")}
+                onAddItem={(e, d) => this.handleAddition(d, "biases")}
               />
             </Form.Field>
           </Form.Group>
@@ -304,7 +337,11 @@ class CreateLesson extends Component {
           <Form.Group widths="equal">
             <Form.Field required>
               <label>Title</label>
-              <Form.Input placeholder="Title" />
+              <Form.Input
+                value={title}
+                onChange={this.changeTitle}
+                placeholder="Title"
+              />
             </Form.Field>
             <Form.Field>
               <label>
@@ -313,32 +350,40 @@ class CreateLesson extends Component {
                   inverted
                   className="icon-settings-popup"
                   content="Please click Upload after you've selected an icon."
-                  trigger={<Icon name="question circle" />}
-                ></Popup>
+                  trigger={
+                    <Icon className="icon-trigger" name="question circle" />
+                  }
+                />
               </label>
               <input
+                accept="image/*"
                 ref={this.fileInputRef}
                 type="file"
                 hidden
                 onChange={(e) => this.handleChangeInput(e.target.files)}
               />
-              <Button.Group className="admin-button-group" basic fluid>
+              <Button.Group className="admin-button-group" fluid>
                 <Button
                   content="Choose Icon"
                   labelPosition="left"
                   icon="file"
                   onClick={() => this.fileInputRef.current.click()}
                 />
-                <Button disabled={files ? false : true} type="submit">
-                  Upload
-                </Button>
                 <Button
-                  disabled={files ? false : true}
+                  color={!iconPath.length ? "facebook" : "red"}
+                  className="upload-button"
+                  disabled={iconFile ? false : true}
+                  type="submit"
+                >
+                  {!iconPath.length ? "Upload" : "Remove"}
+                </Button>
+                {/* <Button
+                  disabled={iconFile ? false : true}
                   onClick={() => {
                     this.showImage();
                     this.toggleIconVisibility();
                   }}
-                  content={iconVisibility ? "Hide image" : " Show image"}
+                  content={iconVisibility ? "Hide icon" : "Preview icon"}
                 />
                 <Transition
                   visible={iconVisibility}
@@ -350,12 +395,16 @@ class CreateLesson extends Component {
                     className="admin-icon-transition"
                     src={iconSrc}
                   />
-                </Transition>
+                </Transition> */}
               </Button.Group>
             </Form.Field>
           </Form.Group>
         </Form>
-        <CustomEditor firebase={this.props.firebase} />
+
+        <CustomEditor
+          onEditorTextChange={this.onEditorTextChange}
+          firebase={this.props.firebase}
+        />
 
         {/*  */}
 
@@ -366,8 +415,7 @@ class CreateLesson extends Component {
           /> */}
         </div>
         <Button
-          /* disabled={editorTextContent ? true : false} */
-          disabled={isPostEmpty ? true : false}
+          disabled={isEditorEmpty ? true : false}
           onClick={this.onPreview}
         >
           {preview ? "Close Preview" : "Open Preview"}
@@ -375,28 +423,17 @@ class CreateLesson extends Component {
         <i className="fas fa-eye-dropper"></i>
 
         <Button
-          disabled={editorTextContent ? true : false}
-          onClick={this.onSubmit}
+          disabled={isEditorEmpty ? true : false}
+          onClick={this.onSubmitPost}
         >
           Create
         </Button>
-        <Button
-          disabled={editorTextContent ? true : false}
-          onClick={this.onEdit}
-        >
+        <Button disabled={isEditorEmpty ? true : false} onClick={this.onEdit}>
           Edit
         </Button>
 
         {preview && editorState && (
           <div className="container-preview">
-            {/* <div
-              dangerouslySetInnerHTML={{
-                __html: sanitizeHtml(
-                  draftToHtml(convertToRaw(editorState.getCurrentContent())),
-                  "editorTextContent"
-                ),
-              }}
-            /> */}
             <div dangerouslySetInnerHTML={{ __html: post }} />
           </div>
         )}
@@ -405,34 +442,15 @@ class CreateLesson extends Component {
   }
 }
 
-// const mapStateToProps = (state) => ({
-//   posts: state.allPosts,
-//   // users: Object.keys(state.userState.users || {}).map((key) => ({
-//   //   ...state.userState.users[key],
-//   //   uid: key,
-//   // })),
-//   // console.log(state, "STATE");
-//   // const { posts } = state;
-//   // return { posts };
-// });
-
 const mapStateToProps = (state) => {
-  // posts: state.allPosts,
-  // users: Object.keys(state.userState.users || {}).map((key) => ({
-  //   ...state.userState.users[key],
-  //   uid: key,
-  // })),
-  // console.log(state, "STATE");
   const { posts, newPostState } = state;
   return { posts, newPostState };
 };
 
 const mapDispatchToProps = (dispatch) => {
-  // console.log("DISPATCH");
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
     onSetNewPostValues: (values) => dispatch(setNewPostValues(values)),
-    // onSetUsers: (users) => dispatch({ type: "USERS_SET", users }),
   };
 };
 

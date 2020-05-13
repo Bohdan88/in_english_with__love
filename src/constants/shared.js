@@ -56,7 +56,6 @@ export const SIGN_IN_METHODS = [
 ];
 
 // admin page
-
 export const ADMIN_TABS = {
   create_lesson: "CREATE A LESSON",
   all_lessons: "ALL LESSONS",
@@ -67,6 +66,15 @@ export const CATEGORIES = [
   { key: "Read", text: "Read", value: "Read" },
   { key: "Listen", text: "Listen", value: "Listen" },
 ];
+
+export const INIT_NEW_POST_VALUES = {
+  category: "Read",
+  subCategory: "",
+  bias: "",
+  post: "",
+  title: "",
+  iconPath: "",
+};
 
 export const ADMIN_DROPDOWN_TITLES = {
   category: {
@@ -86,12 +94,42 @@ export const ADMIN_DROPDOWN_TITLES = {
   },
 };
 
+export const ICON_POST_REMOVE_STATUS = {
+  icon: {
+    success: "success",
+    error: "error",
+  },
+  text: {
+    success: "An Icon has been deleted!",
+    error: "Something went wrong!",
+  },
+  title: {
+    success: "Success!",
+    error: "Oops...",
+  },
+};
+
+export const ICON_POST_ADD_STATUS = {
+  icon: {
+    success: "success",
+    error: "error",
+  },
+  text: {
+    success: "An Icon has been uploded successfully!",
+    error: "Something went wrong!",
+  },
+  title: {
+    success: "Success!",
+    error: "Oops...",
+  },
+};
+
 export const POSTS_BUCKET_NAME = "posts";
 
 // editor page
 export const LESSON_STATUS = {
   icon: {
-    success: "sucess",
+    success: "success",
     error: "error",
   },
   text: {

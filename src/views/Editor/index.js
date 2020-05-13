@@ -102,7 +102,7 @@ class CustomEditor extends Component {
 
     this.state = {
       editorState: EditorState.createEmpty(),
-      editorTextContent: true,
+      isEditorEmpty: true,
       quantity: 1,
 
       answers: [],
@@ -133,15 +133,17 @@ class CustomEditor extends Component {
 
     this.setState({
       editorState,
-      editorTextContent: checkIfcontainsJustSpaces,
+      isEditorEmpty: checkIfcontainsJustSpaces,
     });
 
     this.props.onSetNewPostValues({
       post: sanitizeHtml(
         draftToHtml(convertToRaw(editorState.getCurrentContent()))
       ),
-      isPostEmpty: checkIfcontainsJustSpaces,
+      // isPostEmpty: checkIfcontainsJustSpaces,
     });
+
+    this.props.onEditorTextChange(checkIfcontainsJustSpaces);
   };
 
   onSubmit = () => {
@@ -173,11 +175,12 @@ class CustomEditor extends Component {
   };
 
   render() {
-    const { editorState, preview, editorTextContent } = this.state;
+    const { editorState, preview, isEditorEmpty } = this.state;
     const editorNode = this.editorRef.current;
+    // console.log(isEditorEmpty, "isEditorEmpty");
     // console.log(
-    //   editorTextContent,
-    //   "editorTextContenteditorTextContenteditorTextContent"
+    //   isEditorEmpty,
+    //   "isEditorEmptyisEditorEmptyisEditorEmpty"
     // );
     return (
       <div className="editor-component">
@@ -223,7 +226,7 @@ class CustomEditor extends Component {
           />
         </div>
         <Button
-          disabled={editorTextContent ? true : false}
+          disabled={isEditorEmpty ? true : false}
           onClick={this.onPreview}
         >
           {preview ? "Close Preview" : "Open Preview"}
@@ -231,13 +234,13 @@ class CustomEditor extends Component {
         <i className="fas fa-eye-dropper"></i>
 
         <Button
-          disabled={editorTextContent ? true : false}
+          disabled={isEditorEmpty ? true : false}
           onClick={this.onSubmit}
         >
           Create
         </Button>
         <Button
-          disabled={editorTextContent ? true : false}
+          disabled={isEditorEmpty ? true : false}
           onClick={this.onEdit}
         >
           Edit
@@ -249,7 +252,7 @@ class CustomEditor extends Component {
               dangerouslySetInnerHTML={{
                 __html: sanitizeHtml(
                   draftToHtml(convertToRaw(editorState.getCurrentContent())),
-                  "editorTextContent"
+                  "isEditorEmpty"
                 ),
               }}
             />
