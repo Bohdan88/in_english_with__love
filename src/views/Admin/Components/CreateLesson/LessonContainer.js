@@ -271,12 +271,12 @@ class CreateLesson extends Component {
       iconPath,
     } = this.props.newPostState;
     const { categories, biases, subCategories } = this.props.posts;
-
+    // console.log(this.props.newPostState.post, "POST_POST");
     const panes = [
       {
         menuItem: CREATE_LESSON_STAGES.before,
         render: () => (
-          <Tab.Pane attached={false}>
+          <Tab.Pane>
             <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
           </Tab.Pane>
         ),
@@ -284,16 +284,16 @@ class CreateLesson extends Component {
       {
         menuItem: CREATE_LESSON_STAGES.practise,
         render: () => (
-          <Tab.Pane attached={false}>
-            <Practise />
+          <Tab.Pane>
+            <Practise sectionKey={CREATE_LESSON_STAGES.practise.key} />
           </Tab.Pane>
         ),
       },
       {
         menuItem: CREATE_LESSON_STAGES.after,
         render: () => (
-          <Tab.Pane attached={false}>
-            <AfterWatch />
+          <Tab.Pane>
+            <AfterWatch sectionKey={CREATE_LESSON_STAGES.after.key} />
           </Tab.Pane>
         ),
       },
@@ -301,7 +301,7 @@ class CreateLesson extends Component {
         menuItem: CREATE_LESSON_STAGES.content,
         render: () => (
           <Tab.Pane>
-            <LessonContent />
+            <LessonContent sectionKey={CREATE_LESSON_STAGES.content.key} />
           </Tab.Pane>
         ),
       },
@@ -436,7 +436,11 @@ class CreateLesson extends Component {
           </Form.Group>
         </Form>
 
-        <Tab menu={{ secondary: true, pointing: true }} panes={panes} />
+        <Tab
+          className="tab-lesson-stages"
+          menu={{ secondary: true, pointing: true }}
+          panes={panes}
+        />
         {/* <CustomEditor
           onEditorTextChange={this.onEditorTextChange}
           firebase={this.props.firebase}

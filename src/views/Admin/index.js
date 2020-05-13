@@ -137,18 +137,18 @@ class AdminPage extends Component {
       {
         menuItem: ADMIN_TABS.create_lesson,
         render: () => (
-          <Tab.Pane >
+          <Tab.Pane>
             <CreateLesson />
           </Tab.Pane>
         ),
       },
       {
         menuItem: ADMIN_TABS.all_lessons,
-        render: () => <Tab.Pane attached={false}>All LEsonst</Tab.Pane>,
+        render: () => <Tab.Pane>All LEsonst</Tab.Pane>,
       },
       {
         menuItem: ADMIN_TABS.users,
-        render: () => <Tab.Pane attached={false}>Tab 2 Content</Tab.Pane>,
+        render: () => <Tab.Pane>Tab 2 Content</Tab.Pane>,
       },
     ];
 
@@ -165,7 +165,7 @@ class AdminPage extends Component {
             <Grid.Row>
               <Grid.Column className="column-admin">
                 {/* <Container> */}
-                <Tab  panes={panes} />
+                <Tab panes={panes} />
                 {/* </Container> */}
               </Grid.Column>
             </Grid.Row>

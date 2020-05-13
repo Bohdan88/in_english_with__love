@@ -127,31 +127,57 @@ class CustomEditor extends Component {
 
   onEditorStateChange = (editorState) => {
     // console.log(this.props.,'PROPS')
-    const blocks = convertToRaw(this.state.editorState.getCurrentContent())
-      .blocks;
+    // const blocks = convertToRaw(this.state.editorState.getCurrentContent())
+    //   .blocks;
 
-    const checkIfcontainsJustSpaces =
-      blocks
-        .map((block) => (!block.text.trim() && "\n" && "") || block.text)
-        .join("\n") === "";
+    // const checkIfcontainsJustSpaces =
+    //   blocks
+    //     .map((block) => (!block.text.trim() && "\n" && "") || block.text)
+    //     .join("\n") === "";
 
-    this.setState({
-      editorState,
-      isEditorEmpty: checkIfcontainsJustSpaces,
-    });
+    // this.setState({
+    //   editorState: {
+    //     ...this.state.editorState,
+    //     [this.props.sectionKey]: editorState,
+    //   },
+    //   // editorState,
+    //   // isEditorEmpty: checkIfcontainsJustSpaces,
+    // });
 
-    const currentTextContent = draftToHtml(
-      convertToRaw(editorState.getCurrentContent())
-    );
+    // if (this.props.newPostState.post[this.props.sectionKey]) {
+    //   console.log(
+    //     draftToHtml(
+    //       convertToRaw(
+    //         this.props.newPostState.post[
+    //           this.props.sectionKey
+    //         ].getCurrentContent()
+    //       ),
+    //       "OOOK"
+    //     )
+    //   );
+    // }
 
+    // let clean =  sanitizeHtml((currentTextContent))
+    // const currentTextContent = "<p>Ok</p>"
+
+    // console.log(this.props.newPostState.post,'this.props.onSetNewPostValues.post')
+    // --------
+    // this.props.onSetNewPostValues({
+    //   post: {
+    //     ...this.props.newPostState.post,
+    //     [this.props.sectionKey]: sanitizeHtml(currentTextContent, {
+    //       allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+    //     }),
+    //   },
+    // });
+    //--------------
     this.props.onSetNewPostValues({
       post: {
-        ...this.props.onSetNewPostValues,
-        [this.props.sectionKey]: sanitizeHtml(currentTextContent, {
-          allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-        }),
+        ...this.props.newPostState.post,
+        [this.props.sectionKey]: editorState,
       },
     });
+
     // this.props.onEditorTextChange(checkIfcontainsJustSpaces);
   };
 
@@ -189,6 +215,7 @@ class CustomEditor extends Component {
   render() {
     const { editorState } = this.state;
     const { post } = this.props.newPostState;
+    const { sectionKey } = this.props;
     const editorNode = this.editorRef.current;
     // console.log(editorState, "ost");
     // // console.log(editorState, "editorState");
@@ -197,7 +224,14 @@ class CustomEditor extends Component {
     //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
     // );
 
+    // console.log(editorState, "editorStateeditorState");
     // console.log(localStorage.writtenContent);
+    console.log(post, "postpostpostFROMDB");
+    console.log(sectionKey, "sectionKeypostpostpostFROMDB");
+    console.log(post[sectionKey], "WEEL");
+
+    const currentEditor =
+      post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
     return (
       <div className="editor-component">
         <div className="container-editor">
@@ -205,7 +239,7 @@ class CustomEditor extends Component {
             ref={this.editorRef}
             /* editorState={editorState} */
             /* editorState={post} */
-            editorState={editorState}
+            editorState={currentEditor}
             onEditorStateChange={this.onEditorStateChange}
             toolbarClassName="toolbar-class"
             editorClassName="editor-area"

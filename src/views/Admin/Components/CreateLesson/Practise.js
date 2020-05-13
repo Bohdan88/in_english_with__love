@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-export default function Practise() {
-    return (
-        <div>
-            PRACTISE
-        </div>
-    )
-}
+const Practise = ({ sectionKey }) => {
+  return <div>Practise</div>;
+};
+
+export default Practise;

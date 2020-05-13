@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import CustomEditor from "../../../Editor";
 
-export default function LessonContent() {
-    return (
-        <div>
-            LESSON_CONTENT_HERE
-        </div>
-    )
-}
+const LessonContent = ({ sectionKey }) => {
+  return (
+    <div>
+      <CustomEditor sectionKey={sectionKey} />
+    </div>
+  );
+};
+
+export default LessonContent;

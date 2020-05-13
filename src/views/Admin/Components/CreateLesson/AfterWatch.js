@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import CustomEditor from "../../../Editor";
 
-export default function AfterWatch() {
-    return (
-        <div>
-            AFTER_WATCH
-        </div>
-    )
-}
+const AfterWatch = ({ sectionKey }) => {
+  return (
+    <div>
+      <CustomEditor sectionKey={sectionKey} />
+    </div>
+  );
+};
+
+export default AfterWatch;
