@@ -87,7 +87,7 @@ const NavigationNonAuth = () => {
               {ROUTES.SHARED_AUTH_ROUTES.map((route) => (
                 <Menu.Item key={route} active={activeItem === route}>
                   <Link onClick={() => setActiveItem(route)} to={route}>
-                    {route.slice(1)}
+                    {route.slice(1).toUpperCase()}
                   </Link>
                 </Menu.Item>
               ))}

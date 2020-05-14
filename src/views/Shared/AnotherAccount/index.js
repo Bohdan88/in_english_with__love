@@ -97,7 +97,10 @@ const AnotherAccountBase = ({
 
   return (
     <div className="container-another-account">
-      <p className="another-account"> {actionType} WITH ANOTHER ACCOUNT: </p>
+      <p className="another-account">
+        {" "}
+        <span className="action-another-account"> {actionType.toLowerCase()}</span> with another account:{" "}
+      </p>
       <div className="contaniner-social-assets">
         <Image
           onClick={onSubmitGoogle}

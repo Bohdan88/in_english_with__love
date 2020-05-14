@@ -1,7 +1,7 @@
 @import "../../../style/variables.scss";
 
 .form-label {
-  font-size: 25px !important;
+  // font-size: 25px !important;
   // margin-top: 10% !important;
   padding-bottom: 10px !important;
   letter-spacing: 2px;
@@ -64,13 +64,24 @@
   }
 }
 
+@media only screen and (min-width: 2560px) {
+  .form-label {
+    font-size: 18px !important;
+    padding-top: 0px 15px !important;
+  }
+
+  .form-input > .input > input {
+    height:40px!important;
+    margin-bottom: 3% !important;
+  }
+}
 @media only screen and (max-width: 1919px) {
   .sign-form > .field > .error > .prompt.label {
     font-size: 15px;
   }
 
   .form-label {
-    font-size: 15px !important;
+    // font-size: 15px !important;
     // margin-top: 10% !important;
     padding-bottom: 1px !important;
     letter-spacing: 2px;
@@ -145,5 +156,4 @@
 }
 
 @media screen and (max-width: 767px) {
-
 }

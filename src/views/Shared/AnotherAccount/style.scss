@@ -7,19 +7,35 @@
 
 .another-account {
   letter-spacing: 1px;
+  font-size: 20px;
+}
+
+.container-another-account {
+  margin-top: 14px;
+  color: $dark-green;
+  // font-size: 18px;
+  // font-weight: bold;
+}
+
+.action-another-account {
+  text-transform: capitalize;
+}
+
+.container-social-assets {
+  margin: 25px 0 !important;
 }
 
 .social-image-facebook {
   cursor: pointer;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   left: 15px;
   border-radius: 2px;
 }
 .social-image-google {
   cursor: pointer;
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
 }
 
 @media only screen and (max-width: 1919px) {
