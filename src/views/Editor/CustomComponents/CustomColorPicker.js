@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { CompactPicker } from "react-color";
-import FontAwesome from "react-fontawesome";
+import { FaEyeDropper } from "react-icons/fa";
 
 class CustomColorPicker extends Component {
   stopPropagation = (event) => {
@@ -30,7 +30,7 @@ class CustomColorPicker extends Component {
         aria-label="rdw-color-picker"
       >
         <div className="rdw-option-wrapper" onClick={onExpandEvent}>
-          <FontAwesome className="fas fa-eye-dropper" name="eyedropper" />
+          <FaEyeDropper className="admin-eye-dropper" />
         </div>
         {expanded ? this.renderModal() : undefined}
       </div>

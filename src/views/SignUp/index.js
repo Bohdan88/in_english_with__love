@@ -32,7 +32,7 @@ const SignUpPage = () => (
   <Grid columns={2} className="sign-grid">
     <Grid.Row>
       <LeftGridAuth />
-      <Grid.Column  mobile={16} tablet={9} computer={8}>
+      <Grid.Column mobile={16} tablet={9} computer={8}>
         <SignUpForm />
       </Grid.Column>
     </Grid.Row>
@@ -153,9 +153,9 @@ class SignUpFormBase extends Component {
           />
           <div className="container-account-ask">
             <p className="">
-              ALREADY HAVE AN ACCOUNT?
+              Already have an account?
               <span className="sign-word">
-                <Link to={ROUTES.SIGN_IN}>SIGN IN</Link>
+                <Link to={ROUTES.SIGN_IN}>Sign in</Link>
               </span>
             </p>
           </div>

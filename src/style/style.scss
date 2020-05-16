@@ -1,18 +1,19 @@
 @import "./variables";
 
 html {
-  overflow-y: hidden; // hide vertical
+  // overflow-y: hidden; // hide vertical
   scroll-behavior: smooth !important;
 }
 
 body {
   margin: 0;
-  overflow: hidden;
+  // overflow-y: hidden;
   // font-family: "Amatic SC", cursive;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: url("../views/assets/backg.svg") !important;
+  // background: url("../views/assets/backg.svg") !important;
+  background: url("https://firebasestorage.googleapis.com/v0/b/in-english-with-love.appspot.com/o/backg.svg?alt=media&token=9a2541c9-1cfe-4ddd-8905-5f46bbe19fdd") !important;
   background-repeat: no-repeat !important;
   background-size: 100vw !important;
   // background-size:;
@@ -137,7 +138,7 @@ body {
 
 .sign-form,
 .forget-password-form {
-  box-shadow: 10px 0px 10px 10px $light-grey;
+  box-shadow: 5px 2px 5px 5px $dark-grey;
   background: $grey;
   width: 55%;
   border-radius: 30px;
@@ -212,7 +213,7 @@ body {
 
   .main-menu,
   .sign-menu {
-    font-size: 25px;
+    // font-size: 25px;
   }
 
   .sign-form {
@@ -223,7 +224,7 @@ body {
 @media only screen and (max-width: 992px) {
   .main-menu,
   .sign-menu {
-    font-size: 18px;
+    // font-size: 18px;
     padding: 0px !important;
   }
   .sign-form {

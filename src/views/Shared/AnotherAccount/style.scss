@@ -5,17 +5,20 @@
   flex-direction: row;
 }
 
-.another-account {
-  letter-spacing: 1px;
-  font-size: 20px;
-}
-
 .container-another-account {
-  margin-top: 14px;
+ 
+  margin:14px 0;
   color: $dark-green;
   // font-size: 18px;
   // font-weight: bold;
 }
+
+.another-account {
+  letter-spacing: 1px;
+  font-size: 18px;
+}
+
+
 
 .action-another-account {
   text-transform: capitalize;

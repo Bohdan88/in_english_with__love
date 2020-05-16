@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { withFirebase } from "../../../Firebase";
-import CustomEditor from "../../../Editor";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import { withAuthorization } from "../../../Session";
 import * as ROLES from "../../../../constants/roles";
+import draftToHtml from "draftjs-to-html";
+
 import {
   ADMIN_TABS,
   CATEGORIES,
@@ -15,16 +16,7 @@ import {
   CREATE_LESSON_STAGES,
 } from "../../../../constants/shared";
 import { EditorState, convertToRaw } from "draft-js";
-import {
-  Form,
-  Button,
-  Popup,
-  Image,
-  Icon,
-  Transition,
-  Input,
-  Tab,
-} from "semantic-ui-react";
+import { Form, Button, Popup, Icon, Input, Tab } from "semantic-ui-react";
 import { getAllPostsValues, setNewPostValues } from "../../../../redux/actions";
 import Swal from "sweetalert2";
 import {
@@ -132,8 +124,8 @@ class CreateLesson extends Component {
           ...new Set(postsList.map((obj, key) => obj.subCategory)),
         ]);
 
-        const setBias = transformToOptions([
-          ...new Set(postsList.map((obj, key) => obj.bias)),
+        const setFocuses = transformToOptions([
+          ...new Set(postsList.map((obj, key) => obj.focus)),
         ]);
 
         // console.log(setSubCategories, "setSubCategories");
@@ -142,12 +134,12 @@ class CreateLesson extends Component {
         this.props.onGetAllPostsValues({
           allPosts: postsList,
           subCategories: setSubCategories,
-          biases: setBias,
+          focuses: setFocuses,
         });
 
         this.props.onSetNewPostValues({
           subCategory: setSubCategories[0] && setSubCategories[0].text,
-          bias: setBias[0] && setBias[0].text,
+          focus: setFocuses[0] && setFocuses[0].text,
         });
       }
     });
@@ -259,33 +251,39 @@ class CreateLesson extends Component {
       iconVisibility,
       preview,
       editorTextContent,
-      editorState,
+      // editorState,
       isEditorEmpty,
     } = this.state;
     const {
       category,
       subCategory,
       post,
-      bias,
+      focus,
       title,
       iconPath,
     } = this.props.newPostState;
-    const { categories, biases, subCategories } = this.props.posts;
+    const { categories, focuses, subCategories } = this.props.posts;
     // console.log(this.props.newPostState.post, "POST_POST");
+    // // post[sectionKey]
+    if (post["about"] !== "") {
+      console.log(
+        draftToHtml(convertToRaw(post["about"].getCurrentContent()), "POST")
+      );
+    }
     const panes = [
-      {
-        menuItem: CREATE_LESSON_STAGES.before,
-        render: () => (
-          <Tab.Pane>
-            <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
-          </Tab.Pane>
-        ),
-      },
       {
         menuItem: CREATE_LESSON_STAGES.practise,
         render: () => (
           <Tab.Pane>
             <Practise sectionKey={CREATE_LESSON_STAGES.practise.key} />
+          </Tab.Pane>
+        ),
+      },
+      {
+        menuItem: CREATE_LESSON_STAGES.before,
+        render: () => (
+          <Tab.Pane>
+            <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
           </Tab.Pane>
         ),
       },
@@ -350,20 +348,20 @@ class CreateLesson extends Component {
             <Form.Field>
               <Form.Dropdown
                 className="capitalize"
-                label={ADMIN_DROPDOWN_TITLES.bias.label}
+                label={ADMIN_DROPDOWN_TITLES.focus.label}
                 selection
                 search
                 allowAdditions
-                options={biases}
-                value={bias}
-                placeholder={ADMIN_DROPDOWN_TITLES.bias.label}
+                options={focuses}
+                value={focus}
+                placeholder={ADMIN_DROPDOWN_TITLES.focus.label}
                 onChange={(e, data) =>
                   this.onDropDownChange(
                     data,
-                    ADMIN_DROPDOWN_TITLES.bias.defaultVal
+                    ADMIN_DROPDOWN_TITLES.focus.defaultVal
                   )
                 }
-                onAddItem={(e, d) => this.handleAddition(d, "biases")}
+                onAddItem={(e, d) => this.handleAddition(d, "focuses")}
               />
             </Form.Field>
           </Form.Group>
@@ -390,6 +388,7 @@ class CreateLesson extends Component {
                   }
                 />
               </label>
+
               <input
                 accept="image/*"
                 ref={this.fileInputRef}
@@ -455,7 +454,7 @@ class CreateLesson extends Component {
           /> */}
         </div>
         <Button
-          disabled={isEditorEmpty ? true : false}
+          /* disabled={isEditorEmpty ? true : false} */
           onClick={this.onPreview}
         >
           {preview ? "Close Preview" : "Open Preview"}
@@ -471,10 +470,17 @@ class CreateLesson extends Component {
         <Button disabled={isEditorEmpty ? true : false} onClick={this.onEdit}>
           Edit
         </Button>
-
-        {preview && editorState && (
+        {/* // editorState   */}
+        {preview && (
           <div className="container-preview">
-            <div dangerouslySetInnerHTML={{ __html: post }} />
+            {/* { draftToHtml(convertToRaw(post["about"].getCurrentContent())} */}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: draftToHtml(
+                  convertToRaw(post["about"].getCurrentContent())
+                ),
+              }}
+            />
           </div>
         )}
       </div>

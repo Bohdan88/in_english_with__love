@@ -4,8 +4,7 @@ import {
   Modifier,
   convertToRaw,
   ContentState,
-  convertFromRaw,
-  RichUtils,
+  AtomicBlockUtils,
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -15,16 +14,19 @@ import { EDITOR_OPTIONS } from "../../constants/shared";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import Swal from "sweetalert2";
-import { Button, Dropdown, Input } from "semantic-ui-react";
+import { Button, Input } from "semantic-ui-react";
 import { LESSON_STATUS } from "../../constants/shared";
-import { CustomColorPicker } from "./CutomComponents";
+import { CustomColorPicker, VideoPlayer } from "./CustomComponents";
 import sanitizeHtml from "sanitize-html-react";
 import { setNewPostValues } from "../../redux/actions";
 import { connect } from "react-redux";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
+import { POSTS_BUCKET_NAME } from "../../constants/shared";
 
+// import * as PluginEditor from "draft-js-plugins-editor";
 // style
+
 import "./style.scss";
 
 class CustomOption extends Component {
@@ -85,6 +87,7 @@ class AnswerTemplate extends Component {
     );
   }
 }
+
 class CustomEditor extends Component {
   constructor(props) {
     super(props);
@@ -107,7 +110,7 @@ class CustomEditor extends Component {
       editorState: EditorState.createEmpty(),
       isEditorEmpty: true,
       quantity: 1,
-
+      uploadedImages: [],
       answers: [],
       templateNumber: [
         <AnswerTemplate
@@ -126,6 +129,7 @@ class CustomEditor extends Component {
   };
 
   onEditorStateChange = (editorState) => {
+    // console.log(draftToHtml(convertToRaw(editorState.getCurrentContent()), "OOOK"));
     // console.log(this.props.,'PROPS')
     // const blocks = convertToRaw(this.state.editorState.getCurrentContent())
     //   .blocks;
@@ -210,28 +214,132 @@ class CustomEditor extends Component {
   };
 
   componentDidMount() {
+    // const fontFamilies = document.querySelectorAll(
+    //   ".rdw-dropdown-optionwrapper"
+    // );
+    // console.log(fontFamilies, "fontFamilies");
+    // console.log(fontFamilies, "fontFamilies");
+    // document.querySelector('rdw-dropdownoption-default').fontFamily
     // console.log(this.props.firebase.users(), "FIRE");
   }
+  _uploadImageCallBack = (file) => {
+    // const { iconFile } = this.state;
+    const { iconPath } = this.props.newPostState;
+    const { firebase } = this.props;
+    // console.log(this.state, "STATUSINCALLVAKC");
+    // long story short, every time we upload an image, we
+    // need to save it to the state so we can get it's data
+    // later when we decide what to do with it.
+
+    // Make sure you have a uploadImages: [] as your default state
+    let uploadedImages = this.state.uploadedImages;
+
+    // let imagePath = `${POSTS_BUCKET_NAME}/${file.lastModified}-${file.name}`;
+    // // console.log(file,'filefile')
+    // const storageRef = firebase.storage.ref(imagePath);
+
+    // storageRef
+    //   .put(file)
+    //   .then(() => {
+    //     console.log("NOICE");
+    //     // fireAlert(true, ICON_POST_ADD_STATUS);
+    //   })
+    //   .catch((error) => {
+    //     console.log("ERROR");
+    //   });
+
+    const imageObject = {
+      file: file,
+      localSrc: URL.createObjectURL(file),
+    };
+
+    // POSTS_BUCKET_NAME
+    // console.log(uploadedImages,'uploadedImages')
+    // uploadedImages.push(imageObject);
+
+    // console.log(imagePath, "imagePath");
+    this.setState({ uploadedImages: uploadedImages });
+    // We need to return a promise with the image src
+    // the img src we will use here will be what's needed
+    // to preview it in the browser. This will be different than what
+    // we will see in the index.md file we generate.
+    // let lastLink = "";
+    // let source = firebase.storage
+    //   .ref()
+    //   .child(`${POSTS_BUCKET_NAME}/${imagePath}`)
+    //   .getDownloadURL()
+    //   .then((url) => {
+    //     lastLink = url;
+    //     // this.setState({
+    //     //   iconSrc: url,
+    //     // });
+    //   });
+
+    // console.log(lastLink, "lastLink");
+    return new Promise((resolve, reject) => {
+      // resolve({ data: { link: imageObject.localSrc } });
+      resolve({
+        data: { link: imageObject.localSrc },
+      });
+    });
+  };
+
+  _addImageFromState = () => {
+    const imgSrc = "";
+    const alt = "";
+    // const { imgSrc, alt } = this.state;
+    let { height, width } = this.state;
+    const { onChange } = this.props;
+    if (!isNaN(height)) {
+      height += "px";
+    }
+    if (!isNaN(width)) {
+      width += "px";
+    }
+    onChange(imgSrc, height, width, alt);
+  };
+
+  _addImage = (src, height, width, alt) => {
+    const { editorState, onChange, config } = this.props;
+    const entityData = { src, height, width };
+    if (config.alt.present) {
+      entityData.alt = alt;
+    }
+    const entityKey = editorState
+      .getCurrentContent()
+      .createEntity("IMAGE", "MUTABLE", entityData)
+      .getLastCreatedEntityKey();
+    const newEditorState = AtomicBlockUtils.insertAtomicBlock(
+      editorState,
+      entityKey,
+      " "
+    );
+    onChange(newEditorState);
+    this.doCollapse();
+  };
   render() {
     const { editorState } = this.state;
     const { post } = this.props.newPostState;
     const { sectionKey } = this.props;
     const editorNode = this.editorRef.current;
+    // console.log(
+    //   draftToHtml(convertToRaw(editorState.getCurrentContent()), "OOOK")
+    // );
     // console.log(editorState, "ost");
     // // console.log(editorState, "editorState");
     // localStorage.setItem(
     //   "writtenContent",
     //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
     // );
-
-    // console.log(editorState, "editorStateeditorState");
-    // console.log(localStorage.writtenContent);
-    console.log(post, "postpostpostFROMDB");
-    console.log(sectionKey, "sectionKeypostpostpostFROMDB");
-    console.log(post[sectionKey], "WEEL");
+    console.log(this.state.uploadedImages, "statusinrender");
 
     const currentEditor =
       post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
+
+    console.log(
+      draftToHtml(convertToRaw(currentEditor.getCurrentContent()), "OOOK")
+    );
+
     return (
       <div className="editor-component">
         <div className="container-editor">
@@ -244,7 +352,6 @@ class CustomEditor extends Component {
             toolbarClassName="toolbar-class"
             editorClassName="editor-area"
             toolbarClassName="editor-toolbar"
-            /* onEditorStateChange={(e,v) => console.log(e,v,"onEditorStateChange")} */
             /* onChange={(e,v) => console.log(e,v,"onChange")}   */
             /* onContentStateChange={(e,v) => console.log(e,v,"onContentStateChange")} */
             /* toolbar={{
@@ -254,8 +361,18 @@ class CustomEditor extends Component {
             toolbar={{
               fontFamily: { options: EDITOR_OPTIONS.fontFamily },
               colorPicker: { component: CustomColorPicker },
+              embedded: { className: "default-embedded" },
+              image: {
+                uploadCallback: this._uploadImageCallBack,
+                previewImage: true,
+                alt: { present: true, mandatory: false },
+                inputAccept:
+                  "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+              },
             }}
+            toolbarCustomButtons={[<VideoPlayer />]}
           />
+
           {/* <Button
             disabled={isEditorEmpty ? true : false}
             onClick={this.onPreview}

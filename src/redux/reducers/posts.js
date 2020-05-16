@@ -6,7 +6,7 @@ const initState = {
   allPosts: [],
   categories: CATEGORIES,
   subCategories: [],
-  biases: [],
+  focuses: [],
 };
 
 export const posts = (state = initState, action) => {

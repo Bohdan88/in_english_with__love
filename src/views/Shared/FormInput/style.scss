@@ -4,7 +4,7 @@
   // font-size: 25px !important;
   // margin-top: 10% !important;
   padding-bottom: 10px !important;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 .form-input > .input > input {
@@ -17,8 +17,8 @@
 
 .sign-form > .field > .error > .prompt.label {
   position: absolute;
-  font-size: 19px;
-  padding: 5px;
+  font-size: 15px;
+  padding: 5px 3px;
   border-radius: 8px !important;
   right: 4% !important;
   &:before {
@@ -26,21 +26,9 @@
   }
 }
 
-// .sign-form > .field > .error.email-signin > .prompt.label {
-//   top: 20% !important;
-// }
-
-// .sign-form > .field > .error.password-signin > .prompt.label {
-//   top: 37.8% !important;
-// }
-
-// .sign-form > .field > .error.password-signup > .prompt.label {
-//   top: 41% !important;
-// }
-
 .sign-form > .field {
   .error.email-signin > .prompt.label {
-    top: 20% !important;
+    top: 18% !important;
   }
 
   .error.email-signup > .prompt.label {
@@ -48,7 +36,7 @@
   }
 
   .error.password-signin > .prompt.label {
-    top: 37.8% !important;
+    top: 36.8% !important;
   }
 
   .error.password-signup > .prompt.label {
@@ -71,7 +59,7 @@
   }
 
   .form-input > .input > input {
-    height:40px!important;
+    height: 40px !important;
     margin-bottom: 3% !important;
   }
 }

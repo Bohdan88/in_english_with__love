@@ -48,7 +48,7 @@ class AdminPage extends Component {
       editorState: EditorState.createEmpty(),
       categories: CATEGORIES,
       subCategories: [],
-      bias: [],
+      focus: [],
       files: null,
       iconSrc: "",
       iconVisibility: false,
@@ -94,8 +94,8 @@ class AdminPage extends Component {
     //     subCategories: transformToOptions([
     //       ...new Set(postsList.map((obj, key) => obj.type)),
     //     ]),
-    //     bias: transformToOptions([
-    //       ...new Set(postsList.map((obj, key) => obj.bias)),
+    //     focus: transformToOptions([
+    //       ...new Set(postsList.map((obj, key) => obj.focus)),
     //     ]),
     //   });
     // });

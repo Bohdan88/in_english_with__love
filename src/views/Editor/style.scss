@@ -11,16 +11,23 @@
   z-index: 2;
 }
 
+.admin-eye-dropper {
+  // fill: $grey;
+}
+
 .container-editor {
   // margin: 2% 0;
 }
 
+.default-embedded {
+  display: none !important;
+}
 .editor-area {
   border: 1px solid $white-smoke;
 }
 
 .editor-toolbar {
-  background-color: $light-sea;
+  background-color: #aeb9d2; // $light-cloud; //$light-sea;
 }
 
 .editor-toolbar {
@@ -34,8 +41,9 @@
 }
 
 .editor-toolbar > * > .rdw-option-active {
-  background: $corn-silk !important;
+  background: $corn-silk !important; //saturated-blue
   border: 1px solid $light-grey;
+  color: $white !important;
 }
 
 .container-preview {

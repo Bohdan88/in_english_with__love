@@ -9,6 +9,9 @@ export const FACEBOOK_LINK =
 // "https://firebasestorage.googleapis.com/v0/b/in-english-with-love.appspot.com/o/facebook.png?alt=media&token=9a01f538-8c5c-4920-b04e-7d4a60014fef";
 //  error message
 
+export const BACKGROUND_LINK =
+  "https://firebasestorage.googleapis.com/v0/b/in-english-with-love.appspot.com/o/backg.svg?alt=media&token=9a2541c9-1cfe-4ddd-8905-5f46bbe19fdd";
+
 export const PASSWORD_FORGET_INIT = {
   email: "",
   error: null,
@@ -77,7 +80,7 @@ export const CATEGORIES = [
 export const INIT_NEW_POST_VALUES = {
   category: "Read",
   subCategory: "",
-  bias: "",
+  focus: "",
   post: {
     [CREATE_LESSON_STAGES.before.key]: "",
     [CREATE_LESSON_STAGES.after.key]: "",
@@ -99,10 +102,10 @@ export const ADMIN_DROPDOWN_TITLES = {
     placeholder: "Select Subcategory",
     defaultVal: "subCategory",
   },
-  bias: {
-    label: "Bias",
-    placeholder: "Select Bias",
-    defaultVal: "bias",
+  focus: {
+    label: "Focus",
+    placeholder: "Focus",
+    defaultVal: "focus",
   },
 };
 
