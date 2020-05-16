@@ -181,11 +181,15 @@ export const PRACTISE_DROPDOWN_TITLES = {
   },
 };
 
-
+export const MATH_FIELDS = {
+  letter: { label: "Letter", placeholder: "Letter" },
+  id: { label: "number", placeholder: "number" },
+  text: { label: "Content", placeholder: "Content" },
+};
 
 export const INIT_FIELDS_CONTENT = {
-  match_left
-}
+  match: { id: 1, letter: "", contentId: "", contentLetter: "" },
+};
 
 export const ICON_POST_REMOVE_STATUS = {
   icon: {

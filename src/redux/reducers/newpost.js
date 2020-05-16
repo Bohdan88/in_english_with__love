@@ -4,7 +4,7 @@ import {
   CATEGORIES,
   EXERCISES_TYPES,
   EXERCISES_DESCRIPTIONS,
-  EXERCISES_NAMES
+  EXERCISES_NAMES,
 } from "../../constants/shared";
 
 const initState = {
@@ -22,6 +22,10 @@ const initState = {
   exerciseType: EXERCISES_TYPES[0].text,
   exerciseDescription: EXERCISES_DESCRIPTIONS[0].text,
   exerciseName: EXERCISES_NAMES[0].text,
+  // exerciseContent: {},
+  exerciseContent: {
+    match: [{ id: 1, letter: "", contentId: "", contentLetter: "" }],
+  },
 };
 
 export const newPostReducer = (state = initState, action) => {

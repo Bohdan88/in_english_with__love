@@ -1,6 +1,10 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import { PRACTISE_DROPDOWN_TITLES } from "../../../../constants/shared";
+import {
+  PRACTISE_DROPDOWN_TITLES,
+  INIT_FIELDS_CONTENT,
+  MATH_FIELDS,
+} from "../../../../constants/shared";
 import { getAllPostsValues, setNewPostValues } from "../../../../redux/actions";
 import {
   Tab,
@@ -17,57 +21,47 @@ import {
 class Practise extends PureComponent {
   state = {
     exercisesQuantity: 1,
-    exerciseValues: {},
   };
 
   // Match: []
 
   addField = (exerciseName) => {
-    const { exerciseValues } = this.state;
-    // const inrementedNumber = exerciseValues[exerciseName]
-    //   ? exerciseValues[exerciseName].id + 1
-    //   : 1;
-
-    // console.log(exerciseValues.Match, "exerciseValues[exerciseName]");
-    // console.log(inrementedNumber, "inrementedNumber");
-    // let val = 1;
+    exerciseName = exerciseName.toLowerCase();
+    const { exerciseContent } = this.props.newPostState;
 
     const inrementedNumber =
-      exerciseValues[exerciseName] && !!exerciseValues[exerciseName].length
-        ? exerciseValues[exerciseName].length + 1
+      exerciseContent[exerciseName] && !!exerciseContent[exerciseName].length
+        ? exerciseContent[exerciseName].length + 1
         : 1;
 
-    this.setState({
-      exerciseValues: {
-        ...exerciseValues,
-        [exerciseName]: !exerciseValues
-          ? [
-              {
-                id: inrementedNumber,
-                content: "",
-                letter: "",
-              },
-            ]
-          : exerciseValues[exerciseName].concat({
+    this.props.onSetNewPostValues({
+      exerciseContent: {
+        ...exerciseContent,
+        [exerciseName]: !exerciseContent[exerciseName]
+          ? [INIT_FIELDS_CONTENT[exerciseName]]
+          : exerciseContent[exerciseName].concat({
+              ...INIT_FIELDS_CONTENT[exerciseName],
               id: inrementedNumber,
-              content: "",
-              letter: "",
             }),
       },
     });
-    // [exerciseName]: { [id]: id, content: "", letter: "" },
   };
 
   // match = [{ id: 1, number, conent: '', letter }, { }]
 
   removeField = (exerciseName) => {
-    const exerciseValues = Object.assign({}, this.state.exerciseValues);
-    if (exerciseValues[exerciseName] === 1) {
-      delete exerciseValues[exerciseName];
+    const { newPostState } = this.props;
+
+    exerciseName = exerciseName.toLowerCase();
+
+    const exerciseContent = Object.assign({}, newPostState.exerciseContent);
+
+    if (exerciseContent[exerciseName].length === 1) {
+      delete exerciseContent[exerciseName];
     } else {
-      exerciseValues[exerciseName] = exerciseValues[exerciseName] - 1;
+      exerciseContent[exerciseName].pop();
     }
-    this.setState({ exerciseValues });
+    this.props.onSetNewPostValues({ exerciseContent });
   };
 
   onDropDownChange = (data, dropDownType) => {
@@ -77,7 +71,7 @@ class Practise extends PureComponent {
   };
 
   render() {
-    const { exercisesQuantity, exerciseValues } = this.state;
+    const { exercisesQuantity } = this.state;
     const { sectionKey, exercises } = this.props;
     const {
       exercisesTypes,
@@ -88,8 +82,10 @@ class Practise extends PureComponent {
       exerciseName,
       exerciseType,
       exerciseDescription,
+      exerciseContent,
     } = this.props.newPostState;
-    console.log(this.state.exerciseValues.Match, "exerciseName");
+    // const { exerciseContent } = this.props.newPostState;
+    console.log(exerciseContent, "exerciseContent");
     // console.log(exerciseDescription, "this.props.posts");
     return (
       <div>
@@ -153,7 +149,7 @@ class Practise extends PureComponent {
             <Button onClick={() => this.addField(exerciseName)}>
               Add field <Icon name="plus" />
             </Button>
-            {exerciseValues[exerciseName] && (
+            {exerciseContent && exerciseContent[exerciseName.toLowerCase()] && (
               <Button onClick={() => this.removeField(exerciseName)}>
                 Remove field <Icon name="minus" />
               </Button>
@@ -170,10 +166,44 @@ class Practise extends PureComponent {
           <div className="match-field-container">
             <Segment>
               <Grid columns={2}>
-                <Grid.Column textAlign="left">LEft</Grid.Column>
-                <Grid.Column textAlign="right">Right</Grid.Column>
+                {exerciseContent &&
+                  exerciseContent[exerciseName.toLowerCase()] &&
+                  exerciseContent[exerciseName.toLowerCase()].map((obj) => {
+                    return (
+                      <React.Fragment key={obj.id}>
+                        <Grid.Column textAlign="left">
+                          <Form>
+                            <Form.Group style={{ border: "1px solid black" }}>
+                              <Form.Field widths="1">
+                                <Form.Dropdown
+                                  label={MATH_FIELDS.letter.label}
+                                  /* placeholder={MATH_FIELDS.letter.placeholder} */
+                                  compact
+                                  selection
+                                />
+                              </Form.Field>
+                              <Statistic className="math-field-id" size="tiny">
+                                <Statistic.Value>{obj.id}.</Statistic.Value>
+                              </Statistic>
+                              <Form.TextArea className="math-textarea"/>
+                            </Form.Group>
+                          </Form>
+                        </Grid.Column>
+                        <Grid.Column textAlign="right">
+                          <Form>
+                            <Form.Group>
+                              <Form.Field>
+                                <Form.Dropdown />
+                                <Form.TextArea />
+                              </Form.Field>
+                            </Form.Group>
+                          </Form>
+                        </Grid.Column>
+                      </React.Fragment>
+                    );
+                  })}
               </Grid>
-              <Divider vertical>And</Divider>
+              <Divider vertical></Divider>
             </Segment>
           </div>
         </div>
