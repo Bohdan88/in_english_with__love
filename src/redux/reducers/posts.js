@@ -1,5 +1,10 @@
-import { GET_ALL_POSTS, GET_ALL_CATEGORIES } from "../constants/actionTypes";
-import { CATEGORIES } from "../../constants/shared";
+import { GET_ALL_CATEGORIES } from "../constants/actionTypes";
+import {
+  CATEGORIES,
+  EXERCISES_TYPES,
+  EXERCISES_DESCRIPTIONS,
+  EXERCISES_NAMES,
+} from "../../constants/shared";
 const initState = {
   loading: false,
   error: false,
@@ -7,10 +12,12 @@ const initState = {
   categories: CATEGORIES,
   subCategories: [],
   focuses: [],
+  exercisesTypes: EXERCISES_TYPES,
+  exercisesDescriptions: EXERCISES_DESCRIPTIONS,
+  exerciseNames: EXERCISES_NAMES,
 };
 
 export const posts = (state = initState, action) => {
-  // console.log(action.payload && action.payload.firebase, "ACTION TYPE");
   switch (action.type) {
     case GET_ALL_CATEGORIES:
       // console.log(action.payload.firebase);

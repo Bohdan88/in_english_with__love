@@ -77,6 +77,59 @@ export const CATEGORIES = [
   { key: "Listen", text: "Listen", value: "Listen" },
 ];
 
+export const EXERCISES_TYPES = [
+  { key: "vocabulary", text: "Vocabulary", value: "Vocabulary" },
+  {
+    key: "vocabulary_practise",
+    text: "Vocabulary Practise",
+    value: "Vocabulary Practise",
+  },
+  { key: "from_the_video", text: "From the video", value: "From the video" },
+];
+
+export const EXERCISES_NAMES = [
+  { key: "match", text: "Match", value: "Match" },
+  {
+    key: "complete",
+    text: "Complete The Sentences",
+    value: "Complete The Sentences",
+  },
+];
+
+const MATCH_THE_WORDS_DESC = {
+  key: "match_the_words",
+  value:
+    "Match the words on the left to their synonyms or meanings on the right.",
+};
+
+const MATCH_THE_SENTENCES_DESC = {
+  key: "match_the_sentences",
+  value: "Match the following sentences to their meanings below.",
+};
+
+const COMPLETE_THE_SENTENCES_DESC = {
+  key: "complete_the_sentences",
+  value: "Complete the sentences with one of the words below.",
+};
+
+export const EXERCISES_DESCRIPTIONS = [
+  {
+    key: MATCH_THE_WORDS_DESC.key,
+    text: MATCH_THE_WORDS_DESC.value,
+    value: MATCH_THE_WORDS_DESC.value,
+  },
+  {
+    key: MATCH_THE_SENTENCES_DESC.key,
+    text: MATCH_THE_SENTENCES_DESC.value,
+    value: MATCH_THE_SENTENCES_DESC.value,
+  },
+  {
+    key: COMPLETE_THE_SENTENCES_DESC.key,
+    text: COMPLETE_THE_SENTENCES_DESC.value,
+    value: COMPLETE_THE_SENTENCES_DESC.value,
+  },
+];
+
 export const INIT_NEW_POST_VALUES = {
   category: "Read",
   subCategory: "",
@@ -89,6 +142,7 @@ export const INIT_NEW_POST_VALUES = {
   },
   title: "",
   iconPath: "",
+  exercise: "",
 };
 
 export const ADMIN_DROPDOWN_TITLES = {
@@ -108,6 +162,30 @@ export const ADMIN_DROPDOWN_TITLES = {
     defaultVal: "focus",
   },
 };
+
+export const PRACTISE_DROPDOWN_TITLES = {
+  name: {
+    label: "Name",
+    placeholder: "Name",
+    defaultVal: "exerciseName",
+  },
+  type: {
+    label: "Type",
+    placeholder: "Type",
+    defaultVal: "exerciseType",
+  },
+  description: {
+    label: "Description",
+    placeholder: "Description",
+    defaultVal: "exerciseDescription",
+  },
+};
+
+
+
+export const INIT_FIELDS_CONTENT = {
+  match_left
+}
 
 export const ICON_POST_REMOVE_STATUS = {
   icon: {

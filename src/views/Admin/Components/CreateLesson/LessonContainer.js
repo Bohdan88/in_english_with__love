@@ -92,6 +92,7 @@ class CreateLesson extends Component {
       answers: [],
       title: "",
       isEditorEmpty: true,
+      exercises: [],
     };
     this.onChange = (editorState) => this.setState({ editorState });
   }
@@ -128,6 +129,13 @@ class CreateLesson extends Component {
           ...new Set(postsList.map((obj, key) => obj.focus)),
         ]);
 
+        // const setExercisesTypes = transformToOptions([
+        //   ...new Set(postsList.map((obj, key) => obj.exercisesTypes)),
+        // ]);
+
+        // const setExercisesDescriptions = transformToOptions([
+        //   ...new Set(postsList.map((obj, key) => obj.exercisesDescriptions)),
+        // ]);
         // console.log(setSubCategories, "setSubCategories");
 
         // set posts
@@ -135,6 +143,8 @@ class CreateLesson extends Component {
           allPosts: postsList,
           subCategories: setSubCategories,
           focuses: setFocuses,
+          // exercisesTypes: setExercisesTypes,
+          // exercisesDescriptions: setExercisesDescriptions,
         });
 
         this.props.onSetNewPostValues({
@@ -251,7 +261,7 @@ class CreateLesson extends Component {
       iconVisibility,
       preview,
       editorTextContent,
-      // editorState,
+      exercises,
       isEditorEmpty,
     } = this.state;
     const {
@@ -275,7 +285,10 @@ class CreateLesson extends Component {
         menuItem: CREATE_LESSON_STAGES.practise,
         render: () => (
           <Tab.Pane>
-            <Practise sectionKey={CREATE_LESSON_STAGES.practise.key} />
+            <Practise
+              exercises={exercises}
+              sectionKey={CREATE_LESSON_STAGES.practise.key}
+            />
           </Tab.Pane>
         ),
       },

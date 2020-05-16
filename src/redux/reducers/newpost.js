@@ -1,7 +1,28 @@
 import { SET_NEW_POST_VALUES } from "../constants/actionTypes";
-import { INIT_NEW_POST_VALUES } from "../../constants/shared";
+import {
+  CREATE_LESSON_STAGES,
+  CATEGORIES,
+  EXERCISES_TYPES,
+  EXERCISES_DESCRIPTIONS,
+  EXERCISES_NAMES
+} from "../../constants/shared";
 
-const initState = INIT_NEW_POST_VALUES;
+const initState = {
+  category: CATEGORIES[0].text,
+  subCategory: "",
+  focus: "",
+  post: {
+    [CREATE_LESSON_STAGES.before.key]: "",
+    [CREATE_LESSON_STAGES.after.key]: "",
+    [CREATE_LESSON_STAGES.content.key]: "",
+    [CREATE_LESSON_STAGES.practise.key]: "",
+  },
+  title: "",
+  iconPath: "",
+  exerciseType: EXERCISES_TYPES[0].text,
+  exerciseDescription: EXERCISES_DESCRIPTIONS[0].text,
+  exerciseName: EXERCISES_NAMES[0].text,
+};
 
 export const newPostReducer = (state = initState, action) => {
   switch (action.type) {
