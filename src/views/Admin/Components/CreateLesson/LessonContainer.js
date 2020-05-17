@@ -129,12 +129,12 @@ class CreateLesson extends Component {
           ...new Set(postsList.map((obj, key) => obj.focus)),
         ]);
 
-        // const setExercisesTypes = transformToOptions([
-        //   ...new Set(postsList.map((obj, key) => obj.exercisesTypes)),
+        // const setallExercisesTypes = transformToOptions([
+        //   ...new Set(postsList.map((obj, key) => obj.allExercisesTypes)),
         // ]);
 
-        // const setExercisesDescriptions = transformToOptions([
-        //   ...new Set(postsList.map((obj, key) => obj.exercisesDescriptions)),
+        // const setallExercisesDescriptions = transformToOptions([
+        //   ...new Set(postsList.map((obj, key) => obj.allExercisesDescriptions)),
         // ]);
         // console.log(setSubCategories, "setSubCategories");
 
@@ -143,8 +143,8 @@ class CreateLesson extends Component {
           allPosts: postsList,
           subCategories: setSubCategories,
           focuses: setFocuses,
-          // exercisesTypes: setExercisesTypes,
-          // exercisesDescriptions: setExercisesDescriptions,
+          // allExercisesTypes: setallExercisesTypes,
+          // allExercisesDescriptions: setallExercisesDescriptions,
         });
 
         this.props.onSetNewPostValues({

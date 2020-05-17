@@ -9,6 +9,9 @@ import {
   MATH_KEYS,
   EXERCISES_NAMES,
   ICON_POST_REMOVE_STATUS,
+  EXERCISES_DESCRIPTIONS,
+  EXERCISES_TYPES,
+  NOT_FOUND_OPTION,
 } from "../../../../../constants/shared";
 import {
   getAllPostsValues,
@@ -30,134 +33,219 @@ import {
   Popup,
 } from "semantic-ui-react";
 import { transformToOptions, fireAlert } from "../../../../../utils";
+import MatchExercise from "./MatchExercise";
 
 class PractiseContainer extends PureComponent {
   state = {
     exercisesQuantity: 1,
-    charValues: {},
-    allExercisesView: null,
+    // charValues: {},
+    // allExercisesView: null,
+    exercisesViewState: {},
   };
 
   // Match: []
 
-  addField = (exerciseName) => {
-    exerciseName = exerciseName.toLowerCase();
-    const { charValues } = this.state;
-    const { exerciseContent } = this.props.newPostState;
+  // addField = (exerciseNames) => {
+  //   exerciseNames = exerciseNames.toLowerCase();
+  //   const { charValues } = this.state;
+  //   const { exerciseContent } = this.props.newPostState;
 
-    // inrement exercise number
-    const inrementedNumber =
-      exerciseContent[exerciseName] && !!exerciseContent[exerciseName].length
-        ? exerciseContent[exerciseName].length + 1
-        : 1;
+  //   // inrement exercise number
+  //   const inrementedNumber =
+  //     exerciseContent[exerciseNames] && !!exerciseContent[exerciseNames].length
+  //       ? exerciseContent[exerciseNames].length + 1
+  //       : 1;
 
-    // add a new field if a number of fields is less than letters in the alphabet (26)
-    if (inrementedNumber - 1 < CHAR_SEQUENCE.length) {
-      this.props.onSetNewPostValues({
-        exerciseContent: {
-          ...exerciseContent,
-          [exerciseName]: !exerciseContent[exerciseName]
-            ? [INIT_FIELDS_CONTENT[exerciseName]]
-            : exerciseContent[exerciseName].concat({
-                ...INIT_FIELDS_CONTENT[exerciseName],
-                id: inrementedNumber,
-              }),
-        },
-      });
+  //   // add a new field if a number of fields is less than letters in the alphabet (26)
+  //   if (inrementedNumber - 1 < CHAR_SEQUENCE.length) {
+  //     this.props.onSetNewPostValues({
+  //       exerciseContent: {
+  //         ...exerciseContent,
+  //         [exerciseNames]: !exerciseContent[exerciseNames]
+  //           ? [INIT_FIELDS_CONTENT[exerciseNames]]
+  //           : exerciseContent[exerciseNames].concat({
+  //               ...INIT_FIELDS_CONTENT[exerciseNames],
+  //               id: inrementedNumber,
+  //             }),
+  //       },
+  //     });
 
-      this.setState({
-        charValues: !charValues[exerciseName]
-          ? { [exerciseName]: INIT_CHAR_VALUES }
-          : {
-              ...charValues,
-              [exerciseName]: charValues[exerciseName].concat(
-                transformToOptions([CHAR_SEQUENCE[inrementedNumber - 1]])[0]
-              ),
-            },
-      });
-    } else {
-      // fire alert if user wants create more than 26 fields for a particular exercise
-      fireAlert(
-        false,
-        ICON_POST_REMOVE_STATUS,
-        "You can't create more fields than a number of letters in the alphabet which is 26."
-      );
-    }
-  };
+  //     this.setState({
+  //       charValues: !charValues[exerciseNames]
+  //         ? { [exerciseNames]: INIT_CHAR_VALUES }
+  //         : {
+  //             ...charValues,
+  //             [exerciseNames]: charValues[exerciseNames].concat(
+  //               transformToOptions([CHAR_SEQUENCE[inrementedNumber - 1]])[0]
+  //             ),
+  //           },
+  //     });
+  //   } else {
+  //     // fire alert if user wants create more than 26 fields for a particular exercise
+  //     fireAlert(
+  //       false,
+  //       ICON_POST_REMOVE_STATUS,
+  //       "You can't create more fields than a number of letters in the alphabet which is 26."
+  //     );
+  //   }
+  // };
 
   // match = [{ id: 1, number, conent: '', letter }, { }]
 
-  removeField = (exerciseName) => {
-    const { newPostState } = this.props;
+  // removeField = (exerciseNames) => {
+  //   const { newPostState } = this.props;
 
-    exerciseName = exerciseName.toLowerCase();
+  //   exerciseNames = exerciseNames.toLowerCase();
 
-    // clone objects to keep props immutable
-    const exerciseContent = Object.assign({}, newPostState.exerciseContent);
+  //   // clone objects to keep props immutable
+  //   const exerciseContent = Object.assign({}, newPostState.exerciseContent);
 
-    const charValues = Object.assign({}, this.state.charValues);
+  //   const charValues = Object.assign({}, this.state.charValues);
 
-    if (exerciseContent[exerciseName].length === 1) {
-      delete exerciseContent[exerciseName];
-      // set char values to init
-      delete charValues[exerciseName];
-    } else {
-      exerciseContent[exerciseName].pop();
-      charValues[exerciseName].pop();
-    }
+  //   if (exerciseContent[exerciseNames].length === 1) {
+  //     delete exerciseContent[exerciseNames];
+  //     // set char values to init
+  //     delete charValues[exerciseNames];
+  //   } else {
+  //     exerciseContent[exerciseNames].pop();
+  //     charValues[exerciseNames].pop();
+  //   }
 
-    this.setState({ charValues });
-    this.props.onSetNewPostValues({ exerciseContent });
-  };
+  //   this.setState({ charValues });
+  //   this.props.onSetNewPostValues({ exerciseContent });
+  // };
 
-  onDropDownChange = (data, dropDownType) => {
+  onDropDownChange = (data, dropDownType, exerciseId) => {
+    console.log(dropDownType, "dropdownType");
+    const {
+      exercisesSequence,
+      newPostExercisesValues,
+    } = this.props.newPostState;
+
+    // newPostExercisesValues.forEach((obj) => {
+    //   if (obj.id === exerciseId) {
+    //     this.props.onSetNewPostValues({
+    //       newPostExercisesValues: [...newPostExercisesValues]
+    //     })
+    //     console.log(obj, 'OBJ')
+    //   }
+    // });
+
+    // Find index of specific object using findIndex method.
+
+    // console.log(objIndex, "objIndex");
+    // console.log(objIndex, "objIndexobjIndex");
+    // let som = (newPostExercisesValues[exerciseId][dropDownType] = data.value);
+    // console.log(som, "som");
     this.props.onSetNewPostValues({
-      [dropDownType]: data.value,
+      newPostExercisesValues: newPostExercisesValues.map((obj) =>
+        obj.id === exerciseId ? { ...obj, [dropDownType]: data.value } : obj
+      ),
     });
+
+    // console.log(findObject, "objIndexobjIndex");
+    // this.props.onSetNewPostValues({
+    //   newPostExercisesValues: []
+    // })
+    // this.props.onSetNewPostValues({
+    //   newPostExercisesValues: [
+    //     ...newPostExercisesValues,
+    //     {
+    //       ...newPostExercisesValues[exerciseId],
+    //       [dropDownType]: data.value,
+    //     },
+    //   ],
+    // });
+
+    // exerciseContent: {
+    //   ...exerciseContent,
+    //   [exerciseNames]: !exerciseContent[exerciseNames]
+    //     ? [INIT_FIELDS_CONTENT[exerciseNames]]
+    //     : exerciseContent[exerciseNames].concat({
+    //         ...INIT_FIELDS_CONTENT[exerciseNames],
+    //         id: inrementedNumber,
+    //       }),
+    // },
+
+    // this.props.onSetNewPostValues({
+    //   newPostExercisesValues: [
+    //     ...newPostExercisesValues,
+    //     // [dropDownType]: data.value,
+    //   ],
+    //   // [dropDownType]: data.value,
+    // });
   };
 
   componentDidMount() {}
 
-  setExercisesSequence = () => {
-    const { exercisesSequence } = this.props.newPostState;
+  addExercise = () => {
+    const {
+      exercisesSequence,
+      newPostExercisesValues,
+    } = this.props.newPostState;
     const currentId = exercisesSequence.length;
     const exerciseIndex = currentId >= EXERCISES_NAMES.length ? 0 : currentId;
     // add exercise sequnce, for example Match should be first than we should display Complete
     this.props.onSetNewPostValues({
       exercisesSequence: exercisesSequence.concat({
-        [currentId]: EXERCISES_NAMES[exerciseIndex].text,
+        id: currentId,
+        // [currentId]:
+        name: EXERCISES_NAMES[exerciseIndex].text,
+        type: EXERCISES_TYPES[0].text,
+      }),
+      newPostExercisesValues: newPostExercisesValues.concat({
+        id: currentId,
+        name: "Match",
+        type: "Vocabulary",
+        description: EXERCISES_DESCRIPTIONS[0].text,
+
+        // [currentId]: EXERCISES_NAMES[exerciseIndex].text,
       }),
     });
   };
 
-  onChangePostExerciseValues = (data, exerciseName, id, keyName) => {
-    exerciseName = exerciseName.toLowerCase();
-    const { exerciseContent } = this.props.newPostState;
-    // clone object to
-    const contentCloned = Object.assign({}, exerciseContent);
+  // {
+  //   id: 0,
+  //   name: "Match",
+  //   type: "Vocabulary",
+  //   description: EXERCISES_DESCRIPTIONS[0].text,
+  // },
+  // onChangePostExerciseValues = (data, exerciseNames, id, keyName) => {
+  //   exerciseNames = exerciseNames.toLowerCase();
+  //   const { exerciseContent } = this.props.newPostState;
+  //   // clone object to
+  //   const contentCloned = Object.assign({}, exerciseContent);
 
-    // find object by id and whatever user changed inside
-    const findObject = contentCloned[exerciseName].filter(
-      (obj) => obj.id === id
-    );
+  //   // find object by id and whatever user changed inside
+  //   const findObject = contentCloned[exerciseNames].filter(
+  //     (obj) => obj.id === id
+  //   );
 
-    if (findObject) {
-      findObject[0][keyName] = data.value;
-    }
+  //   if (findObject) {
+  //     findObject[0][keyName] = data.value;
+  //   }
 
-    this.props.onSetNewPostValues({
-      exerciseContent: {
-        ...exerciseContent,
-        [exerciseName]: contentCloned[exerciseName],
-      },
-    });
-  };
+  //   this.props.onSetNewPostValues({
+  //     exerciseContent: {
+  //       ...exerciseContent,
+  //       [exerciseNames]: contentCloned[exerciseNames],
+  //     },
+  //   });
+  // };
 
   // handle views by exercise name
   toggleView = (stateName) => {
     console.log(stateName, "stateName");
+    const { exercisesViewState } = this.state;
+    // if init exercise === undefined => exercise is currently open
     this.setState({
-      [stateName]: !this.state[stateName],
+      exercisesViewState: {
+        ...exercisesViewState,
+        [stateName]:
+          exercisesViewState[stateName] === undefined
+            ? false
+            : !exercisesViewState[stateName],
+      },
     });
   };
 
@@ -172,21 +260,22 @@ class PractiseContainer extends PureComponent {
     });
 
   render() {
-    const { exercisesQuantity, charValues, allExercisesView } = this.state;
+    const { exercisesQuantity, charValues, exercisesViewState } = this.state;
     const {
-      exercisesTypes,
-      exercisesDescriptions,
-      exerciseNames,
+      allExercisesTypes,
+      allExercisesDescriptions,
+      allexerciseNames,
     } = this.props.posts;
     const {
-      exerciseName,
-      exerciseType,
-      exerciseDescription,
+    
       exerciseContent,
       exercisesSequence,
+      newPostExercisesValues,
     } = this.props.newPostState;
 
-    console.log(this.state, "STTT");
+    console.log(this.props.newPostState, "his.props.newPostState");
+    // console.log(exercisesSequence, "exercisesSequence");
+    // console.log(exercisesViewState, "exercisesViewState");
     return (
       <div className="container-init-exercises">
         <Segment className="segment-init-exercises" secondary>
@@ -196,13 +285,13 @@ class PractiseContainer extends PureComponent {
             }`}
           </Header>
           <div className="button-group-init-exercises">
-            {allExercisesView !== null && (
+            {exercisesViewState["allExercisesView"] !== null && (
               <Popup
                 inverted
                 className="popup-init-exercises"
                 position="top center"
                 content={
-                  allExercisesView
+                  exercisesViewState["allExercisesView"]
                     ? "Hide all exercises."
                     : "Show all exercises."
                 }
@@ -211,7 +300,11 @@ class PractiseContainer extends PureComponent {
                     basic
                     color="brown"
                     className="button-toggle-all-exercises"
-                    icon={allExercisesView ? "eye slash" : "eye"}
+                    icon={
+                      exercisesViewState["allExercisesView"]
+                        ? "eye slash"
+                        : "eye"
+                    }
                     onClick={() => this.toggleView("allExercisesView")}
                   />
                 }
@@ -229,7 +322,7 @@ class PractiseContainer extends PureComponent {
                   icon="plus"
                   onClick={() => {
                     this.openView("allExercisesView");
-                    this.setExercisesSequence();
+                    this.addExercise();
                   }}
                 />
               }
@@ -237,18 +330,27 @@ class PractiseContainer extends PureComponent {
           </div>
         </Segment>
         <Transition
-          visible={allExercisesView ? true : true}
+          visible={exercisesViewState["allExercisesView"] ? true : true}
           animation=""
           duration={0}
         >
           <>
-            {exercisesSequence.map((el, key) => {
-              const generatedKey =
-                el && Object.entries(el).length > 0 ? Object.keys(el)[0] : key;
+            {newPostExercisesValues.map((el, key) => {
               {
-                /* console.log( this.state[`${el[generatedKey]}-${generatedKey}`],'ALO') */
+                /* exercisesSequence .log(el.id, "el"); */
               }
+              {
+                /* console.log(el,'el') */
+              }
+              const generatedKey = el.id || key;
+
               const stateExercise = `${el[generatedKey]}-${generatedKey}`;
+
+              // we're getting undefined when component just mounted which means the exercise is currently visible
+              const isExerciseOpen =
+                exercisesViewState[stateExercise] === undefined ||
+                exercisesViewState[stateExercise] === true;
+
               return (
                 <Transition
                   /* visible={this.state[stateExercise] === false ? false : true} */
@@ -269,19 +371,13 @@ class PractiseContainer extends PureComponent {
                             className="popup-init-exercises"
                             position="top center"
                             content={
-                              this.state[stateExercise]
-                                ? "Hide content."
-                                : "Show content."
+                              isExerciseOpen ? "Hide content." : "Show content."
                             }
                             trigger={
                               <Button
                                 color="brown"
                                 className="button-toggle-exercise-view"
-                                icon={
-                                  this.state[stateExercise]
-                                    ? "eye slash"
-                                    : "eye"
-                                }
+                                icon={isExerciseOpen ? "eye slash" : "eye"}
                                 onClick={() => this.toggleView(stateExercise)}
                               />
                             }
@@ -297,15 +393,23 @@ class PractiseContainer extends PureComponent {
                                 icon="remove"
                                 className="button-remove-exercise"
                                 onClick={() => {
-                                  this.openView("allExercisesView");
-                                  this.setExercisesSequence();
+                                  {
+                                    /* this.openView("allExercisesView");
+                                    /* this.setExercisesSequence(); */
+                                  }
                                 }}
                               />
                             }
                           />
                         </div>
                       </div>
-                      <Transition>
+                      <Transition
+                        visible={isExerciseOpen}
+                        animation="fade"
+                        duration={500}
+                        transitionOnMount={true}
+                        unmountOnHide={true}
+                      >
                         <>
                           <Form className="practise-form" widths="equal">
                             <Form.Group>
@@ -317,12 +421,16 @@ class PractiseContainer extends PureComponent {
                                   }
                                   selection
                                   search
-                                  value={exerciseName}
-                                  options={exerciseNames}
+                                  value={
+                                    newPostExercisesValues[el.id].name ||
+                                    NOT_FOUND_OPTION
+                                  }
+                                  options={allexerciseNames}
                                   onChange={(e, data) =>
                                     this.onDropDownChange(
                                       data,
-                                      PRACTISE_DROPDOWN_TITLES.name.defaultVal
+                                      PRACTISE_DROPDOWN_TITLES.name.defaultVal,
+                                      el.id
                                     )
                                   }
                                 />
@@ -335,12 +443,16 @@ class PractiseContainer extends PureComponent {
                                   }
                                   selection
                                   search
-                                  value={exerciseType}
-                                  options={exercisesTypes}
+                                  value={
+                                    newPostExercisesValues[el.id].type ||
+                                    NOT_FOUND_OPTION
+                                  }
+                                  options={allExercisesTypes}
                                   onChange={(e, data) =>
                                     this.onDropDownChange(
                                       data,
-                                      PRACTISE_DROPDOWN_TITLES.type.defaultVal
+                                      PRACTISE_DROPDOWN_TITLES.type.defaultVal,
+                                      el.id
                                     )
                                   }
                                 />
@@ -356,32 +468,42 @@ class PractiseContainer extends PureComponent {
                                   }
                                   selection
                                   search
-                                  value={exerciseDescription}
-                                  options={exercisesDescriptions}
+                                  value={
+                                    newPostExercisesValues[el.id].description ||
+                                    NOT_FOUND_OPTION
+                                  }
+                                  options={allExercisesDescriptions}
                                   onChange={(e, data) =>
                                     this.onDropDownChange(
                                       data,
                                       PRACTISE_DROPDOWN_TITLES.description
-                                        .defaultVal
+                                        .defaultVal,
+                                      el.id
                                     )
                                   }
                                 />
                               </Form.Field>
                             </Form.Group>
                           </Form>
-                          <div className="exercises-container">
+                          {el.name === "Match" && (
+                            <MatchExercise currentExerciseValues={el} />
+                          )}
+                          {/* {exerciseNames.includes("Match") && (
+                            <MatchExercise />
+                          )} */}
+                          {/* <div className="exercises-container">
                             <div className="exercises-handler">
-                              <Header as="h3"> {exerciseName}</Header>
+                              <Header as="h3"> {exerciseNames}</Header>
                               <Button
-                                onClick={() => this.addField(exerciseName)}
+                                onClick={() => this.addField(exerciseNames)}
                               >
                                 Add field <Icon name="plus" />
                               </Button>
                               {exerciseContent &&
-                                exerciseContent[exerciseName.toLowerCase()] && (
+                                exerciseContent[exerciseNames.toLowerCase()] && (
                                   <Button
                                     onClick={() =>
-                                      this.removeField(exerciseName)
+                                      this.removeField(exerciseNames)
                                     }
                                   >
                                     Remove field <Icon name="minus" />
@@ -389,9 +511,9 @@ class PractiseContainer extends PureComponent {
                                 )}
                               <Statistic size="tiny" color="teal">
                                 <Statistic.Value>
-                                  {exerciseContent[exerciseName.toLowerCase()]
+                                  {exerciseContent[exerciseNames.toLowerCase()]
                                     ? exerciseContent[
-                                        exerciseName.toLowerCase()
+                                        exerciseNames.toLowerCase()
                                       ].length
                                     : 0}
                                 </Statistic.Value>
@@ -403,10 +525,10 @@ class PractiseContainer extends PureComponent {
                                 <Grid className="match-grid" columns={2}>
                                   {exerciseContent &&
                                     exerciseContent[
-                                      exerciseName.toLowerCase()
+                                      exerciseNames.toLowerCase()
                                     ] &&
                                     exerciseContent[
-                                      exerciseName.toLowerCase()
+                                      exerciseNames.toLowerCase()
                                     ].map((obj) => {
                                       return (
                                         <Transition
@@ -421,21 +543,21 @@ class PractiseContainer extends PureComponent {
                                             <Grid.Column textAlign="left">
                                               <Form>
                                                 <Form.Group
-                                                /* style={{ border: "1px solid white" }} */
+                                                /* style={{ border: "1px solid white" }} 
                                                 >
                                                   <Form.Field>
                                                     <Form.Dropdown
                                                       label={
                                                         MATH_FIELDS.letter.label
                                                       }
-                                                      /* placeholder={MATH_FIELDS.letter.placeholder}  */
+                                                      /* placeholder={MATH_FIELDS.letter.placeholder}  
                                                       compact
                                                       search
                                                       selection
                                                       className="match-dropwdown-letter"
                                                       options={
                                                         charValues[
-                                                          exerciseName.toLowerCase()
+                                                          exerciseNames.toLowerCase()
                                                         ] || [
                                                           {
                                                             text: "Not Found",
@@ -446,7 +568,7 @@ class PractiseContainer extends PureComponent {
                                                       onChange={(e, data) =>
                                                         this.onChangePostExerciseValues(
                                                           data,
-                                                          exerciseName,
+                                                          exerciseNames,
                                                           obj.id,
                                                           MATH_KEYS.letter
                                                         )
@@ -481,7 +603,7 @@ class PractiseContainer extends PureComponent {
                                                       onChange={(e, data) =>
                                                         this.onChangePostExerciseValues(
                                                           data,
-                                                          exerciseName,
+                                                          exerciseNames,
                                                           obj.id,
                                                           MATH_KEYS.contentId
                                                         )
@@ -522,7 +644,7 @@ class PractiseContainer extends PureComponent {
                                                       onChange={(e, data) =>
                                                         this.onChangePostExerciseValues(
                                                           data,
-                                                          exerciseName,
+                                                          exerciseNames,
                                                           obj.id,
                                                           MATH_KEYS.contentLetter
                                                         )
@@ -545,7 +667,7 @@ class PractiseContainer extends PureComponent {
                                 <Divider vertical></Divider>
                               </Segment>
                             </div>
-                          </div>
+                          </div> */}
                         </>
                       </Transition>
                     </div>

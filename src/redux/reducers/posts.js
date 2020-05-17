@@ -12,9 +12,9 @@ const initState = {
   categories: CATEGORIES,
   subCategories: [],
   focuses: [],
-  exercisesTypes: EXERCISES_TYPES,
-  exercisesDescriptions: EXERCISES_DESCRIPTIONS,
-  exerciseNames: EXERCISES_NAMES,
+  allExercisesTypes: EXERCISES_TYPES,
+  allExercisesDescriptions: EXERCISES_DESCRIPTIONS,
+  allexerciseNames: EXERCISES_NAMES,
 };
 
 export const posts = (state = initState, action) => {

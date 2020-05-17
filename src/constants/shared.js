@@ -174,19 +174,23 @@ export const PRACTISE_DROPDOWN_TITLES = {
   name: {
     label: "Name",
     placeholder: "Name",
-    defaultVal: "exerciseName",
+    defaultVal: "name",
   },
   type: {
     label: "Type",
     placeholder: "Type",
-    defaultVal: "exerciseType",
+    defaultVal: "type",
   },
   description: {
     label: "Description",
     placeholder: "Description",
-    defaultVal: "exerciseDescription",
+    defaultVal: "description",
   },
 };
+
+export const NOT_FOUND_OPTION = [
+  { text: "Not Found", value: "Not Found", key: "Not found" },
+];
 
 export const MATH_FIELDS = {
   letter: { label: "Letter", placeholder: "Letter" },

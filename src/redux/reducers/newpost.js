@@ -19,14 +19,24 @@ const initState = {
   },
   title: "",
   iconPath: "",
-  exerciseType: EXERCISES_TYPES[0].text,
-  exerciseDescription: EXERCISES_DESCRIPTIONS[0].text,
-  exerciseName: EXERCISES_NAMES[0].text,
+  // exerciseType: EXERCISES_TYPES[0].text,
+  // exerciseDescription: EXERCISES_DESCRIPTIONS[0].text,
+  // exerciseNames: EXERCISES_NAMES[0].text,
+  // exerciseNames: [{ 0: "Match" }, { 1: "Complete" }],
+  newPostExercisesValues: [
+    {
+      id: 0,
+      name: "Match",
+      type: "Vocabulary",
+      description: EXERCISES_DESCRIPTIONS[0].text,
+      content: [{ id: 0, letter: "", contentId: "", contentLetter: "" }]
+    },
+  ],
   // exerciseContent: {},
   exerciseContent: {
-    match: [{ id: 1, letter: "", contentId: "", contentLetter: "" }],
+    match: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
   },
-  exercisesSequence: [{0: "Match"}],
+  exercisesSequence: [{ id: 0, name: "Match", type: EXERCISES_TYPES[0].text }],
   // match: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
   // },
 };
