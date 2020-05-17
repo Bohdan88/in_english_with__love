@@ -23,9 +23,9 @@ const initState = {
   exerciseDescription: EXERCISES_DESCRIPTIONS[0].text,
   exerciseName: EXERCISES_NAMES[0].text,
   // exerciseContent: {},
-  exerciseContent: {
-    match: [{ id: 1, letter: "", contentId: "", contentLetter: "" }],
-  },
+  exerciseContent: { match: [{ id: 1, letter: "", contentId: "", contentLetter: "" }]},
+  // match: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
+  // },
 };
 
 export const newPostReducer = (state = initState, action) => {

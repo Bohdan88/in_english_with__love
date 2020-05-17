@@ -25,17 +25,17 @@ import {
   ICON_POST_ADD_STATUS,
 } from "../../../../constants/shared";
 import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
-
-const transformToOptions = (arr) => {
-  // console.log(arr, "arr");
-  return arr && arr[0] !== undefined
-    ? arr.map((el) => ({
-        key: el,
-        text: el,
-        value: el,
-      }))
-    : [];
-};
+import { transformToOptions } from "../../../../utils";
+// const transformToOptions = (arr) => {
+//   // console.log(arr, "arr");
+//   return arr && arr[0] !== undefined
+//     ? arr.map((el) => ({
+//         key: el,
+//         text: el,
+//         value: el,
+//       }))
+//     : [];
+// };
 
 class AnswerTemplate extends Component {
   render() {

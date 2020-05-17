@@ -5,7 +5,7 @@ import { FiVideo } from "react-icons/fi";
 
 const transformEmbeddedLink = (link) => {
   if (link.includes("youtube")) {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/; // eslint-disable-line
     const youtubeMatch = link.match(regExp);
     return `https://www.youtube.com/embed/${youtubeMatch[2]}`;
   }

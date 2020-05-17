@@ -96,6 +96,13 @@ export const EXERCISES_NAMES = [
   },
 ];
 
+export const MATH_KEYS = {
+  id: "id",
+  letter: "letter",
+  contentId: "contentId",
+  contentLetter: "contentLetter",
+};
+
 const MATCH_THE_WORDS_DESC = {
   key: "match_the_words",
   value:
@@ -190,6 +197,37 @@ export const MATH_FIELDS = {
 export const INIT_FIELDS_CONTENT = {
   match: { id: 1, letter: "", contentId: "", contentLetter: "" },
 };
+
+export const INIT_CHAR_VALUES = [{ key: "A", text: "A", value: "A" }];
+// export const INIT_CHAR_VALUES = [];
+export const CHAR_SEQUENCE = [
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+];
 
 export const ICON_POST_REMOVE_STATUS = {
   icon: {

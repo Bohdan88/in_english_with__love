@@ -73,6 +73,10 @@
   padding-bottom: 0px !important;
 }
 
+.math-field-row > .column{
+  padding: 0px 3%!important;
+}
+
 .match-statistic-id {
   display: flex !important;
   justify-content: center !important;
@@ -86,7 +90,13 @@
   top: 5px;
   margin-top: 0px !important;
   box-shadow: none !important;
-  min-width: 44px !important;
+  justify-content: center;
+  // min-width: 50px !important;
+}
+
+.match-dropwdown-letter > div,
+.match-segment-id {
+  min-width: 55px !important;
 }
 
 .match-textarea-container {
