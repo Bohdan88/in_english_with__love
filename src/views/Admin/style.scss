@@ -61,8 +61,26 @@
   // background:#aeb9d2;
 }
 
+.exercise-builder-container {
+  margin-bottom: 10px !important;
+}
+
+.segment-init-exercises {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-init-exercises {
+  position: relative;
+  top: 6px !important;
+}
+
+.init-exercises-popup {
+  // height: 100px!important;
+}
+
 .exercises-container {
-  border: 1px solid black;
+  // border: 1px solid black;
 }
 
 .exercises-handler {
@@ -73,14 +91,13 @@
   padding-bottom: 0px !important;
 }
 
-.math-field-row > .column{
-  padding: 0px 3%!important;
+.math-field-row > .column {
+  padding: 0px 3% !important;
 }
 
 .match-statistic-id {
   display: flex !important;
   justify-content: center !important;
-  // min-width: 44px !important;
 }
 
 .match-segment-id {
@@ -91,11 +108,11 @@
   margin-top: 0px !important;
   box-shadow: none !important;
   justify-content: center;
-  // min-width: 50px !important;
 }
 
 .match-dropwdown-letter > div,
-.match-segment-id {
+.match-segment-id,
+.match-remove-field > .button {
   min-width: 55px !important;
 }
 
@@ -111,7 +128,8 @@
 
 .match-textarea,
 .match-segment-id,
-.match-dropwdown-letter > div {
+.match-dropwdown-letter > div,
+.match-remove-field > .button {
   height: 42px !important;
 }
 
@@ -121,6 +139,10 @@
 
 .match-textarea {
   margin-top: 5px !important;
+}
+
+.match-remove-field {
+  margin-top: 23px !important;
 }
 .match-builder {
 }
