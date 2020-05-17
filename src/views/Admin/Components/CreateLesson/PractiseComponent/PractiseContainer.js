@@ -154,10 +154,12 @@ class PractiseContainer extends PureComponent {
   };
 
   // handle views by exercise name
-  toggleView = (stateName) =>
+  toggleView = (stateName) => {
+    console.log(stateName, "stateName");
     this.setState({
       [stateName]: !this.state[stateName],
     });
+  };
 
   closeView = (stateName) =>
     this.setState({
@@ -184,6 +186,7 @@ class PractiseContainer extends PureComponent {
       exercisesSequence,
     } = this.props.newPostState;
 
+    console.log(this.state, "STTT");
     return (
       <div className="container-init-exercises">
         <Segment className="segment-init-exercises" secondary>
@@ -240,18 +243,22 @@ class PractiseContainer extends PureComponent {
         >
           <>
             {exercisesSequence.map((el, key) => {
+              const generatedKey =
+                el && Object.entries(el).length > 0 ? Object.keys(el)[0] : key;
+              {
+                /* console.log( this.state[`${el[generatedKey]}-${generatedKey}`],'ALO') */
+              }
+              const stateExercise = `${el[generatedKey]}-${generatedKey}`;
               return (
-                <Segment
-                  key={
-                    el && Object.entries(el).length > 0
-                      ? Object.keys(el)[0]
-                      : key
-                  }
-                  className={`container-exercises-builders`}
-                  secondary
+                <Transition
+                  /* visible={this.state[stateExercise] === false ? false : true} */
+                  visible={true}
+                  animation="fade"
+                  duration={1000}
+                  key={generatedKey}
                 >
-                  <div key={key} className="container-exercise-builder">
-                    <Form className="practise-form" widths="equal">
+                  <Segment className={`container-exercises-builders`} secondary>
+                    <div key={key} className="container-exercise-builder">
                       <div className="container-exercise-top">
                         <Header className="header-exercise-top" as="h3">
                           Exercise {exercisesQuantity}
@@ -262,7 +269,7 @@ class PractiseContainer extends PureComponent {
                             className="popup-init-exercises"
                             position="top center"
                             content={
-                              allExercisesView
+                              this.state[stateExercise]
                                 ? "Hide content."
                                 : "Show content."
                             }
@@ -270,10 +277,12 @@ class PractiseContainer extends PureComponent {
                               <Button
                                 color="brown"
                                 className="button-toggle-exercise-view"
-                                icon={allExercisesView ? "eye slash" : "eye"}
-                                onClick={() =>
-                                  this.toggleView("allExercisesView")
+                                icon={
+                                  this.state[stateExercise]
+                                    ? "eye slash"
+                                    : "eye"
                                 }
+                                onClick={() => this.toggleView(stateExercise)}
                               />
                             }
                           />
@@ -296,234 +305,252 @@ class PractiseContainer extends PureComponent {
                           />
                         </div>
                       </div>
-                      <Form.Group>
-                        <Form.Field>
-                          <Form.Dropdown
-                            label={PRACTISE_DROPDOWN_TITLES.name.label}
-                            placeholder={
-                              PRACTISE_DROPDOWN_TITLES.name.placeholder
-                            }
-                            selection
-                            search
-                            value={exerciseName}
-                            options={exerciseNames}
-                            onChange={(e, data) =>
-                              this.onDropDownChange(
-                                data,
-                                PRACTISE_DROPDOWN_TITLES.name.defaultVal
-                              )
-                            }
-                          />
-                        </Form.Field>
-                        <Form.Field>
-                          <Form.Dropdown
-                            label={PRACTISE_DROPDOWN_TITLES.type.label}
-                            placeholder={
-                              PRACTISE_DROPDOWN_TITLES.type.placeholder
-                            }
-                            selection
-                            search
-                            value={exerciseType}
-                            options={exercisesTypes}
-                            onChange={(e, data) =>
-                              this.onDropDownChange(
-                                data,
-                                PRACTISE_DROPDOWN_TITLES.type.defaultVal
-                              )
-                            }
-                          />
-                        </Form.Field>
-                        <Form.Field>
-                          <Form.Dropdown
-                            label={PRACTISE_DROPDOWN_TITLES.description.label}
-                            placeholder={
-                              PRACTISE_DROPDOWN_TITLES.description.placeholder
-                            }
-                            selection
-                            search
-                            value={exerciseDescription}
-                            options={exercisesDescriptions}
-                            onChange={(e, data) =>
-                              this.onDropDownChange(
-                                data,
-                                PRACTISE_DROPDOWN_TITLES.description.defaultVal
-                              )
-                            }
-                          />
-                        </Form.Field>
-                      </Form.Group>
-                    </Form>
+                      <Transition>
+                        <>
+                          <Form className="practise-form" widths="equal">
+                            <Form.Group>
+                              <Form.Field>
+                                <Form.Dropdown
+                                  label={PRACTISE_DROPDOWN_TITLES.name.label}
+                                  placeholder={
+                                    PRACTISE_DROPDOWN_TITLES.name.placeholder
+                                  }
+                                  selection
+                                  search
+                                  value={exerciseName}
+                                  options={exerciseNames}
+                                  onChange={(e, data) =>
+                                    this.onDropDownChange(
+                                      data,
+                                      PRACTISE_DROPDOWN_TITLES.name.defaultVal
+                                    )
+                                  }
+                                />
+                              </Form.Field>
+                              <Form.Field>
+                                <Form.Dropdown
+                                  label={PRACTISE_DROPDOWN_TITLES.type.label}
+                                  placeholder={
+                                    PRACTISE_DROPDOWN_TITLES.type.placeholder
+                                  }
+                                  selection
+                                  search
+                                  value={exerciseType}
+                                  options={exercisesTypes}
+                                  onChange={(e, data) =>
+                                    this.onDropDownChange(
+                                      data,
+                                      PRACTISE_DROPDOWN_TITLES.type.defaultVal
+                                    )
+                                  }
+                                />
+                              </Form.Field>
+                              <Form.Field>
+                                <Form.Dropdown
+                                  label={
+                                    PRACTISE_DROPDOWN_TITLES.description.label
+                                  }
+                                  placeholder={
+                                    PRACTISE_DROPDOWN_TITLES.description
+                                      .placeholder
+                                  }
+                                  selection
+                                  search
+                                  value={exerciseDescription}
+                                  options={exercisesDescriptions}
+                                  onChange={(e, data) =>
+                                    this.onDropDownChange(
+                                      data,
+                                      PRACTISE_DROPDOWN_TITLES.description
+                                        .defaultVal
+                                    )
+                                  }
+                                />
+                              </Form.Field>
+                            </Form.Group>
+                          </Form>
+                          <div className="exercises-container">
+                            <div className="exercises-handler">
+                              <Header as="h3"> {exerciseName}</Header>
+                              <Button
+                                onClick={() => this.addField(exerciseName)}
+                              >
+                                Add field <Icon name="plus" />
+                              </Button>
+                              {exerciseContent &&
+                                exerciseContent[exerciseName.toLowerCase()] && (
+                                  <Button
+                                    onClick={() =>
+                                      this.removeField(exerciseName)
+                                    }
+                                  >
+                                    Remove field <Icon name="minus" />
+                                  </Button>
+                                )}
+                              <Statistic size="tiny" color="teal">
+                                <Statistic.Value>
+                                  {exerciseContent[exerciseName.toLowerCase()]
+                                    ? exerciseContent[
+                                        exerciseName.toLowerCase()
+                                      ].length
+                                    : 0}
+                                </Statistic.Value>
+                              </Statistic>
+                            </div>
 
-                    <div className="exercises-container">
-                      <div className="exercises-handler">
-                        <Header as="h3"> {exerciseName}</Header>
-                        <Button onClick={() => this.addField(exerciseName)}>
-                          Add field <Icon name="plus" />
-                        </Button>
-                        {exerciseContent &&
-                          exerciseContent[exerciseName.toLowerCase()] && (
-                            <Button
-                              onClick={() => this.removeField(exerciseName)}
-                            >
-                              Remove field <Icon name="minus" />
-                            </Button>
-                          )}
-                        <Statistic size="tiny" color="teal">
-                          <Statistic.Value>
-                            {exerciseContent[exerciseName.toLowerCase()]
-                              ? exerciseContent[exerciseName.toLowerCase()]
-                                  .length
-                              : 0}
-                          </Statistic.Value>
-                        </Statistic>
-                      </div>
-
-                      <div className="match-field-container">
-                        <Segment>
-                          <Grid className="match-grid" columns={2}>
-                            {exerciseContent &&
-                              exerciseContent[exerciseName.toLowerCase()] &&
-                              exerciseContent[exerciseName.toLowerCase()].map(
-                                (obj) => {
-                                  return (
-                                    <Transition
-                                      key={obj.id}
-                                      visible={true}
-                                      animation="fade"
-                                      transitionOnMount={true}
-                                      unmountOnHide={true}
-                                      duration={1000}
-                                    >
-                                      <Grid.Row className="math-field-row">
-                                        <Grid.Column textAlign="left">
-                                          <Form>
-                                            <Form.Group
-                                            /* style={{ border: "1px solid white" }} */
-                                            >
-                                              <Form.Field>
-                                                <Form.Dropdown
-                                                  label={
-                                                    MATH_FIELDS.letter.label
-                                                  }
-                                                  /* placeholder={MATH_FIELDS.letter.placeholder}  */
-                                                  compact
-                                                  search
-                                                  selection
-                                                  className="match-dropwdown-letter"
-                                                  options={
-                                                    charValues[
-                                                      exerciseName.toLowerCase()
-                                                    ] || [
-                                                      {
-                                                        text: "Not Found",
-                                                        value: "Not Found",
-                                                      },
-                                                    ]
-                                                  }
-                                                  onChange={(e, data) =>
-                                                    this.onChangePostExerciseValues(
-                                                      data,
-                                                      exerciseName,
-                                                      obj.id,
-                                                      MATH_KEYS.letter
-                                                    )
-                                                  }
-                                                />
-                                              </Form.Field>
-                                              <div className="match-container-id">
-                                                <label className="match-label-id">
-                                                  {MATH_FIELDS.id.label}
-                                                </label>
-                                                <Segment className="match-segment-id">
-                                                  <Statistic
-                                                    className="match-statistic-id"
-                                                    size="mini"
-                                                  >
-                                                    <Statistic.Value>
-                                                      {obj.id}.
-                                                    </Statistic.Value>
-                                                  </Statistic>
-                                                </Segment>
-                                              </div>
-                                              <Container className="match-textarea-container">
-                                                <label className="match-textarea-label">
-                                                  {MATH_FIELDS.text.label}
-                                                </label>
-                                                <TextArea
-                                                  placeholder={
-                                                    MATH_FIELDS.text.placeholder
-                                                  }
-                                                  className="match-textarea"
-                                                  onChange={(e, data) =>
-                                                    this.onChangePostExerciseValues(
-                                                      data,
-                                                      exerciseName,
-                                                      obj.id,
-                                                      MATH_KEYS.contentId
-                                                    )
-                                                  }
-                                                />
-                                              </Container>
-                                            </Form.Group>
-                                          </Form>
-                                        </Grid.Column>
-                                        <Grid.Column>
-                                          <Form>
-                                            <Form.Group>
-                                              <div className="match-container-id">
-                                                <label className="match-label-id">
-                                                  {MATH_FIELDS.letter.label}
-                                                </label>
-                                                <Segment className="match-segment-id">
-                                                  <Statistic
-                                                    className="match-statistic-id"
-                                                    size="mini"
-                                                  >
-                                                    <Statistic.Value>
-                                                      {obj.letter}
-                                                    </Statistic.Value>
-                                                  </Statistic>
-                                                </Segment>
-                                              </div>
-                                              <Container className="match-textarea-container">
-                                                <label className="match-textarea-label">
-                                                  {MATH_FIELDS.text.label}
-                                                </label>
-                                                <TextArea
-                                                  placeholder={
-                                                    MATH_FIELDS.text.placeholder
-                                                  }
-                                                  className="match-textarea"
-                                                  onChange={(e, data) =>
-                                                    this.onChangePostExerciseValues(
-                                                      data,
-                                                      exerciseName,
-                                                      obj.id,
-                                                      MATH_KEYS.contentLetter
-                                                    )
-                                                  }
-                                                />
-                                              </Container>
-                                              <Form.Button
-                                                className="match-remove-field"
-                                                color="red"
-                                                icon="remove"
-                                              />
-                                            </Form.Group>
-                                          </Form>
-                                        </Grid.Column>
-                                      </Grid.Row>
-                                    </Transition>
-                                  );
-                                }
-                              )}
-                          </Grid>
-                          <Divider vertical></Divider>
-                        </Segment>
-                      </div>
+                            <div className="match-field-container">
+                              <Segment>
+                                <Grid className="match-grid" columns={2}>
+                                  {exerciseContent &&
+                                    exerciseContent[
+                                      exerciseName.toLowerCase()
+                                    ] &&
+                                    exerciseContent[
+                                      exerciseName.toLowerCase()
+                                    ].map((obj) => {
+                                      return (
+                                        <Transition
+                                          key={obj.id}
+                                          visible={true}
+                                          animation="fade"
+                                          transitionOnMount={true}
+                                          unmountOnHide={true}
+                                          duration={1000}
+                                        >
+                                          <Grid.Row className="math-field-row">
+                                            <Grid.Column textAlign="left">
+                                              <Form>
+                                                <Form.Group
+                                                /* style={{ border: "1px solid white" }} */
+                                                >
+                                                  <Form.Field>
+                                                    <Form.Dropdown
+                                                      label={
+                                                        MATH_FIELDS.letter.label
+                                                      }
+                                                      /* placeholder={MATH_FIELDS.letter.placeholder}  */
+                                                      compact
+                                                      search
+                                                      selection
+                                                      className="match-dropwdown-letter"
+                                                      options={
+                                                        charValues[
+                                                          exerciseName.toLowerCase()
+                                                        ] || [
+                                                          {
+                                                            text: "Not Found",
+                                                            value: "Not Found",
+                                                          },
+                                                        ]
+                                                      }
+                                                      onChange={(e, data) =>
+                                                        this.onChangePostExerciseValues(
+                                                          data,
+                                                          exerciseName,
+                                                          obj.id,
+                                                          MATH_KEYS.letter
+                                                        )
+                                                      }
+                                                    />
+                                                  </Form.Field>
+                                                  <div className="match-container-id">
+                                                    <label className="match-label-id">
+                                                      {MATH_FIELDS.id.label}
+                                                    </label>
+                                                    <Segment className="match-segment-id">
+                                                      <Statistic
+                                                        className="match-statistic-id"
+                                                        size="mini"
+                                                      >
+                                                        <Statistic.Value>
+                                                          {obj.id}.
+                                                        </Statistic.Value>
+                                                      </Statistic>
+                                                    </Segment>
+                                                  </div>
+                                                  <Container className="match-textarea-container">
+                                                    <label className="match-textarea-label">
+                                                      {MATH_FIELDS.text.label}
+                                                    </label>
+                                                    <TextArea
+                                                      placeholder={
+                                                        MATH_FIELDS.text
+                                                          .placeholder
+                                                      }
+                                                      className="match-textarea"
+                                                      onChange={(e, data) =>
+                                                        this.onChangePostExerciseValues(
+                                                          data,
+                                                          exerciseName,
+                                                          obj.id,
+                                                          MATH_KEYS.contentId
+                                                        )
+                                                      }
+                                                    />
+                                                  </Container>
+                                                </Form.Group>
+                                              </Form>
+                                            </Grid.Column>
+                                            <Grid.Column>
+                                              <Form>
+                                                <Form.Group>
+                                                  <div className="match-container-id">
+                                                    <label className="match-label-id">
+                                                      {MATH_FIELDS.letter.label}
+                                                    </label>
+                                                    <Segment className="match-segment-id">
+                                                      <Statistic
+                                                        className="match-statistic-id"
+                                                        size="mini"
+                                                      >
+                                                        <Statistic.Value>
+                                                          {obj.letter}
+                                                        </Statistic.Value>
+                                                      </Statistic>
+                                                    </Segment>
+                                                  </div>
+                                                  <Container className="match-textarea-container">
+                                                    <label className="match-textarea-label">
+                                                      {MATH_FIELDS.text.label}
+                                                    </label>
+                                                    <TextArea
+                                                      placeholder={
+                                                        MATH_FIELDS.text
+                                                          .placeholder
+                                                      }
+                                                      className="match-textarea"
+                                                      onChange={(e, data) =>
+                                                        this.onChangePostExerciseValues(
+                                                          data,
+                                                          exerciseName,
+                                                          obj.id,
+                                                          MATH_KEYS.contentLetter
+                                                        )
+                                                      }
+                                                    />
+                                                  </Container>
+                                                  <Form.Button
+                                                    className="match-remove-field"
+                                                    color="red"
+                                                    icon="remove"
+                                                  />
+                                                </Form.Group>
+                                              </Form>
+                                            </Grid.Column>
+                                          </Grid.Row>
+                                        </Transition>
+                                      );
+                                    })}
+                                </Grid>
+                                <Divider vertical></Divider>
+                              </Segment>
+                            </div>
+                          </div>
+                        </>
+                      </Transition>
                     </div>
-                  </div>
-                </Segment>
+                  </Segment>
+                </Transition>
               );
             })}
           </>
