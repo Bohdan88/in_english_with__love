@@ -16,6 +16,8 @@ import {
   Statistic,
   Divider,
   Segment,
+  TextArea,
+  Container,
 } from "semantic-ui-react";
 
 class Practise extends PureComponent {
@@ -165,41 +167,80 @@ class Practise extends PureComponent {
 
           <div className="match-field-container">
             <Segment>
-              <Grid columns={2}>
+              <Grid className="match-grid" columns={2}>
                 {exerciseContent &&
                   exerciseContent[exerciseName.toLowerCase()] &&
                   exerciseContent[exerciseName.toLowerCase()].map((obj) => {
                     return (
-                      <React.Fragment key={obj.id}>
+                      <Grid.Row key={obj.id}>
                         <Grid.Column textAlign="left">
                           <Form>
-                            <Form.Group style={{ border: "1px solid black" }}>
-                              <Form.Field widths="1">
+                            <Form.Group style={{ border: "1px solid white" }}>
+                              <Form.Field>
                                 <Form.Dropdown
                                   label={MATH_FIELDS.letter.label}
                                   /* placeholder={MATH_FIELDS.letter.placeholder} */
                                   compact
                                   selection
+                                  className="match-dropwdown-letter"
                                 />
                               </Form.Field>
-                              <Statistic className="math-field-id" size="tiny">
-                                <Statistic.Value>{obj.id}.</Statistic.Value>
-                              </Statistic>
-                              <Form.TextArea className="math-textarea"/>
+                              <div className="match-container-id">
+                                <label className="match-label-id">
+                                  {MATH_FIELDS.id.label}
+                                </label>
+                                <Segment className="match-segment-id">
+                                  <Statistic
+                                    className="match-statistic-id"
+                                    size="mini"
+                                  >
+                                    <Statistic.Value>{obj.id}.</Statistic.Value>
+                                  </Statistic>
+                                </Segment>
+                              </div>
+                              <Container className="match-textarea-container">
+                                <label className="match-textarea-label">
+                                  {MATH_FIELDS.text.label}
+                                </label>
+                                <TextArea
+                                  placeholder={MATH_FIELDS.text.placeholder}
+                                  className="match-textarea"
+                                />
+                              </Container>
                             </Form.Group>
                           </Form>
                         </Grid.Column>
-                        <Grid.Column textAlign="right">
+                        <Grid.Column>
                           <Form>
                             <Form.Group>
-                              <Form.Field>
-                                <Form.Dropdown />
-                                <Form.TextArea />
-                              </Form.Field>
+                              <div className="match-container-id">
+                                <label className="match-label-id">
+                                  {MATH_FIELDS.letter.label}
+                                </label>
+                                <Segment className="match-segment-id">
+                                  <Statistic
+                                    className="match-statistic-id"
+                                    size="mini"
+                                  >
+                                    <Statistic.Value>
+                                      {obj.letter}
+                                    </Statistic.Value>
+                                  </Statistic>
+                                </Segment>
+                              </div>
+                              <Container className="match-textarea-container">
+                                <label className="match-textarea-label">
+                                  {MATH_FIELDS.text.label}
+                                </label>
+                                <TextArea
+                                  placeholder={MATH_FIELDS.text.placeholder}
+                                  className="match-textarea"
+                                />
+                              </Container>
                             </Form.Group>
                           </Form>
                         </Grid.Column>
-                      </React.Fragment>
+                      </Grid.Row>
                     );
                   })}
               </Grid>
