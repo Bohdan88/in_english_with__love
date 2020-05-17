@@ -25,7 +25,7 @@ import {
   ICON_POST_ADD_STATUS,
 } from "../../../../constants/shared";
 import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
-import { transformToOptions } from "../../../../utils";
+import { transformToOptions, fireAlert } from "../../../../utils";
 // const transformToOptions = (arr) => {
 //   // console.log(arr, "arr");
 //   return arr && arr[0] !== undefined
@@ -56,23 +56,23 @@ class AnswerTemplate extends Component {
   }
 }
 
-const fireAlert = (state, values, error = null) => {
-  Swal.fire({
-    icon: state ? values.icon.success : values.icon.error,
-    heightAuto: false,
-    title: state ? values.title.success : values.title.error,
-    text: state ? values.text.success : error ? error : values.text.error,
-    customClass: {
-      confirmButton: "ui green basic button",
-      container: "alert-container-class",
-    },
-    position: "top-end",
-    popup: "swal2-show",
-    className: "admit-sweet-alert",
-  });
+// const fireAlert = (state, values, error = null) => {
+//   Swal.fire({
+//     icon: state ? values.icon.success : values.icon.error,
+//     heightAuto: false,
+//     title: state ? values.title.success : values.title.error,
+//     text: state ? values.text.success : error ? error : values.text.error,
+//     customClass: {
+//       confirmButton: "ui green basic button",
+//       container: "alert-container-class",
+//     },
+//     position: "top-end",
+//     popup: "swal2-show",
+//     className: "admit-sweet-alert",
+//   });
 
-  setTimeout(() => Swal.close(), 4000);
-};
+//   setTimeout(() => Swal.close(), 4000);
+// };
 
 class CreateLesson extends Component {
   constructor(props) {

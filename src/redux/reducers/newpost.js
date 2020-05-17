@@ -26,7 +26,7 @@ const initState = {
   exerciseContent: {
     match: [{ id: 1, letter: "", contentId: "", contentLetter: "" }],
   },
-  exercisesSequence: [],
+  exercisesSequence: [{0: "Match"}],
   // match: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
   // },
 };

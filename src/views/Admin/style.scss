@@ -61,7 +61,7 @@
   // background:#aeb9d2;
 }
 
-.exercise-builder-container {
+.container-exercise-builder {
   margin-bottom: 10px !important;
 }
 
@@ -70,12 +70,16 @@
   justify-content: space-between;
 }
 
+.button-toggle-all-exercises {
+  margin-right: 5px !important;
+}
+
 .header-init-exercises {
   position: relative;
   top: 6px !important;
 }
 
-.init-exercises-popup {
+.popup-init-exercises {
   // height: 100px!important;
 }
 
@@ -85,6 +89,34 @@
 
 .exercises-handler {
   display: flex;
+}
+
+.container-exercise-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 3px solid $chetwode-blue;
+}
+
+.button-group-exercise-top > .button {
+  padding: 0px !important;
+  background: none !important;
+  margin: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.button-toggle-exercise-view {
+  margin-right: 5px !important;
+  color: $brown!important;
+}
+.button-remove-exercise {
+  color: $red !important;
+}
+
+.header-exercise-top {
+  margin: 0px !important;
 }
 
 .match-grid > .column {
