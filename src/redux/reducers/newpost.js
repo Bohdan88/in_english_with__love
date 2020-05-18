@@ -19,26 +19,15 @@ const initState = {
   },
   title: "",
   iconPath: "",
-  // exerciseType: EXERCISES_TYPES[0].text,
-  // exerciseDescription: EXERCISES_DESCRIPTIONS[0].text,
-  // exerciseNames: EXERCISES_NAMES[0].text,
-  // exerciseNames: [{ 0: "Match" }, { 1: "Complete" }],
   newPostExercisesValues: [
     {
       id: 0,
-      name: "Match",
-      type: "Vocabulary",
+      name: EXERCISES_NAMES[0].text,
+      type: EXERCISES_TYPES[0].text,
       description: EXERCISES_DESCRIPTIONS[0].text,
-      content: [{ id: 0, letter: "", contentId: "", contentLetter: "" }]
+      content: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
     },
   ],
-  // exerciseContent: {},
-  exerciseContent: {
-    match: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
-  },
-  exercisesSequence: [{ id: 0, name: "Match", type: EXERCISES_TYPES[0].text }],
-  // match: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
-  // },
 };
 
 export const newPostReducer = (state = initState, action) => {

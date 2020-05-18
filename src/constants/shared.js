@@ -88,7 +88,7 @@ export const EXERCISES_TYPES = [
 ];
 
 export const EXERCISES_NAMES = [
-  { key: "match", text: "Match", value: "Match" },
+  { key: "matching", text: "Matching", value: "Matching" },
   {
     key: "complete",
     text: "Complete The Sentences",
@@ -263,6 +263,15 @@ export const ICON_POST_ADD_STATUS = {
   },
 };
 
+export const REMOVE_EXERCISE = {
+  icon: {
+    success: "question",
+  },
+  text: {
+    success: "Are you sure you want to remove this Exercise?",
+  },
+};
+
 // db values
 export const POSTS_BUCKET_NAME = "posts";
 
@@ -293,3 +302,17 @@ export const EDITOR_OPTIONS = {
     "Verdana",
   ],
 };
+
+export const CONFIRMATION_REMOVE_ALERT = "CONFIRMATION_REMOVE_ALERT";
+export const MATCHING = "Matching";
+export const EXERCISES_LABELS_COLORS = [
+  "blue",
+  "teal",
+  "green",
+  "olive",
+  "brown",
+  "violet",
+  "pink",
+  "red",
+  "orange",
+];

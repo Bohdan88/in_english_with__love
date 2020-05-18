@@ -8,10 +8,12 @@ import {
   INIT_CHAR_VALUES,
   MATH_KEYS,
   EXERCISES_NAMES,
-  ICON_POST_REMOVE_STATUS,
   EXERCISES_DESCRIPTIONS,
   EXERCISES_TYPES,
   NOT_FOUND_OPTION,
+  REMOVE_EXERCISE,
+  CONFIRMATION_REMOVE_ALERT,
+  MATCHING,
 } from "../../../../../constants/shared";
 import {
   getAllPostsValues,
@@ -32,208 +34,66 @@ import {
   Transition,
   Popup,
 } from "semantic-ui-react";
+import Swal from "sweetalert2";
 import { transformToOptions, fireAlert } from "../../../../../utils";
 import MatchExercise from "./MatchExercise";
 
 class PractiseContainer extends PureComponent {
   state = {
-    exercisesQuantity: 1,
-    // charValues: {},
-    // allExercisesView: null,
     exercisesViewState: {},
   };
 
-  // Match: []
-
-  // addField = (exerciseNames) => {
-  //   exerciseNames = exerciseNames.toLowerCase();
-  //   const { charValues } = this.state;
-  //   const { exerciseContent } = this.props.newPostState;
-
-  //   // inrement exercise number
-  //   const inrementedNumber =
-  //     exerciseContent[exerciseNames] && !!exerciseContent[exerciseNames].length
-  //       ? exerciseContent[exerciseNames].length + 1
-  //       : 1;
-
-  //   // add a new field if a number of fields is less than letters in the alphabet (26)
-  //   if (inrementedNumber - 1 < CHAR_SEQUENCE.length) {
-  //     this.props.onSetNewPostValues({
-  //       exerciseContent: {
-  //         ...exerciseContent,
-  //         [exerciseNames]: !exerciseContent[exerciseNames]
-  //           ? [INIT_FIELDS_CONTENT[exerciseNames]]
-  //           : exerciseContent[exerciseNames].concat({
-  //               ...INIT_FIELDS_CONTENT[exerciseNames],
-  //               id: inrementedNumber,
-  //             }),
-  //       },
-  //     });
-
-  //     this.setState({
-  //       charValues: !charValues[exerciseNames]
-  //         ? { [exerciseNames]: INIT_CHAR_VALUES }
-  //         : {
-  //             ...charValues,
-  //             [exerciseNames]: charValues[exerciseNames].concat(
-  //               transformToOptions([CHAR_SEQUENCE[inrementedNumber - 1]])[0]
-  //             ),
-  //           },
-  //     });
-  //   } else {
-  //     // fire alert if user wants create more than 26 fields for a particular exercise
-  //     fireAlert(
-  //       false,
-  //       ICON_POST_REMOVE_STATUS,
-  //       "You can't create more fields than a number of letters in the alphabet which is 26."
-  //     );
-  //   }
-  // };
-
-  // match = [{ id: 1, number, conent: '', letter }, { }]
-
-  // removeField = (exerciseNames) => {
-  //   const { newPostState } = this.props;
-
-  //   exerciseNames = exerciseNames.toLowerCase();
-
-  //   // clone objects to keep props immutable
-  //   const exerciseContent = Object.assign({}, newPostState.exerciseContent);
-
-  //   const charValues = Object.assign({}, this.state.charValues);
-
-  //   if (exerciseContent[exerciseNames].length === 1) {
-  //     delete exerciseContent[exerciseNames];
-  //     // set char values to init
-  //     delete charValues[exerciseNames];
-  //   } else {
-  //     exerciseContent[exerciseNames].pop();
-  //     charValues[exerciseNames].pop();
-  //   }
-
-  //   this.setState({ charValues });
-  //   this.props.onSetNewPostValues({ exerciseContent });
-  // };
-
   onDropDownChange = (data, dropDownType, exerciseId) => {
     console.log(dropDownType, "dropdownType");
-    const {
-      exercisesSequence,
-      newPostExercisesValues,
-    } = this.props.newPostState;
+    const { newPostExercisesValues } = this.props.newPostState;
 
-    // newPostExercisesValues.forEach((obj) => {
-    //   if (obj.id === exerciseId) {
-    //     this.props.onSetNewPostValues({
-    //       newPostExercisesValues: [...newPostExercisesValues]
-    //     })
-    //     console.log(obj, 'OBJ')
-    //   }
-    // });
-
-    // Find index of specific object using findIndex method.
-
-    // console.log(objIndex, "objIndex");
-    // console.log(objIndex, "objIndexobjIndex");
-    // let som = (newPostExercisesValues[exerciseId][dropDownType] = data.value);
-    // console.log(som, "som");
     this.props.onSetNewPostValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) =>
         obj.id === exerciseId ? { ...obj, [dropDownType]: data.value } : obj
       ),
     });
-
-    // console.log(findObject, "objIndexobjIndex");
-    // this.props.onSetNewPostValues({
-    //   newPostExercisesValues: []
-    // })
-    // this.props.onSetNewPostValues({
-    //   newPostExercisesValues: [
-    //     ...newPostExercisesValues,
-    //     {
-    //       ...newPostExercisesValues[exerciseId],
-    //       [dropDownType]: data.value,
-    //     },
-    //   ],
-    // });
-
-    // exerciseContent: {
-    //   ...exerciseContent,
-    //   [exerciseNames]: !exerciseContent[exerciseNames]
-    //     ? [INIT_FIELDS_CONTENT[exerciseNames]]
-    //     : exerciseContent[exerciseNames].concat({
-    //         ...INIT_FIELDS_CONTENT[exerciseNames],
-    //         id: inrementedNumber,
-    //       }),
-    // },
-
-    // this.props.onSetNewPostValues({
-    //   newPostExercisesValues: [
-    //     ...newPostExercisesValues,
-    //     // [dropDownType]: data.value,
-    //   ],
-    //   // [dropDownType]: data.value,
-    // });
   };
 
   componentDidMount() {}
 
+  removeExerciseById = (exerciseId, stateExerciseView) => {
+    const { newPostExercisesValues } = this.props.newPostState;
+    fireAlert(true, REMOVE_EXERCISE, null, CONFIRMATION_REMOVE_ALERT).then(
+      (res) => {
+        if (res.value) {
+          this.props.onSetNewPostValues({
+            newPostExercisesValues: newPostExercisesValues.filter(
+              (obj) => obj.id !== exerciseId
+            ),
+          });
+
+          // set view to undefined because we removed an bject from the array
+          this.setState({
+            exercisesViewState: {
+              ...this.state.exercisesViewState,
+              [stateExerciseView]: undefined,
+            },
+          });
+        }
+      }
+    );
+  };
   addExercise = () => {
-    const {
-      exercisesSequence,
-      newPostExercisesValues,
-    } = this.props.newPostState;
-    const currentId = exercisesSequence.length;
-    const exerciseIndex = currentId >= EXERCISES_NAMES.length ? 0 : currentId;
-    // add exercise sequnce, for example Match should be first than we should display Complete
+    const { newPostExercisesValues } = this.props.newPostState;
+    const currentId = newPostExercisesValues.length;
+
     this.props.onSetNewPostValues({
-      exercisesSequence: exercisesSequence.concat({
-        id: currentId,
-        // [currentId]:
-        name: EXERCISES_NAMES[exerciseIndex].text,
-        type: EXERCISES_TYPES[0].text,
-      }),
       newPostExercisesValues: newPostExercisesValues.concat({
         id: currentId,
-        name: "Match",
-        type: "Vocabulary",
+        name: EXERCISES_NAMES[0].text,
+        type: EXERCISES_TYPES[0].text,
         description: EXERCISES_DESCRIPTIONS[0].text,
-
-        // [currentId]: EXERCISES_NAMES[exerciseIndex].text,
+        content: [],
       }),
     });
   };
 
-  // {
-  //   id: 0,
-  //   name: "Match",
-  //   type: "Vocabulary",
-  //   description: EXERCISES_DESCRIPTIONS[0].text,
-  // },
-  // onChangePostExerciseValues = (data, exerciseNames, id, keyName) => {
-  //   exerciseNames = exerciseNames.toLowerCase();
-  //   const { exerciseContent } = this.props.newPostState;
-  //   // clone object to
-  //   const contentCloned = Object.assign({}, exerciseContent);
-
-  //   // find object by id and whatever user changed inside
-  //   const findObject = contentCloned[exerciseNames].filter(
-  //     (obj) => obj.id === id
-  //   );
-
-  //   if (findObject) {
-  //     findObject[0][keyName] = data.value;
-  //   }
-
-  //   this.props.onSetNewPostValues({
-  //     exerciseContent: {
-  //       ...exerciseContent,
-  //       [exerciseNames]: contentCloned[exerciseNames],
-  //     },
-  //   });
-  // };
-
-  // handle views by exercise name
+  // handle views by name of an exercise
   toggleView = (stateName) => {
     console.log(stateName, "stateName");
     const { exercisesViewState } = this.state;
@@ -260,28 +120,20 @@ class PractiseContainer extends PureComponent {
     });
 
   render() {
-    const { exercisesQuantity, charValues, exercisesViewState } = this.state;
+    const { exercisesViewState } = this.state;
     const {
       allExercisesTypes,
       allExercisesDescriptions,
       allexerciseNames,
     } = this.props.posts;
-    const {
-    
-      exerciseContent,
-      exercisesSequence,
-      newPostExercisesValues,
-    } = this.props.newPostState;
+    const { newPostExercisesValues } = this.props.newPostState;
 
-    console.log(this.props.newPostState, "his.props.newPostState");
-    // console.log(exercisesSequence, "exercisesSequence");
-    // console.log(exercisesViewState, "exercisesViewState");
     return (
       <div className="container-init-exercises">
         <Segment className="segment-init-exercises" secondary>
           <Header className="header-init-exercises" as="h2">
-            {`You've created ${exercisesSequence.length} ${
-              exercisesSequence.length === 1 ? "esercise" : "esercises"
+            {`You've created ${newPostExercisesValues.length} ${
+              newPostExercisesValues.length === 1 ? "esercise" : "esercises"
             }`}
           </Header>
           <div className="button-group-init-exercises">
@@ -336,15 +188,9 @@ class PractiseContainer extends PureComponent {
         >
           <>
             {newPostExercisesValues.map((el, key) => {
-              {
-                /* exercisesSequence .log(el.id, "el"); */
-              }
-              {
-                /* console.log(el,'el') */
-              }
               const generatedKey = el.id || key;
 
-              const stateExercise = `${el[generatedKey]}-${generatedKey}`;
+              const stateExercise = `${el.id}-${el.name}`;
 
               // we're getting undefined when component just mounted which means the exercise is currently visible
               const isExerciseOpen =
@@ -363,7 +209,7 @@ class PractiseContainer extends PureComponent {
                     <div key={key} className="container-exercise-builder">
                       <div className="container-exercise-top">
                         <Header className="header-exercise-top" as="h3">
-                          Exercise {exercisesQuantity}
+                          Exercise {el.id + 1}
                         </Header>
                         <div className="button-group-exercise-top">
                           <Popup
@@ -392,12 +238,9 @@ class PractiseContainer extends PureComponent {
                                 color="red"
                                 icon="remove"
                                 className="button-remove-exercise"
-                                onClick={() => {
-                                  {
-                                    /* this.openView("allExercisesView");
-                                    /* this.setExercisesSequence(); */
-                                  }
-                                }}
+                                onClick={() =>
+                                  this.removeExerciseById(el.id, stateExercise)
+                                }
                               />
                             }
                           />
@@ -422,7 +265,8 @@ class PractiseContainer extends PureComponent {
                                   selection
                                   search
                                   value={
-                                    newPostExercisesValues[el.id].name ||
+                                    (newPostExercisesValues[el.id] &&
+                                      newPostExercisesValues[el.id].name) ||
                                     NOT_FOUND_OPTION
                                   }
                                   options={allexerciseNames}
@@ -485,7 +329,8 @@ class PractiseContainer extends PureComponent {
                               </Form.Field>
                             </Form.Group>
                           </Form>
-                          {el.name === "Match" && (
+
+                          {el.name === MATCHING && (
                             <MatchExercise currentExerciseValues={el} />
                           )}
                           {/* {exerciseNames.includes("Match") && (
