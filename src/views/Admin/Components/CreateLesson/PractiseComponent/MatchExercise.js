@@ -44,15 +44,13 @@ class MatchExercise extends PureComponent {
     const { charValues } = this.state;
     const { newPostExercisesValues } = this.props.newPostState;
 
-    const intNumber =
+    const incrementedNumber =
       newPostExercisesValues[objValues.id] &&
       !!newPostExercisesValues[objValues.id].content.length
         ? newPostExercisesValues[objValues.id].content.length
         : 0;
 
-    // console.log(intNumber, "int");
-    // console.log(newPostExercisesValues,'newPostExercisesValues')
-    if (intNumber < CHAR_SEQUENCE.length) {
+    if (incrementedNumber < CHAR_SEQUENCE.length) {
       this.props.onSetNewPostValues({
         newPostExercisesValues: newPostExercisesValues.map((obj) =>
           obj.id === objValues.id
@@ -60,7 +58,7 @@ class MatchExercise extends PureComponent {
                 ...obj,
                 content: obj.content.concat({
                   ...INIT_FIELDS_CONTENT[objValues.name],
-                  id: intNumber,
+                  id: incrementedNumber,
                 }),
               }
             : obj
@@ -74,7 +72,7 @@ class MatchExercise extends PureComponent {
           : {
               ...charValues,
               [objValues.name]: charValues[objValues.name].concat(
-                transformToOptions([CHAR_SEQUENCE[intNumber]])[0]
+                transformToOptions([CHAR_SEQUENCE[incrementedNumber]])[0]
               ),
             },
       });
@@ -128,6 +126,64 @@ class MatchExercise extends PureComponent {
     });
   };
 
+  componentDidMount() {
+    const { newPostExercisesValues } = this.props.newPostState;
+    const { currentExerciseValues } = this.props;
+    const { charValues } = this.state;
+    console.log(currentExerciseValues, "currentExerciseValues");
+    const postId = newPostExercisesValues[currentExerciseValues.id];
+    const postName =
+      newPostExercisesValues[currentExerciseValues.id] &&
+      newPostExercisesValues[currentExerciseValues.id].name;
+    // check if post has values
+    if (postId && postId.content && !!postId.content.length) {
+      this.setState({
+        charValues: !charValues[postName]
+          ? {
+              [postName]: INIT_CHAR_VALUES,
+            }
+          : {
+              ...charValues,
+              [postName]: charValues[postName].concat(
+                transformToOptions([CHAR_SEQUENCE[postId.content.length]])[0]
+              ),
+            },
+      });
+    }
+  }
+
+  removeFieldById = (exerciseId, fieldId) => {
+    const { newPostState } = this.props;
+    // clone objects to keep props immutable
+    let newPostExercisesValues = Object.assign(
+      {},
+      newPostState.newPostExercisesValues
+    );
+
+    const charValues = Object.assign({}, this.state.charValues);
+
+    if (newPostExercisesValues[exerciseId].content.length === 1) {
+      newPostExercisesValues.content = [];
+      delete charValues[newPostExercisesValues[exerciseId].name];
+    } else {
+      // filter object
+      newPostExercisesValues[exerciseId].content = newPostExercisesValues[
+        exerciseId
+      ].content.filter((obj) => {
+        const filterObjects = obj.id !== fieldId;
+        //  decrement values which are higher than removed obj.id
+        obj.id = obj.id > fieldId ? obj.id - 1 : obj.id;
+        return filterObjects;
+      });
+      // remove letter from the letters dropdown
+      charValues[newPostExercisesValues[exerciseId].name].pop();
+    }
+
+    this.setState({ charValues });
+
+    this.props.onSetNewPostValues(newPostExercisesValues);
+  };
+
   render() {
     const { charValues } = this.state;
     const { currentExerciseValues } = this.props;
@@ -146,17 +202,8 @@ class MatchExercise extends PureComponent {
             ribbon
             className="label-exercise-name"
           >
-            {currentExerciseValues.name}
+            {currentExerciseValues.name.toUpperCase()}
           </Label>
-          {/* <Statistic horizontal size="tiny" color="teal">
-            <Statistic.Label> Total Fields: </Statistic.Label>
-            <Statistic.Value>
-              {(currentExerciseValues &&
-                currentExerciseValues.content &&
-                currentExerciseValues.content.length) ||
-                0}
-            </Statistic.Value>
-          </Statistic> */}
           <div className="button-group-field-top">
             <Button
               icon
@@ -227,9 +274,8 @@ class MatchExercise extends PureComponent {
                                     selection
                                     className="match-dropwdown-letter"
                                     options={
-                                      charValues[
-                                        currentExerciseValues.name
-                                      ] || [NOT_FOUND_OPTION]
+                                      charValues[currentExerciseValues.name] ||
+                                      []
                                     }
                                     onChange={(e, data) =>
                                       this.onChangePostExerciseValues(
@@ -261,6 +307,18 @@ class MatchExercise extends PureComponent {
                                     {MATH_FIELDS.text.label}
                                   </label>
                                   <TextArea
+                                    value={
+                                      newPostExercisesValues &&
+                                      newPostExercisesValues[
+                                        currentExerciseValues.id
+                                      ] &&
+                                      newPostExercisesValues[
+                                        currentExerciseValues.id
+                                      ].content[obj.id] &&
+                                      newPostExercisesValues[
+                                        currentExerciseValues.id
+                                      ].content[obj.id].contentId
+                                    }
                                     placeholder={MATH_FIELDS.text.placeholder}
                                     className="match-textarea"
                                     onChange={(e, data) =>
@@ -299,6 +357,18 @@ class MatchExercise extends PureComponent {
                                     {MATH_FIELDS.text.label}
                                   </label>
                                   <TextArea
+                                    value={
+                                      newPostExercisesValues &&
+                                      newPostExercisesValues[
+                                        currentExerciseValues.id
+                                      ] &&
+                                      newPostExercisesValues[
+                                        currentExerciseValues.id
+                                      ].content[obj.id] &&
+                                      newPostExercisesValues[
+                                        currentExerciseValues.id
+                                      ].content[obj.id].contentLetter
+                                    }
                                     placeholder={MATH_FIELDS.text.placeholder}
                                     className="match-textarea"
                                     onChange={(e, data) =>
@@ -314,8 +384,19 @@ class MatchExercise extends PureComponent {
                                 <Form.Button
                                   className="match-remove-field"
                                   color="red"
-                                  icon="remove"
-                                />
+                                  onClick={() =>
+                                    this.removeFieldById(
+                                      currentExerciseValues.id,
+                                      obj.id
+                                    )
+                                  }
+                                >
+                                  <Icon
+                                    size="large"
+                                    className="icon-remove-field"
+                                    name="remove"
+                                  />
+                                </Form.Button>
                               </Form.Group>
                             </Form>
                           </Grid.Column>

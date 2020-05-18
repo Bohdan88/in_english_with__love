@@ -129,12 +129,12 @@ class CreateLesson extends Component {
           ...new Set(postsList.map((obj, key) => obj.focus)),
         ]);
 
-        // const setallExercisesTypes = transformToOptions([
-        //   ...new Set(postsList.map((obj, key) => obj.allExercisesTypes)),
+        // const setExercisesTypes = transformToOptions([
+        //   ...new Set(postsList.map((obj, key) => obj.exercisesTypes)),
         // ]);
 
-        // const setallExercisesDescriptions = transformToOptions([
-        //   ...new Set(postsList.map((obj, key) => obj.allExercisesDescriptions)),
+        // const setExercisesDescriptions = transformToOptions([
+        //   ...new Set(postsList.map((obj, key) => obj.exercisesDescriptions)),
         // ]);
         // console.log(setSubCategories, "setSubCategories");
 
@@ -143,8 +143,8 @@ class CreateLesson extends Component {
           allPosts: postsList,
           subCategories: setSubCategories,
           focuses: setFocuses,
-          // allExercisesTypes: setallExercisesTypes,
-          // allExercisesDescriptions: setallExercisesDescriptions,
+          // exercisesTypes: setExercisesTypes,
+          // exercisesDescriptions: setExercisesDescriptions,
         });
 
         this.props.onSetNewPostValues({
@@ -241,9 +241,10 @@ class CreateLesson extends Component {
   };
 
   onSubmitPost = () => {
-    this.props.firebase.posts().push().set(this.props.newPostState);
-    this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
-    fireAlert(true, LESSON_STATUS);
+    console.log(this.props.newPostState)
+    // this.props.firebase.posts().push().set(this.props.newPostState);
+    // this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
+    // fireAlert(true, LESSON_STATUS);
 
     //   fireAlert(true);
     // } else {
@@ -475,7 +476,7 @@ class CreateLesson extends Component {
         <i className="fas fa-eye-dropper"></i>
 
         <Button
-          disabled={isEditorEmpty ? true : false}
+          disabled={isEditorEmpty ? false : false} // true: false
           onClick={this.onSubmitPost}
         >
           Create

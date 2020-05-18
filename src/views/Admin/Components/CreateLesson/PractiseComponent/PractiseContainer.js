@@ -62,9 +62,12 @@ class PractiseContainer extends PureComponent {
       (res) => {
         if (res.value) {
           this.props.onSetNewPostValues({
-            newPostExercisesValues: newPostExercisesValues.filter(
-              (obj) => obj.id !== exerciseId
-            ),
+            newPostExercisesValues: newPostExercisesValues.filter((obj) => {
+              const filterObjects = obj.id !== exerciseId;
+              //  decrement values which are higher than removed obj.id
+              obj.id = obj.id > exerciseId ? obj.id - 1 : obj.id;
+              return filterObjects;
+            }),
           });
 
           // set view to undefined because we removed an bject from the array
@@ -88,7 +91,7 @@ class PractiseContainer extends PureComponent {
         name: EXERCISES_NAMES[0].text,
         type: EXERCISES_TYPES[0].text,
         description: EXERCISES_DESCRIPTIONS[0].text,
-        content: [],
+        content: [INIT_FIELDS_CONTENT.match],
       }),
     });
   };
@@ -128,6 +131,7 @@ class PractiseContainer extends PureComponent {
     } = this.props.posts;
     const { newPostExercisesValues } = this.props.newPostState;
 
+    console.log(newPostExercisesValues, "newPostExercisesValues");
     return (
       <div className="container-init-exercises">
         <Segment className="segment-init-exercises" secondary>
@@ -197,6 +201,9 @@ class PractiseContainer extends PureComponent {
                 exercisesViewState[stateExercise] === undefined ||
                 exercisesViewState[stateExercise] === true;
 
+              {
+                /* console.log(el.id,'el.id') */
+              }
               return (
                 <Transition
                   /* visible={this.state[stateExercise] === false ? false : true} */
@@ -288,7 +295,8 @@ class PractiseContainer extends PureComponent {
                                   selection
                                   search
                                   value={
-                                    newPostExercisesValues[el.id].type ||
+                                    (newPostExercisesValues[el.id] &&
+                                      newPostExercisesValues[el.id].type) ||
                                     NOT_FOUND_OPTION
                                   }
                                   options={allExercisesTypes}
@@ -313,7 +321,9 @@ class PractiseContainer extends PureComponent {
                                   selection
                                   search
                                   value={
-                                    newPostExercisesValues[el.id].description ||
+                                    (newPostExercisesValues[el.id] &&
+                                      newPostExercisesValues[el.id]
+                                        .description) ||
                                     NOT_FOUND_OPTION
                                   }
                                   options={allExercisesDescriptions}
@@ -329,7 +339,6 @@ class PractiseContainer extends PureComponent {
                               </Form.Field>
                             </Form.Group>
                           </Form>
-
                           {el.name === MATCHING && (
                             <MatchExercise currentExerciseValues={el} />
                           )}

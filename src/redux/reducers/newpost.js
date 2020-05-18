@@ -10,7 +10,7 @@ import {
 const initState = {
   category: CATEGORIES[0].text,
   subCategory: "",
-  focus: "",
+  focus: "focus",
   post: {
     [CREATE_LESSON_STAGES.before.key]: "",
     [CREATE_LESSON_STAGES.after.key]: "",

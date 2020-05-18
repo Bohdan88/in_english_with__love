@@ -199,7 +199,12 @@ export const MATH_FIELDS = {
 };
 
 export const INIT_FIELDS_CONTENT = {
-  match: { id: 1, letter: "", contentId: "", contentLetter: "" },
+  match: {
+    id: 1,
+    letter: "",
+    contentId: "",
+    contentLetter: "",
+  },
 };
 
 export const INIT_CHAR_VALUES = [{ key: "A", text: "A", value: "A" }];
