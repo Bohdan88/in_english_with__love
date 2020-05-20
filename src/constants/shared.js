@@ -200,7 +200,7 @@ export const MATH_FIELDS = {
 
 export const INIT_FIELDS_CONTENT = {
   match: {
-    id: 1,
+    id: 0,
     letter: "",
     contentId: "",
     contentLetter: "",

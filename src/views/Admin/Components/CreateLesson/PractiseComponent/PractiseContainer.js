@@ -131,7 +131,7 @@ class PractiseContainer extends PureComponent {
     } = this.props.posts;
     const { newPostExercisesValues } = this.props.newPostState;
 
-    console.log(newPostExercisesValues, "newPostExercisesValues");
+    // console.log(this.props.posts, "newPostExercisesValues");
     return (
       <div className="container-init-exercises">
         <Segment className="segment-init-exercises" secondary>

@@ -130,7 +130,7 @@ class MatchExercise extends PureComponent {
     const { newPostExercisesValues } = this.props.newPostState;
     const { currentExerciseValues } = this.props;
     const { charValues } = this.state;
-    console.log(currentExerciseValues, "currentExerciseValues");
+    // console.log(currentExerciseValues, "currentExerciseValues");
     const postId = newPostExercisesValues[currentExerciseValues.id];
     const postName =
       newPostExercisesValues[currentExerciseValues.id] &&
@@ -161,22 +161,24 @@ class MatchExercise extends PureComponent {
     );
 
     const charValues = Object.assign({}, this.state.charValues);
-
-    if (newPostExercisesValues[exerciseId].content.length === 1) {
+    const currentExercise = newPostExercisesValues[exerciseId];
+    if (currentExercise.content.length === 1) {
       newPostExercisesValues.content = [];
-      delete charValues[newPostExercisesValues[exerciseId].name];
+      delete charValues[currentExercise.name];
     } else {
       // filter object
-      newPostExercisesValues[exerciseId].content = newPostExercisesValues[
-        exerciseId
-      ].content.filter((obj) => {
+      currentExercise.content = currentExercise.content.filter((obj) => {
         const filterObjects = obj.id !== fieldId;
         //  decrement values which are higher than removed obj.id
         obj.id = obj.id > fieldId ? obj.id - 1 : obj.id;
+        // clean props from nonexistent letter from dropdown if we have one
+        const lettersArray = charValues[currentExercise.name];
+        const lastArrayLetter = lettersArray[lettersArray.length - 1].text;
+        obj.letter = obj.letter === lastArrayLetter ? "" : obj.letter;
         return filterObjects;
       });
       // remove letter from the letters dropdown
-      charValues[newPostExercisesValues[exerciseId].name].pop();
+      charValues[currentExercise.name].pop();
     }
 
     this.setState({ charValues });
@@ -188,7 +190,7 @@ class MatchExercise extends PureComponent {
     const { charValues } = this.state;
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
-
+    console.log(charValues, " charValues");
     return (
       <Segment className="exercises-container">
         <div className="exercises-handler">
@@ -250,158 +252,152 @@ class MatchExercise extends PureComponent {
                 newPostExercisesValues[currentExerciseValues.id] &&
                 newPostExercisesValues[currentExerciseValues.id].content.map(
                   (obj) => {
+                    {
+                      /* console.log(obj,'obj') */
+                    }
                     return (
-                      <Transition
-                        key={obj.id}
-                        visible={true}
-                        animation="fade"
-                        transitionOnMount={true}
-                        unmountOnHide={true}
-                        duration={1000}
-                      >
-                        <Grid.Row className="math-field-row">
-                          <Grid.Column textAlign="left">
-                            <Form>
-                              <Form.Group
-                              /* style={{ border: "1px solid white" }} */
-                              >
-                                <Form.Field>
-                                  <Form.Dropdown
-                                    label={MATH_FIELDS.letter.label}
-                                    /* placeholder={MATH_FIELDS.letter.placeholder}  */
-                                    compact
-                                    search
-                                    selection
-                                    className="match-dropwdown-letter"
-                                    options={
-                                      charValues[currentExerciseValues.name] ||
-                                      []
-                                    }
-                                    onChange={(e, data) =>
-                                      this.onChangePostExerciseValues(
-                                        data,
-                                        currentExerciseValues,
-                                        obj.id,
-                                        MATH_KEYS.letter
-                                      )
-                                    }
-                                  />
-                                </Form.Field>
-                                <div className="match-container-id">
-                                  <label className="match-label-id">
-                                    {MATH_FIELDS.id.label}
-                                  </label>
-                                  <Segment className="match-segment-id">
-                                    <Statistic
-                                      className="match-statistic-id"
-                                      size="mini"
-                                    >
-                                      <Statistic.Value>
-                                        {obj.id + 1}.
-                                      </Statistic.Value>
-                                    </Statistic>
-                                  </Segment>
-                                </div>
-                                <Container className="match-textarea-container">
-                                  <label className="match-textarea-label">
-                                    {MATH_FIELDS.text.label}
-                                  </label>
-                                  <TextArea
-                                    value={
-                                      newPostExercisesValues &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ] &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ].content[obj.id] &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ].content[obj.id].contentId
-                                    }
-                                    placeholder={MATH_FIELDS.text.placeholder}
-                                    className="match-textarea"
-                                    onChange={(e, data) =>
-                                      this.onChangePostExerciseValues(
-                                        data,
-                                        currentExerciseValues,
-                                        obj.id,
-                                        MATH_KEYS.contentId
-                                      )
-                                    }
-                                  />
-                                </Container>
-                              </Form.Group>
-                            </Form>
-                          </Grid.Column>
-                          <Grid.Column>
-                            <Form>
-                              <Form.Group>
-                                <div className="match-container-id">
-                                  <label className="match-label-id">
-                                    {MATH_FIELDS.letter.label}
-                                  </label>
-                                  <Segment className="match-segment-id">
-                                    <Statistic
-                                      className="match-statistic-id"
-                                      size="mini"
-                                    >
-                                      <Statistic.Value>
-                                        {obj.letter}
-                                      </Statistic.Value>
-                                    </Statistic>
-                                  </Segment>
-                                </div>
-                                <Container className="match-textarea-container">
-                                  <label className="match-textarea-label">
-                                    {MATH_FIELDS.text.label}
-                                  </label>
-                                  <TextArea
-                                    value={
-                                      newPostExercisesValues &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ] &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ].content[obj.id] &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ].content[obj.id].contentLetter
-                                    }
-                                    placeholder={MATH_FIELDS.text.placeholder}
-                                    className="match-textarea"
-                                    onChange={(e, data) =>
-                                      this.onChangePostExerciseValues(
-                                        data,
-                                        currentExerciseValues,
-                                        obj.id,
-                                        MATH_KEYS.contentLetter
-                                      )
-                                    }
-                                  />
-                                </Container>
-                                <Form.Button
-                                  className="match-remove-field"
-                                  color="red"
-                                  onClick={() =>
-                                    this.removeFieldById(
-                                      currentExerciseValues.id,
-                                      obj.id
+                      <Grid.Row key={obj.id} className="math-field-row">
+                        <Grid.Column textAlign="left">
+                          <Form>
+                            <Form.Group
+                            /* style={{ border: "1px solid white" }} */
+                            >
+                              <Form.Field>
+                                <Form.Dropdown
+                                  label={MATH_FIELDS.letter.label}
+                                  /* placeholder={MATH_FIELDS.letter.placeholder}  */
+                                  compact
+                                  search
+                                  selection
+                                  className="match-dropwdown-letter"
+                                  options={
+                                    charValues[currentExerciseValues.name] || []
+                                  }
+                                  onChange={(e, data) =>
+                                    this.onChangePostExerciseValues(
+                                      data,
+                                      currentExerciseValues,
+                                      obj.id,
+                                      MATH_KEYS.letter
                                     )
                                   }
-                                >
-                                  <Icon
-                                    size="large"
-                                    className="icon-remove-field"
-                                    name="remove"
-                                  />
-                                </Form.Button>
-                              </Form.Group>
-                            </Form>
-                          </Grid.Column>
-                        </Grid.Row>
-                      </Transition>
+                                />
+                              </Form.Field>
+                              <div className="match-container-id">
+                                <label className="match-label-id">
+                                  {MATH_FIELDS.id.label}
+                                </label>
+                                <Segment className="match-segment-id">
+                                  <Statistic
+                                    className="match-statistic-id"
+                                    size="mini"
+                                  >
+                                    <Statistic.Value>
+                                      {obj.id + 1}.
+                                    </Statistic.Value>
+                                  </Statistic>
+                                </Segment>
+                              </div>
+                              <Container className="match-textarea-container">
+                                <label className="match-textarea-label">
+                                  {MATH_FIELDS.text.label}
+                                </label>
+                                <TextArea
+                                  value={
+                                    newPostExercisesValues &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ] &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ].content[obj.id] &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ].content[obj.id].contentId
+                                  }
+                                  placeholder={MATH_FIELDS.text.placeholder}
+                                  className="match-textarea"
+                                  onChange={(e, data) =>
+                                    this.onChangePostExerciseValues(
+                                      data,
+                                      currentExerciseValues,
+                                      obj.id,
+                                      MATH_KEYS.contentId
+                                    )
+                                  }
+                                />
+                              </Container>
+                            </Form.Group>
+                          </Form>
+                        </Grid.Column>
+                        <Grid.Column>
+                          <Form>
+                            <Form.Group>
+                              <div className="match-container-id">
+                                <label className="match-label-id">
+                                  {MATH_FIELDS.letter.label}
+                                </label>
+                                <Segment className="match-segment-id">
+                                  <Statistic
+                                    className="match-statistic-id"
+                                    size="mini"
+                                  >
+                                    <Statistic.Value>
+                                      {/* {console.log(obj.letter,'OBJ_LETTER')} */}
+                                      {obj.letter}
+                                    </Statistic.Value>
+                                  </Statistic>
+                                </Segment>
+                              </div>
+                              <Container className="match-textarea-container">
+                                <label className="match-textarea-label">
+                                  {MATH_FIELDS.text.label}
+                                </label>
+                                <TextArea
+                                  value={
+                                    newPostExercisesValues &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ] &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ].content[obj.id] &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ].content[obj.id].contentLetter
+                                  }
+                                  placeholder={MATH_FIELDS.text.placeholder}
+                                  className="match-textarea"
+                                  onChange={(e, data) =>
+                                    this.onChangePostExerciseValues(
+                                      data,
+                                      currentExerciseValues,
+                                      obj.id,
+                                      MATH_KEYS.contentLetter
+                                    )
+                                  }
+                                />
+                              </Container>
+                              <Form.Button
+                                className="match-remove-field"
+                                color="red"
+                                onClick={() =>
+                                  this.removeFieldById(
+                                    currentExerciseValues.id,
+                                    obj.id
+                                  )
+                                }
+                              >
+                                <Icon
+                                  size="large"
+                                  className="icon-remove-field"
+                                  name="remove"
+                                />
+                              </Form.Button>
+                            </Form.Group>
+                          </Form>
+                        </Grid.Column>
+                      </Grid.Row>
                     );
                   }
                 )}
