@@ -65,7 +65,6 @@ class MatchExercise extends PureComponent {
         ),
       });
 
-      objValues.name = objValues.name;
       this.setState({
         charValues: !charValues[objValues.name]
           ? { [objValues.name]: INIT_CHAR_VALUES }
@@ -109,7 +108,6 @@ class MatchExercise extends PureComponent {
 
   onChangePostExerciseValues = (data, objValues, fieldId, keyName) => {
     const { newPostExercisesValues } = this.props.newPostState;
-
     this.props.onSetNewPostValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) =>
         obj.id === objValues.id
@@ -161,9 +159,9 @@ class MatchExercise extends PureComponent {
     );
 
     const charValues = Object.assign({}, this.state.charValues);
-    const currentExercise = newPostExercisesValues[exerciseId];
+    let currentExercise = newPostExercisesValues[exerciseId];
     if (currentExercise.content.length === 1) {
-      newPostExercisesValues.content = [];
+      currentExercise.content = [];
       delete charValues[currentExercise.name];
     } else {
       // filter object
@@ -190,7 +188,7 @@ class MatchExercise extends PureComponent {
     const { charValues } = this.state;
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
-    console.log(charValues, " charValues");
+
     return (
       <Segment className="exercises-container">
         <div className="exercises-handler">
@@ -252,16 +250,11 @@ class MatchExercise extends PureComponent {
                 newPostExercisesValues[currentExerciseValues.id] &&
                 newPostExercisesValues[currentExerciseValues.id].content.map(
                   (obj) => {
-                    {
-                      /* console.log(obj,'obj') */
-                    }
                     return (
                       <Grid.Row key={obj.id} className="math-field-row">
                         <Grid.Column textAlign="left">
                           <Form>
-                            <Form.Group
-                            /* style={{ border: "1px solid white" }} */
-                            >
+                            <Form.Group>
                               <Form.Field>
                                 <Form.Dropdown
                                   label={MATH_FIELDS.letter.label}
@@ -287,7 +280,7 @@ class MatchExercise extends PureComponent {
                                 <label className="match-label-id">
                                   {MATH_FIELDS.id.label}
                                 </label>
-                                <Segment className="match-segment-id">
+                                <Segment className={`match-segment-id`}>
                                   <Statistic
                                     className="match-statistic-id"
                                     size="mini"
@@ -379,7 +372,7 @@ class MatchExercise extends PureComponent {
                                 />
                               </Container>
                               <Form.Button
-                                className="match-remove-field"
+                                className="button-remove-field"
                                 color="red"
                                 onClick={() =>
                                   this.removeFieldById(

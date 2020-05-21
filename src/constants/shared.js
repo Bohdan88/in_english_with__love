@@ -59,6 +59,10 @@ export const SIGN_IN_METHODS = [
 ];
 
 // admin page
+export const CONFIRMATION_REMOVE_ALERT = "CONFIRMATION_REMOVE_ALERT";
+export const MATCHING = "Matching";
+export const COMPLETE_THE_SENTENCES = "Complete The Sentences";
+export const REPLACED_ANSWER = "_________";
 export const ADMIN_TABS = {
   create_lesson: { key: "lesson ", content: "Create a lesson", icon: "add" },
   all_lessons: { key: "all_lessons ", content: "All lessons", icon: "list" },
@@ -101,6 +105,12 @@ export const MATH_KEYS = {
   letter: "letter",
   contentId: "contentId",
   contentLetter: "contentLetter",
+};
+
+export const COMPLETE_KEYS = {
+  id: "id",
+  sentence: "sentence",
+  answer: "answer",
 };
 
 const MATCH_THE_WORDS_DESC = {
@@ -198,12 +208,22 @@ export const MATH_FIELDS = {
   text: { label: "Content", placeholder: "Content" },
 };
 
+export const COMPLETE_FIELDS = {
+  id: { label: "Num.", placeholder: "number" },
+  sentence: { label: "Sentence", placeholder: "Sentence" },
+  asnwer: { label: "Answer", placeholder: "Answer" },
+};
 export const INIT_FIELDS_CONTENT = {
-  match: {
+  [MATCHING]: {
     id: 0,
     letter: "",
     contentId: "",
     contentLetter: "",
+  },
+  [COMPLETE_THE_SENTENCES]: {
+    id: 0,
+    sentence: "",
+    answer: "",
   },
 };
 
@@ -308,8 +328,6 @@ export const EDITOR_OPTIONS = {
   ],
 };
 
-export const CONFIRMATION_REMOVE_ALERT = "CONFIRMATION_REMOVE_ALERT";
-export const MATCHING = "Matching";
 export const EXERCISES_LABELS_COLORS = [
   "blue",
   "teal",

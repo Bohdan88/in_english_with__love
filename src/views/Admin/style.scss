@@ -102,7 +102,8 @@
   margin-bottom: 18px !important;
 }
 .button-add-field,
-.button-remove-field {
+.button-remove-field,
+.button-replace-field {
   margin-right: 5px !important;
 }
 
@@ -163,7 +164,8 @@
   margin: 0px !important;
 }
 
-.match-grid > .column {
+.match-grid > .column,
+.complete-grid > .column {
   padding-bottom: 0px !important;
 }
 
@@ -171,12 +173,14 @@
   padding: 0px 3% !important;
 }
 
-.match-statistic-id {
+.match-statistic-id,
+.complete-statistic-id {
   display: flex !important;
   justify-content: center !important;
 }
 
-.match-segment-id {
+.match-segment-id,
+.complete-segment-id {
   display: flex;
   background: aliceblue;
   margin-right: 5px !important;
@@ -188,13 +192,14 @@
 
 .match-dropwdown-letter > div,
 .match-segment-id,
-.match-remove-field > .button {
+.complete-segment-id,
+.button-replace-field > .button,
+.button-remove-field > .button {
   min-width: 55px !important;
 }
 
-
-
-.match-remove-field > .button {
+.button-remove-field > .button,
+.button-replace-field > .button {
   display: flex !important;
   justify-content: center !important;
   border: 1px solid rgba(34, 36, 38, 0.15) !important;
@@ -207,10 +212,51 @@
   margin: auto !important;
   padding: 0px !important;
 }
+
+// .complete-column {
+//   padding-right: 0px !important;
+// }
+.complete-field-row > .column {
+  padding: 0 1% !important;
+}
 .match-textarea-container {
 }
+
+.complete-textarea-container {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.answer-column {
+  padding: 1px !important;
+}
+
+// .column-remove-field {
+//   // height: 100vh;
+
+// }
+
+.complete-textarea,
+.answer-textarea {
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  border-radius: 0.28571429rem;
+  box-shadow: 0 0 0 0 transparent inset;
+  font-size: 1em;
+  line-height: 1.2857;
+  margin: 0px;
+  background: #fff;
+  padding: 0.78571429em 1em !important;
+}
+
+.complete-textarea:focus,
+.answer-textarea:focus {
+  outline: none !important;
+}
+
 .match-textarea-label,
+.complete-textarea-label,
 .match-label-id,
+.complete-label-id,
 .match-dropwdown-letter > label {
   font-family: "Roboto", sans-serif !important;
   font-weight: 600 !important;
@@ -219,8 +265,10 @@
 
 .match-textarea,
 .match-segment-id,
+.complete-segment-id,
 .match-dropwdown-letter > div,
-.match-remove-field > .button {
+.button-replace-field > .button,
+.button-remove-field > .button {
   height: 42px !important;
 }
 
@@ -228,12 +276,19 @@
   top: 1px !important;
 }
 
-.match-textarea {
+.match-textarea,
+.answer-textarea,
+.complete-textarea {
   margin-top: 5px !important;
 }
 
-.match-remove-field {
+.button-remove-field,
+.button-replace-field {
   margin-top: 23px !important;
+}
+
+.button-replace-field {
+  // margin: auto!important;
 }
 .match-builder {
 }

@@ -3,10 +3,6 @@ import { connect } from "react-redux";
 import {
   PRACTISE_DROPDOWN_TITLES,
   INIT_FIELDS_CONTENT,
-  MATH_FIELDS,
-  CHAR_SEQUENCE,
-  INIT_CHAR_VALUES,
-  MATH_KEYS,
   EXERCISES_NAMES,
   EXERCISES_DESCRIPTIONS,
   EXERCISES_TYPES,
@@ -14,29 +10,25 @@ import {
   REMOVE_EXERCISE,
   CONFIRMATION_REMOVE_ALERT,
   MATCHING,
+  COMPLETE_THE_SENTENCES,
 } from "../../../../../constants/shared";
 import {
   getAllPostsValues,
   setNewPostValues,
 } from "../../../../../redux/actions";
 import {
-  Tab,
   Form,
   Header,
-  Grid,
   Button,
-  Icon,
-  Statistic,
-  Divider,
   Segment,
   TextArea,
   Container,
   Transition,
   Popup,
 } from "semantic-ui-react";
-import Swal from "sweetalert2";
-import { transformToOptions, fireAlert } from "../../../../../utils";
+import { fireAlert } from "../../../../../utils";
 import MatchExercise from "./MatchExercise";
+import CompleteSentencesExercise from "./CompleteSentencesExercise";
 
 class PractiseContainer extends PureComponent {
   state = {
@@ -44,7 +36,6 @@ class PractiseContainer extends PureComponent {
   };
 
   onDropDownChange = (data, dropDownType, exerciseId) => {
-    console.log(dropDownType, "dropdownType");
     const { newPostExercisesValues } = this.props.newPostState;
 
     this.props.onSetNewPostValues({
@@ -342,6 +333,12 @@ class PractiseContainer extends PureComponent {
                           {el.name === MATCHING && (
                             <MatchExercise currentExerciseValues={el} />
                           )}
+                          {el.name === COMPLETE_THE_SENTENCES && (
+                            <CompleteSentencesExercise
+                              currentExerciseValues={el}
+                            />
+                          )}
+
                           {/* {exerciseNames.includes("Match") && (
                             <MatchExercise />
                           )} */}
@@ -506,7 +503,7 @@ class PractiseContainer extends PureComponent {
                                                     />
                                                   </Container>
                                                   <Form.Button
-                                                    className="match-remove-field"
+                                                    className="button-remove-field"
                                                     color="red"
                                                     icon="remove"
                                                   />

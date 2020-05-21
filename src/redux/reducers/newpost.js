@@ -10,7 +10,7 @@ import {
 const initState = {
   category: CATEGORIES[0].text,
   subCategory: "",
-  focus: "focus",
+  focus: "",
   post: {
     [CREATE_LESSON_STAGES.before.key]: "",
     [CREATE_LESSON_STAGES.after.key]: "",
@@ -20,12 +20,21 @@ const initState = {
   title: "",
   iconPath: "",
   newPostExercisesValues: [
+    // match init
+    // {
+    //   id: 0,
+    //   name: EXERCISES_NAMES[0].text,
+    //   type: EXERCISES_TYPES[0].text,
+    //   description: EXERCISES_DESCRIPTIONS[0].text,
+    //   content: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
+    // },
+    // complete init
     {
       id: 0,
-      name: EXERCISES_NAMES[0].text,
-      type: EXERCISES_TYPES[0].text,
-      description: EXERCISES_DESCRIPTIONS[0].text,
-      content: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
+      name: EXERCISES_NAMES[1].text,
+      type: EXERCISES_TYPES[1].text,
+      description: EXERCISES_DESCRIPTIONS[1].text,
+      content: [{ id: 0, sentence: "", answer: "" }],
     },
   ],
 };
