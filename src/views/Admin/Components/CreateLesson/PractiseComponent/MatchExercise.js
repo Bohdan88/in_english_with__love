@@ -205,27 +205,6 @@ class MatchExercise extends PureComponent {
             {currentExerciseValues.name.toUpperCase()}
           </Label>
           <div className="button-group-field-top">
-            <Button
-              icon
-              labelPosition="right"
-              basic
-              color="green"
-              className="button-add-field"
-              onClick={() => this.addField(currentExerciseValues)}
-            >
-              Add field <Icon name="plus" />
-            </Button>
-            <Button
-              basic
-              color="red"
-              icon
-              labelPosition="right"
-              className="button-remove-field"
-              disabled={currentExerciseValues.content.length > 0 ? false : true}
-              onClick={() => this.removeField(currentExerciseValues)}
-            >
-              Remove field <Icon name="minus" />
-            </Button>
             <Statistic
               horizontal
               size="mini"
@@ -240,6 +219,28 @@ class MatchExercise extends PureComponent {
                   0}
               </Statistic.Value>
             </Statistic>
+
+            <Button
+              basic
+              color="red"
+              icon
+              labelPosition="right"
+              className="button-remove-field"
+              disabled={currentExerciseValues.content.length > 0 ? false : true}
+              onClick={() => this.removeField(currentExerciseValues)}
+            >
+              Remove field <Icon name="minus" />
+            </Button>
+            <Button
+              icon
+              labelPosition="right"
+              basic
+              color="green"
+              className="button-add-field"
+              onClick={() => this.addField(currentExerciseValues)}
+            >
+              Add field <Icon name="plus" />
+            </Button>
           </div>
         </div>
 

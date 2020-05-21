@@ -62,7 +62,7 @@ export const SIGN_IN_METHODS = [
 export const CONFIRMATION_REMOVE_ALERT = "CONFIRMATION_REMOVE_ALERT";
 export const MATCHING = "Matching";
 export const COMPLETE_THE_SENTENCES = "Complete The Sentences";
-export const REPLACED_ANSWER = "_________";
+export const REPLACED_ANSWER = " ______________ ";
 export const ADMIN_TABS = {
   create_lesson: { key: "lesson ", content: "Create a lesson", icon: "add" },
   all_lessons: { key: "all_lessons ", content: "All lessons", icon: "list" },

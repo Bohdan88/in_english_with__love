@@ -24,9 +24,12 @@ import {
 } from "../../../../../constants/shared";
 
 class CompleteSentencesExercise extends Component {
+  state = {
+    answersHidden: true,
+  };
   addField = (objValues) => {
     const { newPostExercisesValues } = this.props.newPostState;
-    console.log(objValues.name, "objValues.name");
+    // console.log(objValues.name, "objValues.name");
     const incrementedNumber =
       newPostExercisesValues[objValues.id] &&
       !!newPostExercisesValues[objValues.id].content.length
@@ -77,16 +80,19 @@ class CompleteSentencesExercise extends Component {
               content: obj.content.map((nestedObj) => {
                 const { sentence, answer } = nestedObj;
                 // remove empty space and enters
-                const editedAnswer = answer.trim("").replace("\u21b5", "");
+                const editedAnswer = answer.trim().replace("\u21b5", "");
                 // console.log(sentence === editedAnswer, "sentence");
-                // console.log(editedAnswer,'editedAnswer')
+                // console.log(/\s/.test(editedAnswer), "editedAnswer");
+
+                console.log(answer.trim() === "", "sentence");
                 return nestedObj.id === fieldId
                   ? {
                       ...nestedObj,
-                      sentence: sentence.replace(editedAnswer, REPLACED_ANSWER),
-                      // sentence: /\s/.test(editedAnswer)
-                      //   ? sentence
-                      //   : sentence.replace(editedAnswer, REPLACED_ANSWER),
+                      // sentence: sentence.replace(editedAnswer, REPLACED_ANSWER),
+                      sentence:
+                        /\s/.test(editedAnswer) || answer.trim() === ""
+                          ? sentence
+                          : sentence.replace(editedAnswer, REPLACED_ANSWER),
                     }
                   : nestedObj;
               }),
@@ -98,19 +104,33 @@ class CompleteSentencesExercise extends Component {
 
   identifyAllAnswersInSentences = () => {
     const { newPostExercisesValues } = this.props.newPostState;
+    const { answersHidden } = this.state;
     this.props.onSetNewPostValues({
-      newPostExercisesValues: newPostExercisesValues.map((obj) => ({
-        ...obj,
-        content: obj.content.map((nestedObj) => ({
-          ...nestedObj,
-          sentence: nestedObj.sentence.replace(
-            nestedObj.answer.trim("").replace("\u21b5", ""),
-            REPLACED_ANSWER
-          ),
-        })),
-      })),
+      newPostExercisesValues: newPostExercisesValues.map((obj) => {
+        return {
+          ...obj,
+          content: obj.content.map((nestedObj) => {
+            const { sentence, answer } = nestedObj;
+            const editedAnswer = answer.trim().replace("\u21b5", "");
+
+            return {
+              ...nestedObj,
+              sentence:
+                /\s/.test(editedAnswer) || answer.trim() === ""
+                  ? sentence
+                  : // replace  according to view state
+                  answersHidden
+                  ? sentence.replace(editedAnswer, REPLACED_ANSWER)
+                  : sentence.replace(REPLACED_ANSWER, editedAnswer),
+            };
+          }),
+        };
+      }),
     });
   };
+
+  toggleReplaceAnswers = () =>
+    this.setState({ answersHidden: !this.state.answersHidden });
 
   removeField = (objValues) => {
     const { newPostState } = this.props;
@@ -129,9 +149,10 @@ class CompleteSentencesExercise extends Component {
 
   replaceAnswersInSentences = () => {};
   render() {
+    const { answersHidden } = this.state;
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
-    console.log(newPostExercisesValues, "newPostExercisesValues");
+    // console.log(newPostExercisesValues, "newPostExercisesValues");
     return (
       <div>
         <Segment className="exercises-container">
@@ -149,15 +170,39 @@ class CompleteSentencesExercise extends Component {
               {currentExerciseValues.name.toUpperCase()}
             </Label>
             <div className="button-group-field-top">
+              <Statistic
+                horizontal
+                size="mini"
+                className="statistic-fields-quantity"
+                color="brown"
+              >
+                <Statistic.Label> Total: </Statistic.Label>
+                <Statistic.Value>
+                  <span>
+                    {(currentExerciseValues &&
+                      currentExerciseValues.content &&
+                      currentExerciseValues.content.length) ||
+                      0}
+                  </span>
+                </Statistic.Value>
+              </Statistic>
+
               <Button
+                basic
+                color="violet"
                 icon
                 labelPosition="right"
-                basic
-                color="green"
-                className="button-add-field"
-                onClick={() => this.addField(currentExerciseValues)}
+                className="button-remove-field"
+                disabled={
+                  currentExerciseValues.content.length > 0 ? false : true
+                }
+                onClick={() => {
+                  this.identifyAllAnswersInSentences();
+                  this.toggleReplaceAnswers();
+                }}
               >
-                Add field <Icon name="plus" />
+                Replace sentences
+                <Icon name={answersHidden ? "toggle off" : "toggle on"} />
               </Button>
               <Button
                 basic
@@ -173,32 +218,15 @@ class CompleteSentencesExercise extends Component {
                 Remove field <Icon name="minus" />
               </Button>
               <Button
-                basic
-                color="red"
                 icon
                 labelPosition="right"
-                className="button-remove-field"
-                disabled={
-                  currentExerciseValues.content.length > 0 ? false : true
-                }
-                onClick={() => this.identifyAllAnswersInSentences()}
+                basic
+                color="green"
+                className="button-add-field"
+                onClick={() => this.addField(currentExerciseValues)}
               >
-                Replace all sentences <Icon name="minus" />
+                Add field <Icon name="plus" />
               </Button>
-              <Statistic
-                horizontal
-                size="mini"
-                className="statistic-fields-quantity"
-                color="brown"
-              >
-                <Statistic.Label> Total: </Statistic.Label>
-                <Statistic.Value>
-                  {(currentExerciseValues &&
-                    currentExerciseValues.content &&
-                    currentExerciseValues.content.length) ||
-                    0}
-                </Statistic.Value>
-              </Statistic>
             </div>
           </div>
           <div className="complete-field-container">
@@ -210,7 +238,7 @@ class CompleteSentencesExercise extends Component {
                     (obj) => {
                       return (
                         <Grid.Row key={obj.id} className="complete-field-row">
-                          <Grid.Column width="1" textAlign="left">
+                          {/* <Grid.Column width="1" textAlign="left">
                             <div className="complete-container-id">
                               <label className="complete-label-id">
                                 {COMPLETE_FIELDS.id.label}
@@ -226,10 +254,10 @@ class CompleteSentencesExercise extends Component {
                                 </Statistic>
                               </Segment>
                             </div>
-                          </Grid.Column>
+                          </Grid.Column> */}
                           <Grid.Column
                             className="complete-column"
-                            largeScreen={11}
+                            largeScreen={13}
                           >
                             <Container
                               fluid
@@ -304,7 +332,8 @@ class CompleteSentencesExercise extends Component {
                               />
                             </Container>
                           </Grid.Column>
-                          <Grid.Column
+                          {/* change answer status by id  */}
+                          {/* <Grid.Column
                             className="column-replace-field"
                             largeScreen={1}
                           >
@@ -323,8 +352,8 @@ class CompleteSentencesExercise extends Component {
                                 className="icon-remove-field"
                                 name="reply"
                               />
-                            </Form.Button>
-                          </Grid.Column>
+                            </Form.Button> */}
+                          {/* </Grid.Column> */}
                         </Grid.Row>
                       );
                     }
