@@ -69,6 +69,8 @@ export const ADMIN_TABS = {
   users: { key: "users ", content: "Users", icon: "users" },
 };
 
+export const INIT_NEW_POST = {};
+
 export const CREATE_LESSON_STAGES = {
   before: { key: "about", content: "About", icon: "info" },
   practise: { key: "exercises", content: "Exercises", icon: "legal" }, //lab
@@ -148,18 +150,40 @@ export const EXERCISES_DESCRIPTIONS = [
 ];
 
 export const INIT_NEW_POST_VALUES = {
-  category: "Read",
+  category: CATEGORIES[0].text,
   subCategory: "",
   focus: "",
   post: {
     [CREATE_LESSON_STAGES.before.key]: "",
     [CREATE_LESSON_STAGES.after.key]: "",
     [CREATE_LESSON_STAGES.content.key]: "",
-    [CREATE_LESSON_STAGES.practise.key]: "",
+    // [CREATE_LESSON_STAGES.practise.key]: "",
   },
   title: "",
   iconPath: "",
-  exercise: "",
+  assets: {
+    [CREATE_LESSON_STAGES.before.key]: [],
+    [CREATE_LESSON_STAGES.after.key]: [],
+    [CREATE_LESSON_STAGES.content.key]: [],
+  },
+  newPostExercisesValues: [
+    // match init
+    // {
+    //   id: 0,
+    //   name: EXERCISES_NAMES[0].text,
+    //   type: EXERCISES_TYPES[0].text,
+    //   description: EXERCISES_DESCRIPTIONS[0].text,
+    //   content: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
+    // },
+    // complete init
+    // {
+    //   id: 0,
+    //   name: EXERCISES_NAMES[1].text,
+    //   type: EXERCISES_TYPES[1].text,
+    //   description: EXERCISES_DESCRIPTIONS[1].text,
+    //   content: [{ id: 0, sentence: "", answer: "" }],
+    // },
+  ],
 };
 
 export const ADMIN_DROPDOWN_TITLES = {
@@ -167,16 +191,24 @@ export const ADMIN_DROPDOWN_TITLES = {
     label: "Category",
     placeholder: "Select Category",
     defaultVal: "category",
+    allValues: "categories",
   },
   subCategory: {
     label: "Subcategory",
     placeholder: "Select Subcategory",
     defaultVal: "subCategory",
+    allValues: "subCategories",
   },
   focus: {
     label: "Focus",
     placeholder: "Focus",
     defaultVal: "focus",
+    allValues: "focuses",
+  },
+  title: {
+    label: "Title",
+    placeholder: "Title",
+    defaultVal: "title",
   },
 };
 

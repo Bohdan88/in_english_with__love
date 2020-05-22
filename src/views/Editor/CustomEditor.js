@@ -5,6 +5,8 @@ import {
   convertToRaw,
   ContentState,
   AtomicBlockUtils,
+  convertFromRaw,
+  SelectionState,
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -105,7 +107,7 @@ class CustomEditor extends Component {
     const entitityValues = Object.values(
       convertToRaw(editorState.getCurrentContent()).entityMap
     );
-    // get all images uploaded from local device
+    // // get all images uploaded from local device
     const allUploadedImagesLinks =
       !!entitityValues.length &&
       entitityValues.map((obj) =>
@@ -126,10 +128,15 @@ class CustomEditor extends Component {
             allUploadedImagesLinks.includes(Object.keys(obj)[0])
         ),
       },
+
       post: {
         ...this.props.newPostState.post,
         [this.props.sectionKey]: editorState,
       },
+    });
+
+    this.setState({
+      try: convertToRaw(editorState.getCurrentContent()),
     });
 
     // this.props.onEditorTextChange(checkIfcontainsJustSpaces);
@@ -190,6 +197,9 @@ class CustomEditor extends Component {
       localSrc: URL.createObjectURL(file),
     };
 
+    // assign section key to a file to make a reference in firebase
+    file.section = sectionKey;
+
     // upload an asset into Redux
     this.props.onSetNewPostValues({
       assets: {
@@ -247,13 +257,41 @@ class CustomEditor extends Component {
 
     // console.log(this.state, "statusinrender");
 
+    // we check on blocks in case it's not editor state
     const currentEditor =
-      post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
+      post[sectionKey] === "" || post[sectionKey].blocks
+        ? EditorState.createEmpty()
+        : post[sectionKey];
+    // EditorState.createWithContent(convertFromRaw(post[sectionKey]));
 
-    console.log(
-      draftToHtml(convertToRaw(currentEditor.getCurrentContent()), "OOOK")
-    );
+    // console.log(
+    //   draftToHtml(convertToRaw(currentEditor.getCurrentContent()), "OOOK")
+    // );
 
+    // console.log(currentEditor, "CURRENTEDITOR");
+    // console.log(
+    //   this.state.try &&
+    //     EditorState.createWithContent(convertFromRaw(this.state.try)),
+    //   "TRY_EDITOR"
+    // );
+
+    // let ed = !this.state.try
+    //   ? EditorState.createEmpty()
+    //   : EditorState.set(this.state.try);
+    // console.log(ed, "EDIK");
+
+    // // console.log(currentEditor, "cURREN");
+    // ed.getSelection().getIsBackward(true)
+    // ed.moveFocusToEnd()
+    // console.log(ed.getSelection().getIsBackward())
+    // let som = EditorState.acceptSelection(
+    //   ed,
+    //   new SelectionState({
+    //     isBackward: true,
+    //   })
+    // );
+    console.log(currentEditor, "EDITOR");
+    // console.log(ed.getSelection().getIsBackward())
     return (
       <div className="editor-component">
         <div className="container-editor">

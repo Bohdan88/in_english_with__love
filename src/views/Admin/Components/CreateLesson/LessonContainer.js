@@ -37,25 +37,6 @@ import { transformToOptions, fireAlert } from "../../../../utils";
 //     : [];
 // };
 
-class AnswerTemplate extends Component {
-  render() {
-    return (
-      <div>
-        <Input type="text" placeholder="Add answer...">
-          <input />
-          <Button
-            onClick={this.props.onUpdateQuantity}
-            color="teal"
-            type="submit"
-          >
-            Add answer {` ${this.props.quantity}`}
-          </Button>
-        </Input>
-      </div>
-    );
-  }
-}
-
 // const fireAlert = (state, values, error = null) => {
 //   Swal.fire({
 //     icon: state ? values.icon.success : values.icon.error,
@@ -88,11 +69,14 @@ class CreateLesson extends Component {
       onPreview: false,
       editorState: EditorState.createEmpty(),
       editorTextContent: true,
-      quantity: 1,
-      answers: [],
-      title: "",
       isEditorEmpty: true,
       exercises: [],
+      errorFields: [
+        // category: false,
+        // focus: false,
+        // subCategory: false,
+        // title: false,
+      ],
     };
     this.onChange = (editorState) => this.setState({ editorState });
   }
@@ -106,7 +90,8 @@ class CreateLesson extends Component {
     });
   };
 
-  componentDidMount() {
+  fetchFromDb = () => {
+    console.log("FETCHFROMDB");
     // on posts
     this.props.firebase.posts().on("value", (snapshot) => {
       const postsObject = snapshot && snapshot.val();
@@ -147,21 +132,31 @@ class CreateLesson extends Component {
           // exercisesDescriptions: setExercisesDescriptions,
         });
 
-        this.props.onSetNewPostValues({
-          subCategory: setSubCategories[0] && setSubCategories[0].text,
-          focus: setFocuses[0] && setFocuses[0].text,
-        });
+        // assign subcategoris and focuses if there's some values
+        INIT_NEW_POST_VALUES.subCategory =
+          setSubCategories[0] && setSubCategories[0].text;
+
+        INIT_NEW_POST_VALUES.focus = setFocuses[0] && setFocuses[0].text;
+
+        // set init
+        this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
       }
     });
+  };
+  componentDidMount() {
+    this.fetchFromDb();
   }
 
   onDropDownChange = (data, dropDownType) => {
     this.props.onSetNewPostValues({
       [dropDownType]: data.value,
     });
+
+    this.setState({
+      errorFields: { ...this.state.errorFields, [dropDownType]: false },
+    });
   };
 
-  changeTitle = (e, d) => this.props.onSetNewPostValues({ title: d.value });
   componentWillUnmount() {
     this.props.firebase.posts().off();
   }
@@ -240,8 +235,141 @@ class CreateLesson extends Component {
     });
   };
 
+  isEmptyField = (value) => !value || value.trim === "";
+  checkEachRequiredField = () => {
+    const { category, subCategory, focus, title } = this.props.newPostState;
+    //  clone state to avoid immutability
+    const errorFields = Object.assign({}, this.state.errorFields);
+
+    // equal to false if there's an empty field
+    let isAllFieldFilled;
+
+    // iterate through each array
+    [{ category }, { subCategory }, { focus }, { title }].forEach((obj) => {
+      isAllFieldFilled = !Object.values(obj)[0] ? false : true;
+      errorFields[Object.keys(obj)[0]] = !Object.values(obj)[0] && true;
+    });
+
+    this.setState({ errorFields });
+    return isAllFieldFilled;
+  };
+
+  convertEditorStateToContentState = () => {
+    // clone an opbject to avoid immutability
+    const post = Object.assign({}, this.props.newPostState.post);
+
+    Object.entries(post).forEach((arr) => {
+      // if string is not empty
+      if (!!arr[1]) {
+        post[arr[0]] = convertToRaw(arr[1].getCurrentContent());
+      }
+    });
+    return new Promise((resolve, reject) => {
+      resolve(this.props.onSetNewPostValues({ post }));
+    });
+  };
+
   onSubmitPost = () => {
-    console.log(this.props.newPostState);
+    const { newPostState, firebase } = this.props;
+    // use assign  to aboid immutability
+    const assets = Object.assign({}, newPostState.assets);
+
+    if (this.checkEachRequiredField()) {
+      //  this.convertEditorStateToContentState();
+      // check if a user have some assets
+      Object.values(assets).map((arrayOfObj) => {
+        if (arrayOfObj && !!arrayOfObj.length) {
+          arrayOfObj.map((obj) => {
+            const imgSection = Object.values(obj)[0].section;
+            const imgUrl = Object.keys(obj)[0];
+            // build a path like this => posts/title/about/imageUrl
+            const storageRef = firebase.storage.ref(
+              `${POSTS_BUCKET_NAME}/${newPostState.title
+                .split(" ")
+                .join("_")}${imgSection}/${Object.values(obj)[0].name}`
+            );
+
+            //  put file in a storage
+            storageRef
+              .put(Object.values(obj)[0])
+              .then(() => {
+                // once assets inserted in our db we change their path in redux
+                const assetIndex = assets[imgSection].findIndex(
+                  (file) => Object.keys(file)[0] === imgUrl
+                );
+                assets[imgSection][assetIndex][imgUrl] = storageRef.fullPath;
+
+                this.props.onSetNewPostValues({ assets });
+
+                this.convertEditorStateToContentState();
+              })
+              .then(() => {
+                // push to db
+                this.props.firebase
+                  .posts()
+                  .push()
+                  .set(this.props.newPostState)
+                  .then(() => {
+                    this.fetchFromDb();
+                  });
+              });
+          });
+        } else {
+          this.convertEditorStateToContentState().then(() => {
+            this.props.firebase
+              .posts()
+              .push()
+              .set(this.props.newPostState)
+              .then(() => {
+                this.fetchFromDb();
+                fireAlert(true, LESSON_STATUS);
+              });
+          });
+        }
+      });
+    }
+
+    // this.convertEditorStateToContentState().then(() => {
+    //   console.log(this.props.newPostState, "AFTERPROMISE");
+    //   this.props.firebase
+    //     .posts()
+    //     .push()
+    //     .set(this.props.newPostState)
+    //     .then(() => {
+    //       this.fetchFromDb();
+    //     });
+    // });
+    // else {
+    //   console.log("ALO");
+    // if user did not upload asstets => just push it to db
+    // this.props.firebase
+    //   .posts()
+    //   .push()
+    //   .set(this.props.newPostState)
+    //   .then(() => {
+    //     // set to init props
+    //     console.log("ELSE HERE")
+    //     this.fetchFromDb();
+    //     this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
+    //   });
+    // }
+    // }
+    // const storageRef = firebase.storage.ref(
+    //   `${POSTS_BUCKET_NAME}/${iconFile[0].lastModified}-${iconFile[0].name}`
+    // );
+    // storageRef
+    //   .put(iconFile[0])
+    //   .then(() => {
+    //     fireAlert(true, ICON_POST_ADD_STATUS);
+    //     this.props.onSetNewPostValues({
+    //       iconPath: storageRef.fullPath,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     fireAlert(false, ICON_POST_ADD_STATUS, error);
+    //   });
+    // }
+
     // this.props.firebase.posts().push().set(this.props.newPostState);
     // this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
     // fireAlert(true, LESSON_STATUS);
@@ -250,6 +378,23 @@ class CreateLesson extends Component {
     // } else {
     //   fireAlert(false);
     // }
+
+    // const storageRef = firebase.storage.ref(
+    //   `${POSTS_BUCKET_NAME}/${iconFile[0].lastModified}-${iconFile[0].name}`
+    // );
+    // storageRef
+    //   .put(iconFile[0])
+    //   .then(() => {
+    //     fireAlert(true, ICON_POST_ADD_STATUS);
+    //     this.props.onSetNewPostValues({
+    //       iconPath: storageRef.fullPath,
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     fireAlert(false, ICON_POST_ADD_STATUS, error);
+    //   });
+
+    // console.log(this.props.newPostState.assets,'ASSETELI');
   };
 
   onEditorTextChange = (value) => this.setState({ isEditorEmpty: value });
@@ -264,6 +409,7 @@ class CreateLesson extends Component {
       editorTextContent,
       exercises,
       isEditorEmpty,
+      errorFields,
     } = this.state;
     const {
       category,
@@ -275,13 +421,14 @@ class CreateLesson extends Component {
     } = this.props.newPostState;
     const { categories, focuses, subCategories } = this.props.posts;
     // console.log(this.props.newPostState.post, "POST_POST");
-    console.log(this.props.newPostState, 'POST')
+    console.log(this.props.newPostState, "POST");
     // // post[sectionKey]
-    if (post["about"] !== "") {
-      console.log(
-        draftToHtml(convertToRaw(post["about"].getCurrentContent()), "POST")
-      );
-    }
+    // if (post["about"] !== "") {
+    //   console.log(
+    //     draftToHtml(convertToRaw(post["about"].getCurrentContent()), "POST")
+    //   );
+    // }
+    // console.log(errorFields, "TITLEERROR");
     const panes = [
       {
         menuItem: CREATE_LESSON_STAGES.before,
@@ -331,6 +478,7 @@ class CreateLesson extends Component {
                 label={ADMIN_DROPDOWN_TITLES.category.label}
                 selection
                 search
+                error={errorFields[ADMIN_DROPDOWN_TITLES.category.defaultVal]}
                 value={category}
                 options={categories}
                 onChange={(e, data) =>
@@ -349,8 +497,11 @@ class CreateLesson extends Component {
                 selection
                 search
                 allowAdditions
-                options={subCategories}
+                error={
+                  errorFields[ADMIN_DROPDOWN_TITLES.subCategory.defaultVal]
+                }
                 value={subCategory}
+                options={subCategories}
                 placeholder={ADMIN_DROPDOWN_TITLES.subCategory.placeholder}
                 onChange={(e, data) =>
                   this.onDropDownChange(
@@ -358,7 +509,12 @@ class CreateLesson extends Component {
                     ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
                   )
                 }
-                onAddItem={(e, d) => this.handleAddition(d, "subCategories")}
+                onAddItem={(e, d) =>
+                  this.handleAddition(
+                    d,
+                    ADMIN_DROPDOWN_TITLES.subCategory.allValues
+                  )
+                }
               />
             </Form.Field>
             <Form.Field>
@@ -368,8 +524,9 @@ class CreateLesson extends Component {
                 selection
                 search
                 allowAdditions
-                options={focuses}
+                error={errorFields[ADMIN_DROPDOWN_TITLES.focus.defaultVal]}
                 value={focus}
+                options={focuses}
                 placeholder={ADMIN_DROPDOWN_TITLES.focus.label}
                 onChange={(e, data) =>
                   this.onDropDownChange(
@@ -377,7 +534,9 @@ class CreateLesson extends Component {
                     ADMIN_DROPDOWN_TITLES.focus.defaultVal
                   )
                 }
-                onAddItem={(e, d) => this.handleAddition(d, "focuses")}
+                onAddItem={(e, d) =>
+                  this.handleAddition(d, ADMIN_DROPDOWN_TITLES.focus.allValues)
+                }
               />
             </Form.Field>
           </Form.Group>
@@ -385,11 +544,17 @@ class CreateLesson extends Component {
         <Form widths="equal" onSubmit={this.handleSaveImage}>
           <Form.Group widths="equal">
             <Form.Field required>
-              <label>Title</label>
+              <label>{ADMIN_DROPDOWN_TITLES.title.label}</label>
               <Form.Input
+                error={errorFields.title}
                 value={title}
-                onChange={this.changeTitle}
-                placeholder="Title"
+                onChange={(e, data) =>
+                  this.onDropDownChange(
+                    data,
+                    ADMIN_DROPDOWN_TITLES.title.defaultVal
+                  )
+                }
+                placeholder={ADMIN_DROPDOWN_TITLES.title.placeholder}
               />
             </Form.Field>
             <Form.Field>
