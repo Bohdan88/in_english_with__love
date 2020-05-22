@@ -241,7 +241,7 @@ class CreateLesson extends Component {
   };
 
   onSubmitPost = () => {
-    console.log(this.props.newPostState)
+    console.log(this.props.newPostState);
     // this.props.firebase.posts().push().set(this.props.newPostState);
     // this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
     // fireAlert(true, LESSON_STATUS);
@@ -275,6 +275,7 @@ class CreateLesson extends Component {
     } = this.props.newPostState;
     const { categories, focuses, subCategories } = this.props.posts;
     // console.log(this.props.newPostState.post, "POST_POST");
+    console.log(this.props.newPostState, 'POST')
     // // post[sectionKey]
     if (post["about"] !== "") {
       console.log(
@@ -282,6 +283,14 @@ class CreateLesson extends Component {
       );
     }
     const panes = [
+      {
+        menuItem: CREATE_LESSON_STAGES.before,
+        render: () => (
+          <Tab.Pane>
+            <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
+          </Tab.Pane>
+        ),
+      },
       {
         menuItem: CREATE_LESSON_STAGES.practise,
         render: () => (
@@ -293,14 +302,7 @@ class CreateLesson extends Component {
           </Tab.Pane>
         ),
       },
-      {
-        menuItem: CREATE_LESSON_STAGES.before,
-        render: () => (
-          <Tab.Pane>
-            <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
-          </Tab.Pane>
-        ),
-      },
+
       {
         menuItem: CREATE_LESSON_STAGES.after,
         render: () => (

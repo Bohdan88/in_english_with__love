@@ -7,7 +7,7 @@ import ReactDOM from "react-dom";
 import { Editor, EditorState } from "draft-js";
 import { withAuthorization } from "../Session";
 import * as ROLES from "../../constants/roles";
-import CustomEditor from "../Editor";
+import CustomEditor from "../Editor/CustomEditor";
 import { CreateLesson } from "./Components";
 import "firebase/storage";
 import {

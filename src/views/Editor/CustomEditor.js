@@ -15,7 +15,10 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import Swal from "sweetalert2";
 import { Button, Input } from "semantic-ui-react";
-import { LESSON_STATUS } from "../../constants/shared";
+import {
+  LESSON_STATUS,
+  SLICED_UPLOADED_IMAGE_KEY,
+} from "../../constants/shared";
 import { CustomColorPicker, VideoPlayer } from "./CustomComponents";
 import sanitizeHtml from "sanitize-html-react";
 import { setNewPostValues } from "../../redux/actions";
@@ -69,42 +72,23 @@ const fireAlert = (state) => {
   setTimeout(() => Swal.close(), 4000);
 };
 
-class AnswerTemplate extends Component {
-  render() {
-    return (
-      <div>
-        <Input type="text" placeholder="Add answer...">
-          <input />
-          <Button
-            onClick={this.props.onUpdateQuantity}
-            color="teal"
-            type="submit"
-          >
-            Add answer {` ${this.props.quantity}`}
-          </Button>
-        </Input>
-      </div>
-    );
-  }
-}
-
 class CustomEditor extends Component {
   constructor(props) {
     super(props);
     this.editorRef = React.createRef();
     // const contentState = convertFromRaw(content);
-    const html = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
-    const contentBlock = htmlToDraft(html);
+    // const html = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
+    // const contentBlock = htmlToDraft(html);
 
-    if (contentBlock) {
-      const contentState = ContentState.createFromBlockArray(
-        contentBlock.contentBlocks
-      );
-      const editorState = EditorState.createWithContent(contentState);
-      this.state = {
-        editorState,
-      };
-    }
+    // if (contentBlock) {
+    //   const contentState = ContentState.createFromBlockArray(
+    //     contentBlock.contentBlocks
+    //   );
+    //   const editorState = EditorState.createWithContent(contentState);
+    //   this.state = {
+    //     editorState,
+    //   };
+    // }
 
     this.state = {
       editorState: EditorState.createEmpty(),
@@ -112,70 +96,36 @@ class CustomEditor extends Component {
       quantity: 1,
       uploadedImages: [],
       answers: [],
-      templateNumber: [
-        <AnswerTemplate
-          quantity={this.state.quantity}
-          onUpdateQuantity={this.updateQuantity}
-        />,
-      ],
-      // answers: <AnswerTemplate index={1} />,
     };
   }
 
-  updateQuantity = () => {
-    let arr = this.state.templateNumber;
-    arr.push(this.state.templateNumber);
-    this.setState({ quantity: this.state.quantity + 1, templateNumber: arr });
-  };
-
   onEditorStateChange = (editorState) => {
-    // console.log(draftToHtml(convertToRaw(editorState.getCurrentContent()), "OOOK"));
-    // console.log(this.props.,'PROPS')
-    // const blocks = convertToRaw(this.state.editorState.getCurrentContent())
-    //   .blocks;
+    const { sectionKey } = this.props;
+    // get all entities we uplaoded, for examples media, link, custom elements
+    const entitityValues = Object.values(
+      convertToRaw(editorState.getCurrentContent()).entityMap
+    );
+    // get all images uploaded from local device
+    const allUploadedImagesLinks =
+      !!entitityValues.length &&
+      entitityValues.map((obj) =>
+        obj.type === "IMAGE" && obj.data.src.includes("blob")
+          ? obj.data.src.slice(SLICED_UPLOADED_IMAGE_KEY)
+          : null
+      );
 
-    // const checkIfcontainsJustSpaces =
-    //   blocks
-    //     .map((block) => (!block.text.trim() && "\n" && "") || block.text)
-    //     .join("\n") === "";
-
-    // this.setState({
-    //   editorState: {
-    //     ...this.state.editorState,
-    //     [this.props.sectionKey]: editorState,
-    //   },
-    //   // editorState,
-    //   // isEditorEmpty: checkIfcontainsJustSpaces,
-    // });
-
-    // if (this.props.newPostState.post[this.props.sectionKey]) {
-    //   console.log(
-    //     draftToHtml(
-    //       convertToRaw(
-    //         this.props.newPostState.post[
-    //           this.props.sectionKey
-    //         ].getCurrentContent()
-    //       ),
-    //       "OOOK"
-    //     )
-    //   );
-    // }
-
-    // let clean =  sanitizeHtml((currentTextContent))
-    // const currentTextContent = "<p>Ok</p>"
-
-    // console.log(this.props.newPostState.post,'this.props.onSetNewPostValues.post')
-    // --------
-    // this.props.onSetNewPostValues({
-    //   post: {
-    //     ...this.props.newPostState.post,
-    //     [this.props.sectionKey]: sanitizeHtml(currentTextContent, {
-    //       allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
-    //     }),
-    //   },
-    // });
     //--------------
     this.props.onSetNewPostValues({
+      // if a user remove an image from editor => we remove it from redux store
+      assets: {
+        ...this.props.newPostState.assets,
+        [sectionKey]: this.props.newPostState.assets[sectionKey].filter(
+          (obj) =>
+            !!Object.keys(obj).length &&
+            !!allUploadedImagesLinks.length &&
+            allUploadedImagesLinks.includes(Object.keys(obj)[0])
+        ),
+      },
       post: {
         ...this.props.newPostState.post,
         [this.props.sectionKey]: editorState,
@@ -223,80 +173,44 @@ class CustomEditor extends Component {
     // console.log(this.props.firebase.users(), "FIRE");
   }
   _uploadImageCallBack = (file) => {
-    // const { iconFile } = this.state;
+    console.log(file, "file");
     const { iconPath } = this.props.newPostState;
     const { firebase } = this.props;
+    const { sectionKey } = this.props;
+    console.log(sectionKey, "sectionKey");
     // console.log(this.state, "STATUSINCALLVAKC");
-    // long story short, every time we upload an image, we
-    // need to save it to the state so we can get it's data
-    // later when we decide what to do with it.
 
+    // every time we upload an image, we
+    // need to save it to the state so we can get it's data
     // Make sure you have a uploadImages: [] as your default state
     let uploadedImages = this.state.uploadedImages;
-
-    // let imagePath = `${POSTS_BUCKET_NAME}/${file.lastModified}-${file.name}`;
-    // // console.log(file,'filefile')
-    // const storageRef = firebase.storage.ref(imagePath);
-
-    // storageRef
-    //   .put(file)
-    //   .then(() => {
-    //     console.log("NOICE");
-    //     // fireAlert(true, ICON_POST_ADD_STATUS);
-    //   })
-    //   .catch((error) => {
-    //     console.log("ERROR");
-    //   });
 
     const imageObject = {
       file: file,
       localSrc: URL.createObjectURL(file),
     };
 
-    // POSTS_BUCKET_NAME
-    // console.log(uploadedImages,'uploadedImages')
-    // uploadedImages.push(imageObject);
+    // upload an asset into Redux
+    this.props.onSetNewPostValues({
+      assets: {
+        ...this.props.newPostState.assets,
+        [sectionKey]: this.props.newPostState.assets[sectionKey].concat({
+          [imageObject.localSrc.slice(SLICED_UPLOADED_IMAGE_KEY)]: file,
+        }),
+      },
+    });
 
-    // console.log(imagePath, "imagePath");
     this.setState({ uploadedImages: uploadedImages });
+
     // We need to return a promise with the image src
     // the img src we will use here will be what's needed
     // to preview it in the browser. This will be different than what
     // we will see in the index.md file we generate.
-    // let lastLink = "";
-    // let source = firebase.storage
-    //   .ref()
-    //   .child(`${POSTS_BUCKET_NAME}/${imagePath}`)
-    //   .getDownloadURL()
-    //   .then((url) => {
-    //     lastLink = url;
-    //     // this.setState({
-    //     //   iconSrc: url,
-    //     // });
-    //   });
-
-    // console.log(lastLink, "lastLink");
     return new Promise((resolve, reject) => {
-      // resolve({ data: { link: imageObject.localSrc } });
       resolve({
         data: { link: imageObject.localSrc },
       });
     });
-  };
-
-  _addImageFromState = () => {
-    const imgSrc = "";
-    const alt = "";
-    // const { imgSrc, alt } = this.state;
-    let { height, width } = this.state;
-    const { onChange } = this.props;
-    if (!isNaN(height)) {
-      height += "px";
-    }
-    if (!isNaN(width)) {
-      width += "px";
-    }
-    onChange(imgSrc, height, width, alt);
   };
 
   _addImage = (src, height, width, alt) => {
@@ -321,7 +235,6 @@ class CustomEditor extends Component {
     const { editorState } = this.state;
     const { post } = this.props.newPostState;
     const { sectionKey } = this.props;
-    const editorNode = this.editorRef.current;
     // console.log(
     //   draftToHtml(convertToRaw(editorState.getCurrentContent()), "OOOK")
     // );
@@ -331,7 +244,8 @@ class CustomEditor extends Component {
     //   "writtenContent",
     //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
     // );
-    console.log(this.state.uploadedImages, "statusinrender");
+
+    // console.log(this.state, "statusinrender");
 
     const currentEditor =
       post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
@@ -363,6 +277,7 @@ class CustomEditor extends Component {
               colorPicker: { component: CustomColorPicker },
               embedded: { className: "default-embedded" },
               image: {
+                addImageFromState: this._addImageFromState,
                 uploadCallback: this._uploadImageCallBack,
                 previewImage: true,
                 alt: { present: true, mandatory: false },

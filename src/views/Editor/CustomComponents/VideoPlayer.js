@@ -144,7 +144,7 @@ convert html case
                   name="height"
                   className="rdw-embedded-modal-size-input"
                   placeholder="Height"
-                  value="auto"
+                  /* value="auto" */
                   value={height}
                   onChange={this.onChangeInput}
                 />

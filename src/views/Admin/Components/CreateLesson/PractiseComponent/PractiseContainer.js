@@ -72,24 +72,23 @@ class PractiseContainer extends PureComponent {
       }
     );
   };
+
   addExercise = () => {
     const { newPostExercisesValues } = this.props.newPostState;
     const currentId = newPostExercisesValues.length;
-
     this.props.onSetNewPostValues({
       newPostExercisesValues: newPostExercisesValues.concat({
         id: currentId,
         name: EXERCISES_NAMES[0].text,
         type: EXERCISES_TYPES[0].text,
         description: EXERCISES_DESCRIPTIONS[0].text,
-        content: [INIT_FIELDS_CONTENT.match],
+        content: [INIT_FIELDS_CONTENT[MATCHING]],
       }),
     });
   };
 
   // handle views by name of an exercise
   toggleView = (stateName) => {
-    console.log(stateName, "stateName");
     const { exercisesViewState } = this.state;
     // if init exercise === undefined => exercise is currently open
     this.setState({

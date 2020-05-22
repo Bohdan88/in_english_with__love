@@ -13,7 +13,9 @@ import {
   Grid,
   Container,
   TextArea,
-  Form,
+  Popup,
+  Header,
+  List,
 } from "semantic-ui-react";
 import {
   EXERCISES_LABELS_COLORS,
@@ -23,10 +25,40 @@ import {
   REPLACED_ANSWER,
 } from "../../../../../constants/shared";
 
+const TutorialContent = () => {
+  return (
+    <div className="tutorial-popup-container">
+      <Header as="h4">
+        Please implement the following steps in any sequence.
+      </Header>
+      <List bulleted>
+        <List.Item>Fill all the fields.</List.Item>
+        <List.Item>
+          Wrap an answer into brackets in <b> Sentence</b> field.
+          <br /> For example:
+          <q>
+            I think we need to
+            <b>
+              {" {"} rehearse{" }  "}
+            </b>
+            first scene again.
+          </q>
+        </List.Item>
+        <List.Item>
+          Type an appropriate answer in <b> Answers</b> field <b>without </b>
+          brackets.
+        </List.Item>
+        <List.Item>
+          Once you've done, please click on <b>Replace sentences</b> button.
+        </List.Item>
+      </List>
+    </div>
+  );
+};
+
 class CompleteSentencesExercise extends Component {
-  state = {
-    answersHidden: true,
-  };
+  state = {};
+
   addField = (objValues) => {
     const { newPostExercisesValues } = this.props.newPostState;
     // console.log(objValues.name, "objValues.name");
@@ -70,67 +102,67 @@ class CompleteSentencesExercise extends Component {
     });
   };
 
-  identifyAnswerInSentence = (objValues, fieldId) => {
-    const { newPostExercisesValues } = this.props.newPostState;
-    this.props.onSetNewPostValues({
-      newPostExercisesValues: newPostExercisesValues.map((obj) =>
-        obj.id === objValues.id
-          ? {
-              ...obj,
-              content: obj.content.map((nestedObj) => {
-                const { sentence, answer } = nestedObj;
-                // remove empty space and enters
-                const editedAnswer = answer.trim().replace("\u21b5", "");
-                // console.log(sentence === editedAnswer, "sentence");
-                // console.log(/\s/.test(editedAnswer), "editedAnswer");
-
-                console.log(answer.trim() === "", "sentence");
-                return nestedObj.id === fieldId
-                  ? {
-                      ...nestedObj,
-                      // sentence: sentence.replace(editedAnswer, REPLACED_ANSWER),
-                      sentence:
-                        /\s/.test(editedAnswer) || answer.trim() === ""
-                          ? sentence
-                          : sentence.replace(editedAnswer, REPLACED_ANSWER),
-                    }
-                  : nestedObj;
-              }),
-            }
-          : obj
-      ),
-    });
-  };
+  // identifyAnswerInSentence = (objValues, fieldId) => {
+  //   const { newPostExercisesValues } = this.props.newPostState;
+  //   this.props.onSetNewPostValues({
+  //     newPostExercisesValues: newPostExercisesValues.map((obj) =>
+  //       obj.id === objValues.id
+  //         ? {
+  //             ...obj,
+  //             content: obj.content.map((nestedObj) => {
+  //               const { sentence, answer } = nestedObj;
+  //               // remove empty space and enters
+  //               const editedAnswer = answer.trim().replace("\u21b5", "");
+  //               return nestedObj.id === fieldId
+  //                 ? {
+  //                     ...nestedObj,
+  //                     // sentence: sentence.replace(editedAnswer, REPLACED_ANSWER),
+  //                     sentence:
+  //                       /\s/.test(editedAnswer) || answer.trim() === ""
+  //                         ? sentence
+  //                         : sentence.replace(
+  //                             `**${editedAnswer}**`,
+  //                             `**${REPLACED_ANSWER}**`
+  //                           ),
+  //                   }
+  //                 : nestedObj;
+  //             }),
+  //           }
+  //         : obj
+  //     ),
+  //   });
+  // };
 
   identifyAllAnswersInSentences = () => {
     const { newPostExercisesValues } = this.props.newPostState;
-    const { answersHidden } = this.state;
     this.props.onSetNewPostValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) => {
         return {
           ...obj,
           content: obj.content.map((nestedObj) => {
             const { sentence, answer } = nestedObj;
-            const editedAnswer = answer.trim().replace("\u21b5", "");
+            // create an object of answers  { value: '___'}  => useful for more than one answer
+            const editedAnswer = answer.trim().replace("\u21b5", "").split(" ");
+
+            let objValues = {};
+            editedAnswer.forEach(
+              (word) => (objValues[`{${word}}`] = REPLACED_ANSWER)
+            );
+
+            const convertedSentence = sentence.replace(
+              new RegExp(Object.keys(objValues).join("|"), "gi"),
+              (matched) => objValues[matched.toLowerCase()]
+            );
 
             return {
               ...nestedObj,
-              sentence:
-                /\s/.test(editedAnswer) || answer.trim() === ""
-                  ? sentence
-                  : // replace  according to view state
-                  answersHidden
-                  ? sentence.replace(editedAnswer, REPLACED_ANSWER)
-                  : sentence.replace(REPLACED_ANSWER, editedAnswer),
+              sentence: convertedSentence,
             };
           }),
         };
       }),
     });
   };
-
-  toggleReplaceAnswers = () =>
-    this.setState({ answersHidden: !this.state.answersHidden });
 
   removeField = (objValues) => {
     const { newPostState } = this.props;
@@ -149,10 +181,8 @@ class CompleteSentencesExercise extends Component {
 
   replaceAnswersInSentences = () => {};
   render() {
-    const { answersHidden } = this.state;
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
-    // console.log(newPostExercisesValues, "newPostExercisesValues");
     return (
       <div>
         <Segment className="exercises-container">
@@ -186,23 +216,40 @@ class CompleteSentencesExercise extends Component {
                   </span>
                 </Statistic.Value>
               </Statistic>
-
+              <Popup
+                content={<TutorialContent />}
+                wide={"very"}
+                on="click"
+                trigger={
+                  <Button
+                    basic
+                    color="purple"
+                    icon
+                    labelPosition="right"
+                    className="button-remove-field"
+                    disabled={
+                      currentExerciseValues.content.length > 0 ? false : true
+                    }
+                    onClick={() => this.identifyAllAnswersInSentences()}
+                  >
+                    Quick tutorial
+                    <Icon name="info" />
+                  </Button>
+                }
+              />
               <Button
                 basic
-                color="violet"
+                color="blue"
                 icon
                 labelPosition="right"
                 className="button-remove-field"
                 disabled={
                   currentExerciseValues.content.length > 0 ? false : true
                 }
-                onClick={() => {
-                  this.identifyAllAnswersInSentences();
-                  this.toggleReplaceAnswers();
-                }}
+                onClick={() => this.identifyAllAnswersInSentences()}
               >
                 Replace sentences
-                <Icon name={answersHidden ? "toggle off" : "toggle on"} />
+                <Icon name="clone" />
               </Button>
               <Button
                 basic
@@ -237,8 +284,9 @@ class CompleteSentencesExercise extends Component {
                   newPostExercisesValues[currentExerciseValues.id].content.map(
                     (obj) => {
                       return (
-                        <Grid.Row key={obj.id} className="complete-field-row">
-                          {/* <Grid.Column width="1" textAlign="left">
+                        obj && (
+                          <Grid.Row key={obj.id} className="complete-field-row">
+                            {/* <Grid.Column width="1" textAlign="left">
                             <div className="complete-container-id">
                               <label className="complete-label-id">
                                 {COMPLETE_FIELDS.id.label}
@@ -255,85 +303,88 @@ class CompleteSentencesExercise extends Component {
                               </Segment>
                             </div>
                           </Grid.Column> */}
-                          <Grid.Column
-                            className="complete-column"
-                            largeScreen={13}
-                          >
-                            <Container
-                              fluid
-                              className="complete-textarea-container"
-                            >
-                              <label className="complete-textarea-label">
-                                {COMPLETE_FIELDS.sentence.label}
-                              </label>
-                              <TextArea
-                                value={
-                                  newPostExercisesValues &&
-                                  newPostExercisesValues[
-                                    currentExerciseValues.id
-                                  ] &&
-                                  newPostExercisesValues[
-                                    currentExerciseValues.id
-                                  ].content[obj.id] &&
-                                  newPostExercisesValues[
-                                    currentExerciseValues.id
-                                  ].content[obj.id].sentence
-                                }
-                                placeholder={
-                                  COMPLETE_FIELDS.sentence.placeholder
-                                }
-                                className="complete-textarea"
-                                onChange={(e, data) =>
-                                  this.onChangePostExerciseValues(
-                                    data,
-                                    currentExerciseValues,
-                                    obj.id,
-                                    COMPLETE_KEYS.sentence
-                                  )
-                                }
-                              />
-                            </Container>
-                          </Grid.Column>
 
-                          <Grid.Column
-                            className="answer-column"
-                            largeScreen={3}
-                          >
-                            <Container
-                              fluid
-                              className="answer-textarea-container"
+                            <Grid.Column
+                              className="complete-column"
+                              largeScreen={13}
                             >
-                              <label className="complete-textarea-label">
-                                {COMPLETE_FIELDS.asnwer.label}
-                              </label>
-                              <TextArea
-                                value={
-                                  newPostExercisesValues &&
-                                  newPostExercisesValues[
-                                    currentExerciseValues.id
-                                  ] &&
-                                  newPostExercisesValues[
-                                    currentExerciseValues.id
-                                  ].content[obj.id] &&
-                                  newPostExercisesValues[
-                                    currentExerciseValues.id
-                                  ].content[obj.id].asnwer
-                                }
-                                placeholder={COMPLETE_FIELDS.asnwer.placeholder}
-                                className="answer-textarea"
-                                onChange={(e, data) =>
-                                  this.onChangePostExerciseValues(
-                                    data,
-                                    currentExerciseValues,
-                                    obj.id,
-                                    COMPLETE_KEYS.answer
-                                  )
-                                }
-                              />
-                            </Container>
-                          </Grid.Column>
-                          {/* change answer status by id  */}
-                          {/* <Grid.Column
+                              <Container
+                                fluid
+                                className="complete-textarea-container"
+                              >
+                                <label className="complete-textarea-label">
+                                  {COMPLETE_FIELDS.sentence.label}
+                                </label>
+                                <TextArea
+                                  value={
+                                    newPostExercisesValues &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ] &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ].content[obj.id] &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ].content[obj.id].sentence
+                                  }
+                                  placeholder={
+                                    COMPLETE_FIELDS.sentence.placeholder
+                                  }
+                                  className="complete-textarea"
+                                  onChange={(e, data) =>
+                                    this.onChangePostExerciseValues(
+                                      data,
+                                      currentExerciseValues,
+                                      obj.id,
+                                      COMPLETE_KEYS.sentence
+                                    )
+                                  }
+                                />
+                              </Container>
+                            </Grid.Column>
+
+                            <Grid.Column
+                              className="answer-column"
+                              largeScreen={3}
+                            >
+                              <Container
+                                fluid
+                                className="answer-textarea-container"
+                              >
+                                <label className="complete-textarea-label">
+                                  {COMPLETE_FIELDS.asnwer.label}
+                                </label>
+                                <TextArea
+                                  value={
+                                    newPostExercisesValues &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ] &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ].content[obj.id] &&
+                                    newPostExercisesValues[
+                                      currentExerciseValues.id
+                                    ].content[obj.id].asnwer
+                                  }
+                                  placeholder={
+                                    COMPLETE_FIELDS.asnwer.placeholder
+                                  }
+                                  className="answer-textarea"
+                                  onChange={(e, data) =>
+                                    this.onChangePostExerciseValues(
+                                      data,
+                                      currentExerciseValues,
+                                      obj.id,
+                                      COMPLETE_KEYS.answer
+                                    )
+                                  }
+                                />
+                              </Container>
+                            </Grid.Column>
+                            {/* change answer status by id  */}
+                            {/* <Grid.Column
                             className="column-replace-field"
                             largeScreen={1}
                           >
@@ -353,8 +404,9 @@ class CompleteSentencesExercise extends Component {
                                 name="reply"
                               />
                             </Form.Button> */}
-                          {/* </Grid.Column> */}
-                        </Grid.Row>
+                            {/* </Grid.Column> */}
+                          </Grid.Row>
+                        )
                       );
                     }
                   )}

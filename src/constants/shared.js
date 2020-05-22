@@ -301,6 +301,7 @@ export const REMOVE_EXERCISE = {
 export const POSTS_BUCKET_NAME = "posts";
 
 // editor page
+export const SLICED_UPLOADED_IMAGE_KEY = 27;
 export const LESSON_STATUS = {
   icon: {
     success: "success",

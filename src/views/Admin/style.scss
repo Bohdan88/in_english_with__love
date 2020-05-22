@@ -129,10 +129,9 @@
   .value {
     position: relative;
     right: 4px;
-    top:-1px;
+    top: -1px;
     // font-size: 1.2rem !important;
     span {
-      
       font-size: 1.2rem !important;
     }
   }
@@ -220,6 +219,19 @@
 .icon-remove-field {
   margin: auto !important;
   padding: 0px !important;
+}
+
+.tutorial-popup-container {
+  display: flex;
+  flex-direction: column;
+
+  .list {
+    margin-top: 0px !important;
+    .item {
+      // padding: 10px 80px!important;
+      line-height: 22px !important;
+    }
+  }
 }
 
 // .complete-column {
