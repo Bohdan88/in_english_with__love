@@ -366,6 +366,14 @@ class CreateLesson extends Component {
     // console.log(this.props.newPostState,'this.props')
     const panes = [
       {
+        menuItem: CREATE_LESSON_STAGES.before,
+        render: () => (
+          <Tab.Pane>
+            <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
+          </Tab.Pane>
+        ),
+      },
+      {
         menuItem: CREATE_LESSON_STAGES.practise,
         render: () => (
           <Tab.Pane>
@@ -373,14 +381,6 @@ class CreateLesson extends Component {
               exercises={exercises}
               sectionKey={CREATE_LESSON_STAGES.practise.key}
             />
-          </Tab.Pane>
-        ),
-      },
-      {
-        menuItem: CREATE_LESSON_STAGES.before,
-        render: () => (
-          <Tab.Pane>
-            <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
           </Tab.Pane>
         ),
       },

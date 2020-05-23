@@ -35,10 +35,15 @@ class PractiseContainer extends PureComponent {
 
   onDropDownChange = (data, dropDownType, exerciseId) => {
     const { newPostExercisesValues } = this.props.newPostState;
-
     this.props.onSetNewPostValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) =>
-        obj.id === exerciseId ? { ...obj, [dropDownType]: data.value } : obj
+        obj.id === exerciseId
+          ? {
+              ...obj,
+              [dropDownType]: data.value,
+              content: [INIT_FIELDS_CONTENT[data.value]],
+            }
+          : obj
       ),
     });
   };
@@ -116,7 +121,6 @@ class PractiseContainer extends PureComponent {
       allexerciseNames,
     } = this.props.posts;
     const { newPostExercisesValues } = this.props.newPostState;
-
     return (
       <div className="container-init-exercises">
         <Segment className="segment-init-exercises" secondary>
@@ -255,7 +259,7 @@ class PractiseContainer extends PureComponent {
                                   value={
                                     (newPostExercisesValues[el.id] &&
                                       newPostExercisesValues[el.id].name) ||
-                                    NOT_FOUND_OPTION
+                                    []
                                   }
                                   options={allexerciseNames}
                                   onChange={(e, data) =>
@@ -278,7 +282,7 @@ class PractiseContainer extends PureComponent {
                                   value={
                                     (newPostExercisesValues[el.id] &&
                                       newPostExercisesValues[el.id].type) ||
-                                    NOT_FOUND_OPTION
+                                    []
                                   }
                                   options={allExercisesTypes}
                                   onChange={(e, data) =>
@@ -305,7 +309,7 @@ class PractiseContainer extends PureComponent {
                                     (newPostExercisesValues[el.id] &&
                                       newPostExercisesValues[el.id]
                                         .description) ||
-                                    NOT_FOUND_OPTION
+                                    []
                                   }
                                   options={allExercisesDescriptions}
                                   onChange={(e, data) =>

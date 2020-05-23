@@ -29,27 +29,25 @@ const TutorialContent = () => {
   return (
     <div className="tutorial-popup-container">
       <Header as="h4">
-        Please implement the following steps in any sequence.
+        Please follow the below steps to complete the exercise.
       </Header>
       <List bulleted>
         <List.Item>Fill all the fields.</List.Item>
         <List.Item>
-          Wrap an answer into brackets in <b> Sentence</b> field.
+          Wrap an answer into curly brackets in <b> Sentence</b> field.
           <br /> For example:
-          <q>
-            I think we need to
-            <b>
-              {" {"} rehearse{" }  "}
-            </b>
-            first scene again.
-          </q>
+          <span className="popup-example-sentence-span">
+            <q>
+              I think we need to
+              <b>
+                {" {"} rehearse{" }  "}
+              </b>
+              first scene again.
+            </q>
+          </span>
         </List.Item>
         <List.Item>
-          Type an appropriate answer in <b> Answers</b> field <b>without </b>
-          brackets.
-        </List.Item>
-        <List.Item>
-          Once you've done, please click on <b>Replace sentences</b> button.
+          Once you've wrapped, you should see an answer in an appropriate field.
         </List.Item>
       </List>
     </div>
@@ -206,6 +204,7 @@ class CompleteSentencesExercise extends Component {
   render() {
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
+
     return (
       <div>
         <Segment className="exercises-container">
@@ -251,9 +250,8 @@ class CompleteSentencesExercise extends Component {
                     labelPosition="right"
                     className="button-remove-field"
                     disabled={
-                      currentExerciseValues.content.length > 0 ? false : true
+                      !!currentExerciseValues.content.length ? false : true
                     }
-                    /* onClick={() => this.identifyAllAnswersInSentences()} */
                   >
                     Quick tutorial
                     <Icon name="info" />
@@ -371,11 +369,6 @@ class CompleteSentencesExercise extends Component {
                                 <label className="complete-textarea-label">
                                   {COMPLETE_FIELDS.asnwer.label}
                                 </label>
-                                {console.log(
-                                  newPostExercisesValues[
-                                    currentExerciseValues.id
-                                  ].content[obj.id].answer
-                                )}
                                 <TextArea
                                   value={
                                     newPostExercisesValues[
@@ -393,7 +386,7 @@ class CompleteSentencesExercise extends Component {
                             {/* change answer status by id  */}
                             {/* <Grid.Column
                             className="column-replace-field"
-                            largeScreen={1}
+                            largeScreen={1} 
                           >
                             <Form.Button
                               className="button-replace-field"

@@ -19,6 +19,11 @@
   // margin: 2% 0;
 }
 
+.video-player-icon {
+  position: relative;
+  top: -2px;
+}
+
 .default-embedded {
   display: none !important;
 }
@@ -52,4 +57,21 @@
 
 .answers-container > * > * {
   border-radius: 0px !important;
+}
+
+.rdw-embedded-modal {
+  box-shadow: 1px 1px 3px $light-grey !important;
+}
+
+.video-popup {
+  width: 265px !important;
+}
+
+.video-add-button {
+  background: #ece9e9 !important; //ECE9E9
+}
+
+.video-cancel-button,
+.video-add-button {
+  min-height: 33px;
 }
