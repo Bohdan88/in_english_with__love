@@ -84,21 +84,35 @@ class CompleteSentencesExercise extends Component {
     });
   };
 
-  onChangePostExerciseValues = (data, objValues, fieldId, keyName) => {
+  onChangePostExerciseValues = (data, objValues, fieldId) => {
     const { newPostExercisesValues } = this.props.newPostState;
     this.props.onSetNewPostValues({
-      newPostExercisesValues: newPostExercisesValues.map((obj) =>
-        obj.id === objValues.id
+      newPostExercisesValues: newPostExercisesValues.map((obj) => {
+        let answer;
+        const wordsInCurlyBraces = /\{.*?\}/g;
+        const removeSpecialCharacters = /[^a-z0-9]/g;
+
+        const answerValues = data.value.match(wordsInCurlyBraces);
+        if (answerValues) {
+          answer = answerValues.map((element) =>
+            element.replace(removeSpecialCharacters, "")
+          );
+        }
+        return obj.id === objValues.id
           ? {
               ...obj,
               content: obj.content.map((nestedObj) => {
                 return nestedObj.id === fieldId
-                  ? { ...nestedObj, [keyName]: data.value }
+                  ? {
+                      ...nestedObj,
+                      sentence: data.value,
+                      answer: answer && answer.join(" "),
+                    }
                   : nestedObj;
               }),
             }
-          : obj
-      ),
+          : obj;
+      }),
     });
   };
 
@@ -133,46 +147,46 @@ class CompleteSentencesExercise extends Component {
   //   });
   // };
 
-  identifyAllAnswersInSentences = () => {
-    const { newPostExercisesValues } = this.props.newPostState;
-    this.props.onSetNewPostValues({
-      newPostExercisesValues: newPostExercisesValues.map((obj) => {
-        return {
-          ...obj,
-          content: obj.content.map((nestedObj) => {
-            const { sentence, answer } = nestedObj;
-            console.log(answer, "answer");
-            if (answer) {
-              // create an object of answers  { value: '___'}  => useful for more than one answer
-              const editedAnswer = answer
-                .trim()
-                .replace("\u21b5", "")
-                .split(" ");
+  // identifyAllAnswersInSentences = () => {
+  //   const { newPostExercisesValues } = this.props.newPostState;
+  //   this.props.onSetNewPostValues({
+  //     newPostExercisesValues: newPostExercisesValues.map((obj) => {
+  //       return {
+  //         ...obj,
+  //         content: obj.content.map((nestedObj) => {
+  //           const { sentence, answer } = nestedObj;
+  //           console.log(answer, "answer");
+  //           if (answer) {
+  //             // create an object of answers  { value: '___'}  => useful for more than one answer
+  //             const editedAnswer = answer
+  //               .trim()
+  //               .replace("\u21b5", "")
+  //               .split(" ");
 
-              let objValues = {};
-              editedAnswer.forEach(
-                (word) => (objValues[`{${word}}`] = REPLACED_ANSWER)
-              );
+  //             let objValues = {};
+  //             editedAnswer.forEach(
+  //               (word) => (objValues[`{${word}}`] = REPLACED_ANSWER)
+  //             );
 
-              const convertedSentence = sentence.replace(
-                new RegExp(Object.keys(objValues).join("|"), "gi"),
-                (matched) => objValues[matched.toLowerCase()]
-              );
+  //             const convertedSentence = sentence.replace(
+  //               new RegExp(Object.keys(objValues).join("|"), "gi"),
+  //               (matched) => objValues[matched.toLowerCase()]
+  //             );
 
-              return {
-                ...nestedObj,
-                sentence: convertedSentence,
-              };
-            } else {
-              return {
-                ...nestedObj,
-              };
-            }
-          }),
-        };
-      }),
-    });
-  };
+  //             return {
+  //               ...nestedObj,
+  //               sentence: convertedSentence,
+  //             };
+  //           } else {
+  //             return {
+  //               ...nestedObj,
+  //             };
+  //           }
+  //         }),
+  //       };
+  //     }),
+  //   });
+  // };
 
   removeField = (objValues) => {
     const { newPostState } = this.props;
@@ -189,9 +203,7 @@ class CompleteSentencesExercise extends Component {
     this.props.onSetNewPostValues(newPostExercisesValues);
   };
 
-  replaceAnswersInSentences = () => {};
   render() {
-    const { loading } = this.state;
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
     return (
@@ -241,15 +253,15 @@ class CompleteSentencesExercise extends Component {
                     disabled={
                       currentExerciseValues.content.length > 0 ? false : true
                     }
-                    onClick={() => this.identifyAllAnswersInSentences()}
+                    /* onClick={() => this.identifyAllAnswersInSentences()} */
                   >
                     Quick tutorial
                     <Icon name="info" />
                   </Button>
                 }
               />
-              <Button
-                basic
+              {/* <Button */}
+              {/* basic
                 color="blue"
                 icon
                 labelPosition="right"
@@ -261,7 +273,7 @@ class CompleteSentencesExercise extends Component {
               >
                 Replace sentences
                 <Icon name="clone" />
-              </Button>
+              </Button> */}
               <Button
                 basic
                 color="red"
@@ -317,7 +329,7 @@ class CompleteSentencesExercise extends Component {
 
                             <Grid.Column
                               className="complete-column"
-                              largeScreen={13}
+                              largeScreen={14}
                             >
                               <Container
                                 fluid
@@ -328,13 +340,6 @@ class CompleteSentencesExercise extends Component {
                                 </label>
                                 <TextArea
                                   value={
-                                    newPostExercisesValues &&
-                                    newPostExercisesValues[
-                                      currentExerciseValues.id
-                                    ] &&
-                                    newPostExercisesValues[
-                                      currentExerciseValues.id
-                                    ].content[obj.id] &&
                                     newPostExercisesValues[
                                       currentExerciseValues.id
                                     ].content[obj.id].sentence
@@ -347,8 +352,7 @@ class CompleteSentencesExercise extends Component {
                                     this.onChangePostExerciseValues(
                                       data,
                                       currentExerciseValues,
-                                      obj.id,
-                                      COMPLETE_KEYS.sentence
+                                      obj.id
                                     )
                                   }
                                 />
@@ -358,7 +362,7 @@ class CompleteSentencesExercise extends Component {
                             <Grid.Column
                               className="answer-column"
                               widescreen={2}
-                              largeScreen={3}
+                              largeScreen={2}
                             >
                               <Container
                                 fluid
@@ -367,31 +371,22 @@ class CompleteSentencesExercise extends Component {
                                 <label className="complete-textarea-label">
                                   {COMPLETE_FIELDS.asnwer.label}
                                 </label>
+                                {console.log(
+                                  newPostExercisesValues[
+                                    currentExerciseValues.id
+                                  ].content[obj.id].answer
+                                )}
                                 <TextArea
                                   value={
-                                    newPostExercisesValues &&
                                     newPostExercisesValues[
                                       currentExerciseValues.id
-                                    ] &&
-                                    newPostExercisesValues[
-                                      currentExerciseValues.id
-                                    ].content[obj.id] &&
-                                    newPostExercisesValues[
-                                      currentExerciseValues.id
-                                    ].content[obj.id].asnwer
+                                    ].content[obj.id].answer
                                   }
                                   placeholder={
                                     COMPLETE_FIELDS.asnwer.placeholder
                                   }
                                   className="answer-textarea"
-                                  onChange={(e, data) =>
-                                    this.onChangePostExerciseValues(
-                                      data,
-                                      currentExerciseValues,
-                                      obj.id,
-                                      COMPLETE_KEYS.answer
-                                    )
-                                  }
+                                  disabled
                                 />
                               </Container>
                             </Grid.Column>

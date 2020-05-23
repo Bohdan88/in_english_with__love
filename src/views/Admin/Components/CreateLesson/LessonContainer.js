@@ -102,7 +102,7 @@ class CreateLesson extends Component {
 
   fetchPostsFromDb = () => {
     // reload the page
-    this.setState({ loading: true });
+    // this.setState({ loading: true });
     // on posts
     this.props.firebase.posts().on("value", (snapshot) => {
       const postsObject = snapshot && snapshot.val();
@@ -114,7 +114,6 @@ class CreateLesson extends Component {
 
         this.setState({
           posts: postsList,
-          loading: false,
         });
 
         const setSubCategories = transformToOptions([
@@ -364,15 +363,8 @@ class CreateLesson extends Component {
     // }
     // console.log(errorFields, "TITLEERROR");
     // console.log(load÷ing, "LOOOOADING");
+    // console.log(this.props.newPostState,'this.props')
     const panes = [
-      {
-        menuItem: CREATE_LESSON_STAGES.before,
-        render: () => (
-          <Tab.Pane>
-            <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
-          </Tab.Pane>
-        ),
-      },
       {
         menuItem: CREATE_LESSON_STAGES.practise,
         render: () => (
@@ -381,6 +373,14 @@ class CreateLesson extends Component {
               exercises={exercises}
               sectionKey={CREATE_LESSON_STAGES.practise.key}
             />
+          </Tab.Pane>
+        ),
+      },
+      {
+        menuItem: CREATE_LESSON_STAGES.before,
+        render: () => (
+          <Tab.Pane>
+            <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
           </Tab.Pane>
         ),
       },
@@ -405,142 +405,129 @@ class CreateLesson extends Component {
 
     return (
       <div>
-        {loading ? (
-          <Segment className="loader-admin">
-            <Dimmer active>
-              <Loader size="massive">Loading </Loader>
-            </Dimmer>
-          </Segment>
-        ) : (
-          <>
-            <Form>
-              <Form.Group widths="equal">
-                <Form.Field>
-                  <Form.Dropdown
-                    className="capitalize"
-                    label={ADMIN_DROPDOWN_TITLES.category.label}
-                    selection
-                    search
-                    error={
-                      errorFields[ADMIN_DROPDOWN_TITLES.category.defaultVal]
-                    }
-                    value={category}
-                    options={categories}
-                    onChange={(e, data) =>
-                      this.onDropDownChange(
-                        data,
-                        ADMIN_DROPDOWN_TITLES.category.defaultVal
-                      )
-                    }
-                    placeholder="Select Category"
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <Form.Dropdown
-                    className="capitalize"
-                    label={ADMIN_DROPDOWN_TITLES.subCategory.label}
-                    selection
-                    search
-                    allowAdditions
-                    error={
-                      errorFields[ADMIN_DROPDOWN_TITLES.subCategory.defaultVal]
-                    }
-                    value={subCategory}
-                    options={subCategories}
-                    placeholder={ADMIN_DROPDOWN_TITLES.subCategory.placeholder}
-                    onChange={(e, data) =>
-                      this.onDropDownChange(
-                        data,
-                        ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
-                      )
-                    }
-                    onAddItem={(e, d) =>
-                      this.handleAddition(
-                        d,
-                        ADMIN_DROPDOWN_TITLES.subCategory.allValues
-                      )
-                    }
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <Form.Dropdown
-                    className="capitalize"
-                    label={ADMIN_DROPDOWN_TITLES.focus.label}
-                    selection
-                    search
-                    allowAdditions
-                    error={errorFields[ADMIN_DROPDOWN_TITLES.focus.defaultVal]}
-                    value={focus}
-                    options={focuses}
-                    placeholder={ADMIN_DROPDOWN_TITLES.focus.label}
-                    onChange={(e, data) =>
-                      this.onDropDownChange(
-                        data,
-                        ADMIN_DROPDOWN_TITLES.focus.defaultVal
-                      )
-                    }
-                    onAddItem={(e, d) =>
-                      this.handleAddition(
-                        d,
-                        ADMIN_DROPDOWN_TITLES.focus.allValues
-                      )
-                    }
-                  />
-                </Form.Field>
-              </Form.Group>
-            </Form>
-            <Form widths="equal" onSubmit={this.handleSaveImage}>
-              <Form.Group widths="equal">
-                <Form.Field required>
-                  <label>{ADMIN_DROPDOWN_TITLES.title.label}</label>
-                  <Form.Input
-                    error={errorFields.title}
-                    value={title}
-                    onChange={(e, data) =>
-                      this.onDropDownChange(
-                        data,
-                        ADMIN_DROPDOWN_TITLES.title.defaultVal
-                      )
-                    }
-                    placeholder={ADMIN_DROPDOWN_TITLES.title.placeholder}
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <label>
-                    Icon Settings
-                    <Popup
-                      inverted
-                      className="icon-settings-popup"
-                      content="Please click Upload after you've selected an icon."
-                      trigger={
-                        <Icon className="icon-trigger" name="question circle" />
-                      }
-                    />
-                  </label>
+        <Form>
+          <Form.Group widths="equal">
+            <Form.Field>
+              <Form.Dropdown
+                className="capitalize"
+                label={ADMIN_DROPDOWN_TITLES.category.label}
+                selection
+                search
+                error={errorFields[ADMIN_DROPDOWN_TITLES.category.defaultVal]}
+                value={category}
+                options={categories}
+                onChange={(e, data) =>
+                  this.onDropDownChange(
+                    data,
+                    ADMIN_DROPDOWN_TITLES.category.defaultVal
+                  )
+                }
+                placeholder="Select Category"
+              />
+            </Form.Field>
+            <Form.Field>
+              <Form.Dropdown
+                className="capitalize"
+                label={ADMIN_DROPDOWN_TITLES.subCategory.label}
+                selection
+                search
+                allowAdditions
+                error={
+                  errorFields[ADMIN_DROPDOWN_TITLES.subCategory.defaultVal]
+                }
+                value={subCategory}
+                options={subCategories}
+                placeholder={ADMIN_DROPDOWN_TITLES.subCategory.placeholder}
+                onChange={(e, data) =>
+                  this.onDropDownChange(
+                    data,
+                    ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
+                  )
+                }
+                onAddItem={(e, d) =>
+                  this.handleAddition(
+                    d,
+                    ADMIN_DROPDOWN_TITLES.subCategory.allValues
+                  )
+                }
+              />
+            </Form.Field>
+            <Form.Field>
+              <Form.Dropdown
+                className="capitalize"
+                label={ADMIN_DROPDOWN_TITLES.focus.label}
+                selection
+                search
+                allowAdditions
+                error={errorFields[ADMIN_DROPDOWN_TITLES.focus.defaultVal]}
+                value={focus}
+                options={focuses}
+                placeholder={ADMIN_DROPDOWN_TITLES.focus.label}
+                onChange={(e, data) =>
+                  this.onDropDownChange(
+                    data,
+                    ADMIN_DROPDOWN_TITLES.focus.defaultVal
+                  )
+                }
+                onAddItem={(e, d) =>
+                  this.handleAddition(d, ADMIN_DROPDOWN_TITLES.focus.allValues)
+                }
+              />
+            </Form.Field>
+          </Form.Group>
+        </Form>
+        <Form widths="equal" onSubmit={this.handleSaveImage}>
+          <Form.Group widths="equal">
+            <Form.Field required>
+              <label>{ADMIN_DROPDOWN_TITLES.title.label}</label>
+              <Form.Input
+                error={errorFields.title}
+                value={title}
+                onChange={(e, data) =>
+                  this.onDropDownChange(
+                    data,
+                    ADMIN_DROPDOWN_TITLES.title.defaultVal
+                  )
+                }
+                placeholder={ADMIN_DROPDOWN_TITLES.title.placeholder}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>
+                Icon Settings
+                <Popup
+                  inverted
+                  className="icon-settings-popup"
+                  content="Please click Upload after you've selected an icon."
+                  trigger={
+                    <Icon className="icon-trigger" name="question circle" />
+                  }
+                />
+              </label>
 
-                  <input
-                    accept="image/*"
-                    ref={this.fileInputRef}
-                    type="file"
-                    hidden
-                    onChange={(e) => this.handleChangeInput(e.target.files)}
-                  />
-                  <Button.Group className="admin-button-group" fluid>
-                    <Button
-                      content="Choose Icon"
-                      labelPosition="left"
-                      icon="file"
-                      onClick={() => this.fileInputRef.current.click()}
-                    />
-                    <Button
-                      color={!iconPath.length ? "facebook" : "red"}
-                      className="upload-button"
-                      disabled={iconFile ? false : true}
-                      type="submit"
-                    >
-                      {!iconPath.length ? "Upload" : "Remove"}
-                    </Button>
-                    {/* <Button
+              <input
+                accept="image/*"
+                ref={this.fileInputRef}
+                type="file"
+                hidden
+                onChange={(e) => this.handleChangeInput(e.target.files)}
+              />
+              <Button.Group className="admin-button-group" fluid>
+                <Button
+                  content="Choose Icon"
+                  labelPosition="left"
+                  icon="file"
+                  onClick={() => this.fileInputRef.current.click()}
+                />
+                <Button
+                  color={!iconPath.length ? "facebook" : "red"}
+                  className="upload-button"
+                  disabled={iconFile ? false : true}
+                  type="submit"
+                >
+                  {!iconPath.length ? "Upload" : "Remove"}
+                </Button>
+                {/* <Button
                   disabled={iconFile ? false : true}
                   onClick={() => {
                     this.showImage();
@@ -559,63 +546,58 @@ class CreateLesson extends Component {
                     src={iconSrc}
                   />
                 </Transition> */}
-                  </Button.Group>
-                </Form.Field>
-              </Form.Group>
-            </Form>
+              </Button.Group>
+            </Form.Field>
+          </Form.Group>
+        </Form>
 
-            <Tab
-              className="tab-lesson-stages"
-              menu={{ secondary: true, pointing: true }}
-              panes={panes}
-            />
-            {/* <CustomEditor
+        <Tab
+          className="tab-lesson-stages"
+          menu={{ secondary: true, pointing: true }}
+          panes={panes}
+        />
+        {/* <CustomEditor
           onEditorTextChange={this.onEditorTextChange}
           firebase={this.props.firebase}
         /> */}
 
-            {/*  */}
+        {/*  */}
 
-            <div className="answers-container">
-              {/* <AnswerTemplate
+        <div className="answers-container">
+          {/* <AnswerTemplate
             quantity={this.state.quantity}
             onUpdateQuantity={this.updateQuantity}
           /> */}
-            </div>
-            <Button
-              /* disabled={isEditorEmpty ? true : false} */
-              onClick={this.onPreview}
-            >
-              {preview ? "Close Preview" : "Open Preview"}
-            </Button>
-            <i className="fas fa-eye-dropper"></i>
+        </div>
+        <Button
+          /* disabled={isEditorEmpty ? true : false} */
+          onClick={this.onPreview}
+        >
+          {preview ? "Close Preview" : "Open Preview"}
+        </Button>
+        <i className="fas fa-eye-dropper"></i>
 
-            <Button
-              disabled={isEditorEmpty ? false : false} // true: false
-              onClick={this.onSubmitPost}
-            >
-              Create
-            </Button>
-            <Button
-              disabled={isEditorEmpty ? true : false}
-              onClick={this.onEdit}
-            >
-              Edit
-            </Button>
-            {/* // editorState   */}
-            {preview && (
-              <div className="container-preview">
-                {/* { draftToHtml(convertToRaw(post["about"].getCurrentContent())} */}
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: draftToHtml(
-                      convertToRaw(post["about"].getCurrentContent())
-                    ),
-                  }}
-                />
-              </div>
-            )}
-          </>
+        <Button
+          disabled={isEditorEmpty ? false : false} // true: false
+          onClick={this.onSubmitPost}
+        >
+          Create
+        </Button>
+        <Button disabled={isEditorEmpty ? true : false} onClick={this.onEdit}>
+          Edit
+        </Button>
+        {/* // editorState   */}
+        {preview && (
+          <div className="container-preview">
+            {/* { draftToHtml(convertToRaw(post["about"].getCurrentContent())} */}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: draftToHtml(
+                  convertToRaw(post["about"].getCurrentContent())
+                ),
+              }}
+            />
+          </div>
         )}
       </div>
     );
