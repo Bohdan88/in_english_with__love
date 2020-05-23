@@ -26,13 +26,13 @@ const initState = {
   },
   newPostExercisesValues: [
     // match init
-    {
-      id: 0,
-      name: EXERCISES_NAMES[0].text,
-      type: EXERCISES_TYPES[0].text,
-      description: EXERCISES_DESCRIPTIONS[0].text,
-      content: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
-    },
+    // {
+    //   id: 0,
+    //   name: EXERCISES_NAMES[0].text,
+    //   type: EXERCISES_TYPES[0].text,
+    //   description: EXERCISES_DESCRIPTIONS[0].text,
+    //   content: [{ id: 0, letter: "", contentId: "", contentLetter: "" }],
+    // },
     // complete init
     // {
     //   id: 0,

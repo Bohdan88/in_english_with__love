@@ -17,7 +17,8 @@ const fireAlert = (state, values, error = null, type) => {
         position: "top-end",
       });
     default:
-      Swal.fire({
+      setTimeout(() => Swal.close(), 4000);
+      return Swal.fire({
         icon: values.icon
           ? state
             ? values.icon.success
@@ -45,7 +46,6 @@ const fireAlert = (state, values, error = null, type) => {
         className: "admit-sweet-alert",
         reverseButtons: true,
       });
-      setTimeout(() => Swal.close(), 4000);
   }
 };
 

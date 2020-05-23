@@ -16,7 +16,17 @@ import {
   CREATE_LESSON_STAGES,
 } from "../../../../constants/shared";
 import { EditorState, convertToRaw } from "draft-js";
-import { Form, Button, Popup, Icon, Input, Tab } from "semantic-ui-react";
+import {
+  Form,
+  Button,
+  Popup,
+  Icon,
+  Input,
+  Tab,
+  Segment,
+  Dimmer,
+  Loader,
+} from "semantic-ui-react";
 import { getAllPostsValues, setNewPostValues } from "../../../../redux/actions";
 import Swal from "sweetalert2";
 import {
@@ -90,8 +100,9 @@ class CreateLesson extends Component {
     });
   };
 
-  fetchFromDb = () => {
-    console.log("FETCHFROMDB");
+  fetchPostsFromDb = () => {
+    // reload the page
+    this.setState({ loading: true });
     // on posts
     this.props.firebase.posts().on("value", (snapshot) => {
       const postsObject = snapshot && snapshot.val();
@@ -114,15 +125,6 @@ class CreateLesson extends Component {
           ...new Set(postsList.map((obj, key) => obj.focus)),
         ]);
 
-        // const setExercisesTypes = transformToOptions([
-        //   ...new Set(postsList.map((obj, key) => obj.exercisesTypes)),
-        // ]);
-
-        // const setExercisesDescriptions = transformToOptions([
-        //   ...new Set(postsList.map((obj, key) => obj.exercisesDescriptions)),
-        // ]);
-        // console.log(setSubCategories, "setSubCategories");
-
         // set posts
         this.props.onGetAllPostsValues({
           allPosts: postsList,
@@ -144,7 +146,7 @@ class CreateLesson extends Component {
     });
   };
   componentDidMount() {
-    this.fetchFromDb();
+    this.fetchPostsFromDb();
   }
 
   onDropDownChange = (data, dropDownType) => {
@@ -269,132 +271,64 @@ class CreateLesson extends Component {
     });
   };
 
-  onSubmitPost = () => {
+  uploadAllAssetsIntoDb = () => {
     const { newPostState, firebase } = this.props;
-    // use assign  to aboid immutability
     const assets = Object.assign({}, newPostState.assets);
+    return new Promise((resolve, reject) => {
+      resolve(
+        Object.values(assets).map((arrayOfObj) => {
+          if (arrayOfObj && !!arrayOfObj.length) {
+            arrayOfObj.map((obj) => {
+              const imgSection = Object.values(obj)[0].section;
+              const imgUrl = Object.keys(obj)[0];
+              // build a path like this => posts/title/about/imageUrl
+              const storageRef = firebase.storage.ref(
+                `${POSTS_BUCKET_NAME}/${newPostState.title
+                  .split(" ")
+                  .join("_")}${imgSection}/${Object.values(obj)[0].name}`
+              );
 
-    if (this.checkEachRequiredField()) {
-      //  this.convertEditorStateToContentState();
-      // check if a user have some assets
-      Object.values(assets).map((arrayOfObj) => {
-        if (arrayOfObj && !!arrayOfObj.length) {
-          arrayOfObj.map((obj) => {
-            const imgSection = Object.values(obj)[0].section;
-            const imgUrl = Object.keys(obj)[0];
-            // build a path like this => posts/title/about/imageUrl
-            const storageRef = firebase.storage.ref(
-              `${POSTS_BUCKET_NAME}/${newPostState.title
-                .split(" ")
-                .join("_")}${imgSection}/${Object.values(obj)[0].name}`
-            );
+              //  put file in a storage
+              storageRef
+                .put(Object.values(obj)[0])
+                .then(() => {
+                  // once assets inserted in our db we change their path in redux
+                  const assetIndex = assets[imgSection].findIndex(
+                    (file) => Object.keys(file)[0] === imgUrl
+                  );
+                  assets[imgSection][assetIndex][imgUrl] = storageRef.fullPath;
 
-            //  put file in a storage
-            storageRef
-              .put(Object.values(obj)[0])
-              .then(() => {
-                // once assets inserted in our db we change their path in redux
-                const assetIndex = assets[imgSection].findIndex(
-                  (file) => Object.keys(file)[0] === imgUrl
+                  this.props.onSetNewPostValues({ assets });
+                })
+                .catch((error) =>
+                  fireAlert(false, ICON_POST_ADD_STATUS, error)
                 );
-                assets[imgSection][assetIndex][imgUrl] = storageRef.fullPath;
+            });
+          }
+        })
+      );
+    });
+  };
 
-                this.props.onSetNewPostValues({ assets });
-
-                this.convertEditorStateToContentState();
-              })
-              .then(() => {
-                // push to db
-                this.props.firebase
-                  .posts()
-                  .push()
-                  .set(this.props.newPostState)
-                  .then(() => {
-                    this.fetchFromDb();
-                  });
-              });
-          });
-        } else {
-          this.convertEditorStateToContentState().then(() => {
-            this.props.firebase
-              .posts()
-              .push()
-              .set(this.props.newPostState)
-              .then(() => {
-                this.fetchFromDb();
-                fireAlert(true, LESSON_STATUS);
-              });
-          });
-        }
-      });
+  onSubmitPost = () => {
+    if (this.checkEachRequiredField()) {
+      // insert into db users assets and convert editor state
+      this.uploadAllAssetsIntoDb()
+        .then(() => this.convertEditorStateToContentState())
+        .then(() => {
+          this.props.firebase
+            .posts()
+            .push()
+            .set(this.props.newPostState)
+            .then(() => {
+              // call success modal and refresh props
+              fireAlert(true, LESSON_STATUS).then(() =>
+                this.fetchPostsFromDb()
+              );
+            })
+            .catch((error) => fireAlert(false, LESSON_STATUS, error));
+        });
     }
-
-    // this.convertEditorStateToContentState().then(() => {
-    //   console.log(this.props.newPostState, "AFTERPROMISE");
-    //   this.props.firebase
-    //     .posts()
-    //     .push()
-    //     .set(this.props.newPostState)
-    //     .then(() => {
-    //       this.fetchFromDb();
-    //     });
-    // });
-    // else {
-    //   console.log("ALO");
-    // if user did not upload asstets => just push it to db
-    // this.props.firebase
-    //   .posts()
-    //   .push()
-    //   .set(this.props.newPostState)
-    //   .then(() => {
-    //     // set to init props
-    //     console.log("ELSE HERE")
-    //     this.fetchFromDb();
-    //     this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
-    //   });
-    // }
-    // }
-    // const storageRef = firebase.storage.ref(
-    //   `${POSTS_BUCKET_NAME}/${iconFile[0].lastModified}-${iconFile[0].name}`
-    // );
-    // storageRef
-    //   .put(iconFile[0])
-    //   .then(() => {
-    //     fireAlert(true, ICON_POST_ADD_STATUS);
-    //     this.props.onSetNewPostValues({
-    //       iconPath: storageRef.fullPath,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     fireAlert(false, ICON_POST_ADD_STATUS, error);
-    //   });
-    // }
-
-    // this.props.firebase.posts().push().set(this.props.newPostState);
-    // this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
-    // fireAlert(true, LESSON_STATUS);
-
-    //   fireAlert(true);
-    // } else {
-    //   fireAlert(false);
-    // }
-
-    // const storageRef = firebase.storage.ref(
-    //   `${POSTS_BUCKET_NAME}/${iconFile[0].lastModified}-${iconFile[0].name}`
-    // );
-    // storageRef
-    //   .put(iconFile[0])
-    //   .then(() => {
-    //     fireAlert(true, ICON_POST_ADD_STATUS);
-    //     this.props.onSetNewPostValues({
-    //       iconPath: storageRef.fullPath,
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     fireAlert(false, ICON_POST_ADD_STATUS, error);
-    //   });
-
-    // console.log(this.props.newPostState.assets,'ASSETELI');
   };
 
   onEditorTextChange = (value) => this.setState({ isEditorEmpty: value });
@@ -421,7 +355,7 @@ class CreateLesson extends Component {
     } = this.props.newPostState;
     const { categories, focuses, subCategories } = this.props.posts;
     // console.log(this.props.newPostState.post, "POST_POST");
-    console.log(this.props.newPostState, "POST");
+    // console.log(this.props.newPostState, "POST");
     // // post[sectionKey]
     // if (post["about"] !== "") {
     //   console.log(
@@ -429,6 +363,7 @@ class CreateLesson extends Component {
     //   );
     // }
     // console.log(errorFields, "TITLEERROR");
+    // console.log(load÷ing, "LOOOOADING");
     const panes = [
       {
         menuItem: CREATE_LESSON_STAGES.before,
@@ -470,129 +405,142 @@ class CreateLesson extends Component {
 
     return (
       <div>
-        <Form>
-          <Form.Group widths="equal">
-            <Form.Field>
-              <Form.Dropdown
-                className="capitalize"
-                label={ADMIN_DROPDOWN_TITLES.category.label}
-                selection
-                search
-                error={errorFields[ADMIN_DROPDOWN_TITLES.category.defaultVal]}
-                value={category}
-                options={categories}
-                onChange={(e, data) =>
-                  this.onDropDownChange(
-                    data,
-                    ADMIN_DROPDOWN_TITLES.category.defaultVal
-                  )
-                }
-                placeholder="Select Category"
-              />
-            </Form.Field>
-            <Form.Field>
-              <Form.Dropdown
-                className="capitalize"
-                label={ADMIN_DROPDOWN_TITLES.subCategory.label}
-                selection
-                search
-                allowAdditions
-                error={
-                  errorFields[ADMIN_DROPDOWN_TITLES.subCategory.defaultVal]
-                }
-                value={subCategory}
-                options={subCategories}
-                placeholder={ADMIN_DROPDOWN_TITLES.subCategory.placeholder}
-                onChange={(e, data) =>
-                  this.onDropDownChange(
-                    data,
-                    ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
-                  )
-                }
-                onAddItem={(e, d) =>
-                  this.handleAddition(
-                    d,
-                    ADMIN_DROPDOWN_TITLES.subCategory.allValues
-                  )
-                }
-              />
-            </Form.Field>
-            <Form.Field>
-              <Form.Dropdown
-                className="capitalize"
-                label={ADMIN_DROPDOWN_TITLES.focus.label}
-                selection
-                search
-                allowAdditions
-                error={errorFields[ADMIN_DROPDOWN_TITLES.focus.defaultVal]}
-                value={focus}
-                options={focuses}
-                placeholder={ADMIN_DROPDOWN_TITLES.focus.label}
-                onChange={(e, data) =>
-                  this.onDropDownChange(
-                    data,
-                    ADMIN_DROPDOWN_TITLES.focus.defaultVal
-                  )
-                }
-                onAddItem={(e, d) =>
-                  this.handleAddition(d, ADMIN_DROPDOWN_TITLES.focus.allValues)
-                }
-              />
-            </Form.Field>
-          </Form.Group>
-        </Form>
-        <Form widths="equal" onSubmit={this.handleSaveImage}>
-          <Form.Group widths="equal">
-            <Form.Field required>
-              <label>{ADMIN_DROPDOWN_TITLES.title.label}</label>
-              <Form.Input
-                error={errorFields.title}
-                value={title}
-                onChange={(e, data) =>
-                  this.onDropDownChange(
-                    data,
-                    ADMIN_DROPDOWN_TITLES.title.defaultVal
-                  )
-                }
-                placeholder={ADMIN_DROPDOWN_TITLES.title.placeholder}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>
-                Icon Settings
-                <Popup
-                  inverted
-                  className="icon-settings-popup"
-                  content="Please click Upload after you've selected an icon."
-                  trigger={
-                    <Icon className="icon-trigger" name="question circle" />
-                  }
-                />
-              </label>
+        {loading ? (
+          <Segment className="loader-admin">
+            <Dimmer active>
+              <Loader size="massive">Loading </Loader>
+            </Dimmer>
+          </Segment>
+        ) : (
+          <>
+            <Form>
+              <Form.Group widths="equal">
+                <Form.Field>
+                  <Form.Dropdown
+                    className="capitalize"
+                    label={ADMIN_DROPDOWN_TITLES.category.label}
+                    selection
+                    search
+                    error={
+                      errorFields[ADMIN_DROPDOWN_TITLES.category.defaultVal]
+                    }
+                    value={category}
+                    options={categories}
+                    onChange={(e, data) =>
+                      this.onDropDownChange(
+                        data,
+                        ADMIN_DROPDOWN_TITLES.category.defaultVal
+                      )
+                    }
+                    placeholder="Select Category"
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <Form.Dropdown
+                    className="capitalize"
+                    label={ADMIN_DROPDOWN_TITLES.subCategory.label}
+                    selection
+                    search
+                    allowAdditions
+                    error={
+                      errorFields[ADMIN_DROPDOWN_TITLES.subCategory.defaultVal]
+                    }
+                    value={subCategory}
+                    options={subCategories}
+                    placeholder={ADMIN_DROPDOWN_TITLES.subCategory.placeholder}
+                    onChange={(e, data) =>
+                      this.onDropDownChange(
+                        data,
+                        ADMIN_DROPDOWN_TITLES.subCategory.defaultVal
+                      )
+                    }
+                    onAddItem={(e, d) =>
+                      this.handleAddition(
+                        d,
+                        ADMIN_DROPDOWN_TITLES.subCategory.allValues
+                      )
+                    }
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <Form.Dropdown
+                    className="capitalize"
+                    label={ADMIN_DROPDOWN_TITLES.focus.label}
+                    selection
+                    search
+                    allowAdditions
+                    error={errorFields[ADMIN_DROPDOWN_TITLES.focus.defaultVal]}
+                    value={focus}
+                    options={focuses}
+                    placeholder={ADMIN_DROPDOWN_TITLES.focus.label}
+                    onChange={(e, data) =>
+                      this.onDropDownChange(
+                        data,
+                        ADMIN_DROPDOWN_TITLES.focus.defaultVal
+                      )
+                    }
+                    onAddItem={(e, d) =>
+                      this.handleAddition(
+                        d,
+                        ADMIN_DROPDOWN_TITLES.focus.allValues
+                      )
+                    }
+                  />
+                </Form.Field>
+              </Form.Group>
+            </Form>
+            <Form widths="equal" onSubmit={this.handleSaveImage}>
+              <Form.Group widths="equal">
+                <Form.Field required>
+                  <label>{ADMIN_DROPDOWN_TITLES.title.label}</label>
+                  <Form.Input
+                    error={errorFields.title}
+                    value={title}
+                    onChange={(e, data) =>
+                      this.onDropDownChange(
+                        data,
+                        ADMIN_DROPDOWN_TITLES.title.defaultVal
+                      )
+                    }
+                    placeholder={ADMIN_DROPDOWN_TITLES.title.placeholder}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>
+                    Icon Settings
+                    <Popup
+                      inverted
+                      className="icon-settings-popup"
+                      content="Please click Upload after you've selected an icon."
+                      trigger={
+                        <Icon className="icon-trigger" name="question circle" />
+                      }
+                    />
+                  </label>
 
-              <input
-                accept="image/*"
-                ref={this.fileInputRef}
-                type="file"
-                hidden
-                onChange={(e) => this.handleChangeInput(e.target.files)}
-              />
-              <Button.Group className="admin-button-group" fluid>
-                <Button
-                  content="Choose Icon"
-                  labelPosition="left"
-                  icon="file"
-                  onClick={() => this.fileInputRef.current.click()}
-                />
-                <Button
-                  color={!iconPath.length ? "facebook" : "red"}
-                  className="upload-button"
-                  disabled={iconFile ? false : true}
-                  type="submit"
-                >
-                  {!iconPath.length ? "Upload" : "Remove"}
-                </Button>
-                {/* <Button
+                  <input
+                    accept="image/*"
+                    ref={this.fileInputRef}
+                    type="file"
+                    hidden
+                    onChange={(e) => this.handleChangeInput(e.target.files)}
+                  />
+                  <Button.Group className="admin-button-group" fluid>
+                    <Button
+                      content="Choose Icon"
+                      labelPosition="left"
+                      icon="file"
+                      onClick={() => this.fileInputRef.current.click()}
+                    />
+                    <Button
+                      color={!iconPath.length ? "facebook" : "red"}
+                      className="upload-button"
+                      disabled={iconFile ? false : true}
+                      type="submit"
+                    >
+                      {!iconPath.length ? "Upload" : "Remove"}
+                    </Button>
+                    {/* <Button
                   disabled={iconFile ? false : true}
                   onClick={() => {
                     this.showImage();
@@ -611,58 +559,63 @@ class CreateLesson extends Component {
                     src={iconSrc}
                   />
                 </Transition> */}
-              </Button.Group>
-            </Form.Field>
-          </Form.Group>
-        </Form>
+                  </Button.Group>
+                </Form.Field>
+              </Form.Group>
+            </Form>
 
-        <Tab
-          className="tab-lesson-stages"
-          menu={{ secondary: true, pointing: true }}
-          panes={panes}
-        />
-        {/* <CustomEditor
+            <Tab
+              className="tab-lesson-stages"
+              menu={{ secondary: true, pointing: true }}
+              panes={panes}
+            />
+            {/* <CustomEditor
           onEditorTextChange={this.onEditorTextChange}
           firebase={this.props.firebase}
         /> */}
 
-        {/*  */}
+            {/*  */}
 
-        <div className="answers-container">
-          {/* <AnswerTemplate
+            <div className="answers-container">
+              {/* <AnswerTemplate
             quantity={this.state.quantity}
             onUpdateQuantity={this.updateQuantity}
           /> */}
-        </div>
-        <Button
-          /* disabled={isEditorEmpty ? true : false} */
-          onClick={this.onPreview}
-        >
-          {preview ? "Close Preview" : "Open Preview"}
-        </Button>
-        <i className="fas fa-eye-dropper"></i>
+            </div>
+            <Button
+              /* disabled={isEditorEmpty ? true : false} */
+              onClick={this.onPreview}
+            >
+              {preview ? "Close Preview" : "Open Preview"}
+            </Button>
+            <i className="fas fa-eye-dropper"></i>
 
-        <Button
-          disabled={isEditorEmpty ? false : false} // true: false
-          onClick={this.onSubmitPost}
-        >
-          Create
-        </Button>
-        <Button disabled={isEditorEmpty ? true : false} onClick={this.onEdit}>
-          Edit
-        </Button>
-        {/* // editorState   */}
-        {preview && (
-          <div className="container-preview">
-            {/* { draftToHtml(convertToRaw(post["about"].getCurrentContent())} */}
-            <div
-              dangerouslySetInnerHTML={{
-                __html: draftToHtml(
-                  convertToRaw(post["about"].getCurrentContent())
-                ),
-              }}
-            />
-          </div>
+            <Button
+              disabled={isEditorEmpty ? false : false} // true: false
+              onClick={this.onSubmitPost}
+            >
+              Create
+            </Button>
+            <Button
+              disabled={isEditorEmpty ? true : false}
+              onClick={this.onEdit}
+            >
+              Edit
+            </Button>
+            {/* // editorState   */}
+            {preview && (
+              <div className="container-preview">
+                {/* { draftToHtml(convertToRaw(post["about"].getCurrentContent())} */}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: draftToHtml(
+                      convertToRaw(post["about"].getCurrentContent())
+                    ),
+                  }}
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
     );

@@ -141,23 +141,33 @@ class CompleteSentencesExercise extends Component {
           ...obj,
           content: obj.content.map((nestedObj) => {
             const { sentence, answer } = nestedObj;
-            // create an object of answers  { value: '___'}  => useful for more than one answer
-            const editedAnswer = answer.trim().replace("\u21b5", "").split(" ");
+            console.log(answer, "answer");
+            if (answer) {
+              // create an object of answers  { value: '___'}  => useful for more than one answer
+              const editedAnswer = answer
+                .trim()
+                .replace("\u21b5", "")
+                .split(" ");
 
-            let objValues = {};
-            editedAnswer.forEach(
-              (word) => (objValues[`{${word}}`] = REPLACED_ANSWER)
-            );
+              let objValues = {};
+              editedAnswer.forEach(
+                (word) => (objValues[`{${word}}`] = REPLACED_ANSWER)
+              );
 
-            const convertedSentence = sentence.replace(
-              new RegExp(Object.keys(objValues).join("|"), "gi"),
-              (matched) => objValues[matched.toLowerCase()]
-            );
+              const convertedSentence = sentence.replace(
+                new RegExp(Object.keys(objValues).join("|"), "gi"),
+                (matched) => objValues[matched.toLowerCase()]
+              );
 
-            return {
-              ...nestedObj,
-              sentence: convertedSentence,
-            };
+              return {
+                ...nestedObj,
+                sentence: convertedSentence,
+              };
+            } else {
+              return {
+                ...nestedObj,
+              };
+            }
           }),
         };
       }),
@@ -181,6 +191,7 @@ class CompleteSentencesExercise extends Component {
 
   replaceAnswersInSentences = () => {};
   render() {
+    const { loading } = this.state;
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
     return (
@@ -346,6 +357,7 @@ class CompleteSentencesExercise extends Component {
 
                             <Grid.Column
                               className="answer-column"
+                              widescreen={2}
                               largeScreen={3}
                             >
                               <Container

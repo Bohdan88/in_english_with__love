@@ -290,7 +290,7 @@ class CustomEditor extends Component {
     //     isBackward: true,
     //   })
     // );
-    console.log(currentEditor, "EDITOR");
+    // console.log(currentEditor, "EDITOR");
     // console.log(ed.getSelection().getIsBackward())
     return (
       <div className="editor-component">
