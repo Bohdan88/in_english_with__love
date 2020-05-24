@@ -1,20 +1,22 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "recompose";
+import _ from "lodash";
 import { withFirebase } from "../Firebase";
 import { getAllPostsValues, setNewPostValues } from "../../redux/actions";
 import {
   Grid,
   Card,
   Image,
-  Button,
   Icon,
   Loader,
   Segment,
   Dimmer,
+  Header,
+  Input,
+  Button,
 } from "semantic-ui-react";
 import {
-  POSTS_BUCKET_NAME,
   TOPICS_BUCKET_NAME,
   DEFAULT_TOPIC_IMAGE,
 } from "../../constants/shared";
@@ -23,8 +25,46 @@ import { Link } from "react-router-dom";
 // style
 import "./style.scss";
 
+const arrTop = [
+  { name: "Culture", lessons: "" },
+  { name: "History", lessons: [""] },
+  { name: "Sport", lessons: "" },
+  { name: "Math", lessons: "" },
+  { name: "Psychology", lessons: "" },
+  { name: "Philosophy", lessons: "" },
+  { name: "Music", lessons: "" },
+  { name: "Biology", lessons: "" },
+  { name: "Opera", lessons: "" },
+];
+
 class Read extends Component {
-  cardRef = React.createRef();
+  state = {
+    searchedTopic: "",
+    loading: false,
+    stateTopics: arrTop,
+  };
+
+  handleSearchChange = (e, { value }) => {
+    this.setState({ loading: true, value });
+
+    setTimeout(() => {
+      if (this.state.value.length < 1) {
+        return this.setState({
+          stateTopics: arrTop,
+          loading: false,
+        });
+      }
+
+      const re = new RegExp(_.escapeRegExp(this.state.value), "i");
+      const isMatch = (result) => re.test(result.name);
+
+      this.setState({
+        loading: false,
+        stateTopics: _.filter(this.state.stateTopics, isMatch),
+      });
+    }, 300);
+  };
+
   componentDidMount() {
     this.props.firebase.posts().on("value", (snapshot) => {
       const postsObject = snapshot && snapshot.val();
@@ -50,6 +90,10 @@ class Read extends Component {
           allPosts: postsList,
           allTopics: setAlltopics,
         });
+
+        // this.setState({
+        //   stateTopics: setAlltopics,
+        // });
       }
     });
 
@@ -78,25 +122,10 @@ class Read extends Component {
     this.props.firebase.posts().off();
   }
 
-  filterValue = (arr, value) =>
-    arr.filter((element) => element.includes(value));
   render() {
+    const { loading, stateTopics } = this.state;
     const { allTopics, allTopicsImages } = this.props.posts;
-    // console.log(allTopics, "allTopics");
 
-    const arrTop = [
-      { name: "Culture", lessons: "" },
-      { name: "History", lessons: [""] },
-      { name: "Sport", lessons: "" },
-      { name: "Math", lessons: "" },
-      { name: "Psychology", lessons: "" },
-      { name: "Philosophy", lessons: "" },
-      { name: "Music", lessons: "" },
-      { name: "Biology", lessons: "" },
-      { name: "Opera", lessons: "" },
-    ];
-
-    // console.log(this.cardRef.current, "THIS");
     return (
       <div>
         {!allTopicsImages.length || !allTopics.length ? (
@@ -107,93 +136,107 @@ class Read extends Component {
           </Segment>
         ) : (
           <Grid className="topics-container">
-            <Grid.Row columns={2}>
-              <Grid.Column>TOPICS</Grid.Column>
-              <Grid.Column>SEARCH </Grid.Column>
+            <Grid.Row columns={2} className="topics-header-row">
+              <Grid.Column>
+                <Header as="h1"> Topics </Header>
+              </Grid.Column>
+              <Grid.Column className="topics-column-search">
+                <Input
+                  className="topics-input-search"
+                  size="large"
+                  icon="search"
+                  placeholder="Search topics..."
+                  onChange={this.handleSearchChange}
+                />
+              </Grid.Column>
             </Grid.Row>
             <Grid.Row columns={2}>
-              {arrTop.map((topic, key) => {
-                const imgSrc = allTopicsImages.filter((imgUrl) =>
-                  imgUrl.includes(`${topic.name.toLowerCase()}.`)
-                );
-
-                const defaultImage = allTopicsImages.filter((imgUrl) =>
-                  imgUrl.includes(DEFAULT_TOPIC_IMAGE)
-                );
-                return (
-                  <Grid.Column
-                    widescreen={3}
-                    largeScreen={4}
-                    className="topics-column"
-                    key={key}
+              {loading ? (
+                <Segment inverted className="loader-topics">
+                  <Dimmer
+                    className="dimmer-topics"
+                    style={{ color: "black" }}
+                    inverted
+                    active
                   >
-                    <Link
-                      ref={this.cardRef}
-                      className="card-topic-link"
-                      to={LESSON_TOPIC_LIST}
-                    >
-                      <Card
-                        centered
-                        fluid
-                        className="card-topic-container"
-                        key={key}
-                      >
-                        <Icon className="card-topic-arrow" name="arrow right" />
-                        <Card.Content className="card-content-topic">
-                          <Card.Content className="card-content-image">
-                            <Image
-                              className="card-topic-image"
-                              src={!!imgSrc.length ? imgSrc : defaultImage}
-                              alt={topic.name}
-                              floated="left"
-                              size="mini"
-                            />
-                          </Card.Content>
-                          <Card.Content className="card-content-topic-text">
-                            <Card.Header as="h2" className="card-topic-header">
-                              {topic.name}
-                            </Card.Header>
-                            <Card.Meta className="card-topic-meta">
-                              <div>
-                                <Icon name="pencil alternate" />{" "}
-                                <span className="card-lessons-length">
-                                  {topic.lessons ? topic.lessons.length : 0}
-                                  {topic.lessons && topic.lessons.length === 1
-                                    ? " Lesson"
-                                    : " Lessons"}
-                                </span>
-                              </div>
-                              <div className="card-meta-time">
-                                <Icon name="eye" />{" "}
-                                <span className="card-lessons-length">
-                                  55 mintues
-                                </span>
-                              </div>
-                            </Card.Meta>
+                    <Loader style={{ color: "black" }} size="big">
+                      Loading{" "}
+                    </Loader>
+                  </Dimmer>
+                </Segment>
+              ) : (
+                stateTopics.map((topic, key) => {
+                  const imgSrc = allTopicsImages.filter((imgUrl) =>
+                    imgUrl.includes(`${topic.name.toLowerCase()}.`)
+                  );
 
-                            {/* <Card.Description>
-                            Steve wants to add you to the group{" "}
-                            <strong>best friends</strong>
-                          </Card.Description> */}
+                  const defaultImage = allTopicsImages.filter((imgUrl) =>
+                    imgUrl.includes(DEFAULT_TOPIC_IMAGE)
+                  );
+                  return (
+                    <Grid.Column
+                      widescreen={3}
+                      largeScreen={4}
+                      className="topics-column"
+                      key={key}
+                    >
+                      <Link
+                        ref={this.cardRef}
+                        className="card-topic-link"
+                        to={LESSON_TOPIC_LIST}
+                      >
+                        <Card
+                          centered
+                          fluid
+                          className="card-topic-container"
+                          key={key}
+                        >
+                          <Icon
+                            className="card-topic-arrow"
+                            name="arrow right"
+                          />
+                          <Card.Content className="card-content-topic">
+                            <Card.Content className="card-content-image">
+                              <Image
+                                className="card-topic-image"
+                                src={!!imgSrc.length ? imgSrc : defaultImage}
+                                alt={topic.name}
+                                floated="left"
+                                size="mini"
+                              />
+                            </Card.Content>
+                            <Card.Content className="card-content-topic-text">
+                              <Card.Header
+                                as="h2"
+                                className="card-topic-header"
+                              >
+                                {topic.name}
+                              </Card.Header>
+                              <Card.Meta className="card-topic-meta">
+                                <div>
+                                  <Icon name="pencil alternate" />{" "}
+                                  <span className="card-lessons-length">
+                                    {topic.lessons ? topic.lessons.length : 0}
+                                    {topic.lessons && topic.lessons.length === 1
+                                      ? " Lesson"
+                                      : " Lessons"}
+                                  </span>
+                                </div>
+                                <div className="card-meta-time">
+                                  <Icon name="eye" />{" "}
+                                  <span className="card-lessons-length">
+                                    55 mintues
+                                  </span>
+                                </div>
+                              </Card.Meta>
+                            </Card.Content>
                           </Card.Content>
-                        </Card.Content>
-                        {/* <Card.Content extra>
-                      <div className="ui two buttons">
-                        <Button basic color="green">
-                          Approve
-                        </Button>
-                        <Button basic color="red">
-                          Decline
-                        </Button>
-                      </div>
-                    </Card.Content> */}
-                      </Card>
-                    </Link>
-                  </Grid.Column>
-                );
-              })}
-              {/* </Card.Group> */}
-              {/* </Card.Group> */}
+                        </Card>
+                      </Link>
+                    </Grid.Column>
+                  );
+                })
+              )}
             </Grid.Row>
           </Grid>
         )}
@@ -201,8 +244,6 @@ class Read extends Component {
     );
   }
 }
-
-// export default Read;
 
 const mapStateToProps = (state) => {
   const { posts, newPostState } = state;

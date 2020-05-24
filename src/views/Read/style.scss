@@ -4,10 +4,38 @@
   margin: 2rem !important;
 }
 
+.topics-header-row {
+  border-bottom: 2px solid $chetwode-blue;
+}
+
 .topics-column {
+  margin-top: 0.7rem !important;
   margin-bottom: 2rem !important;
 }
 
+.topics-column-search {
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.topics-input-search:hover,
+.topics-input-search:focus {
+  outline: none !important;
+  border-color: none !important;
+}
+
+.loader-topics {
+  margin-top: 10rem!important;
+  // height: 100vh !important;
+  width: 100vw !important;
+  background-color: transparent !important;
+  color: transparent !important;
+}
+
+.dimmer-topics {
+  background-color: transparent !important;
+  color: transparent !important;
+}
 .card-topic-container {
   border: 1px solid $white !important; // $light-sea
 }
