@@ -106,7 +106,7 @@ class AdminPage extends Component {
       this.setState({ loading: true });
     }
 
-    // set userochkov
+    // set users
     this.props.firebase.users().on("value", (snapshot) => {
       this.props.onSetUsers(snapshot.val());
 

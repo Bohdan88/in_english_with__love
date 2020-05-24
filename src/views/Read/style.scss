@@ -1,22 +1,80 @@
-.topics-container
-// , .topics-column
-{
+@import "../../style/variables.scss";
+
+.topics-container {
   margin: 2rem !important;
 }
 
 .topics-column {
-  //   border: 1px soli/ black;
+  margin-bottom: 2rem !important;
+}
+
+.card-topic-container {
+  border: 1px solid $white !important; // $light-sea
+}
+
+.card-topic-container:hover {
+  border: 1px solid $light-sea !important; // $light-sea
+  outline: 0;
+  box-shadow: none !important;
 }
 
 .card-content-topic {
   display: flex;
+  border-top: none !important;
 }
 
 .card-content-image {
-  width: 20%;
+  width: 25%;
   height: auto;
+}
+
+.card-topic-link {
+  color: $black !important;
+}
+
+.card-content-topic-text {
+  padding-left: 1rem;
 }
 
 .card-lessons-length {
   padding-left: 0px;
+}
+
+.card-topic-image {
+  width: 60px !important;
+  height: 60px !important;
+}
+
+.card-topic-meta {
+  display: flex;
+  flex-direction: row;
+}
+
+// .card-content-image {
+//   // clip-path: polygon(56% 0, 95% 25%, 100% 75%, 49% 91%, 0 69%, 10% 26%);
+//   // background-color: rgba(86, 172, 138, 0.1);
+// }
+
+.card-meta-time {
+  padding-left: 10px;
+}
+
+.card-topic-header {
+  color: $coral-pearl;
+}
+.card-topic-arrow {
+  top: 5px;
+  right: 0px;
+  position: absolute;
+  color: transparent;
+}
+
+.card-topic-container:hover .card-topic-arrow {
+  color: $light-sea !important;
+}
+
+@media only screen and (max-width: 1919px) {
+  .card-meta-time {
+    padding-left: 2px;
+  }
 }

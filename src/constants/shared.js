@@ -331,6 +331,9 @@ export const REMOVE_EXERCISE = {
 
 // db values
 export const POSTS_BUCKET_NAME = "posts";
+export const TOPICS_BUCKET_NAME = "topics";
+
+export const DEFAULT_TOPIC_IMAGE = "default";
 
 // editor page
 export const SLICED_UPLOADED_IMAGE_KEY = 27;

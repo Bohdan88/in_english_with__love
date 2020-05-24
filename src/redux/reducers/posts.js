@@ -5,10 +5,13 @@ import {
   EXERCISES_DESCRIPTIONS,
   EXERCISES_NAMES,
 } from "../../constants/shared";
+
 const initState = {
   loading: false,
   error: false,
   allPosts: [],
+  allTopics: [],
+  allTopicsImages: [],
   categories: CATEGORIES,
   subCategories: [],
   focuses: [],

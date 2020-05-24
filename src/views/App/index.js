@@ -12,6 +12,7 @@ import AdminPage from "../Admin";
 import Read from "../Read";
 import Listen from "../Listen";
 import Write from "../Write";
+import TopicList from "../TopicList";
 import { withAuthentication } from "../Session";
 // import Blog from "../Blog";
 import About from "../About";
@@ -42,6 +43,7 @@ const App = () => {
             <Route path={ROUTES.LISTEN} component={Listen} />
             {/* <Route path={ROUTES.BLOG} component={Blog} /> */}
             <Route path={ROUTES.ABOUT} component={About} />
+            <Route path={ROUTES.LESSON_TOPIC_LIST} component={TopicList} />
           </div>
           {/* </Switch> */}
         </div>

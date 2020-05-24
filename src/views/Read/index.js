@@ -3,12 +3,28 @@ import { connect } from "react-redux";
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
 import { getAllPostsValues, setNewPostValues } from "../../redux/actions";
-import { Grid, Card, Image, Button, Icon } from "semantic-ui-react";
-
+import {
+  Grid,
+  Card,
+  Image,
+  Button,
+  Icon,
+  Loader,
+  Segment,
+  Dimmer,
+} from "semantic-ui-react";
+import {
+  POSTS_BUCKET_NAME,
+  TOPICS_BUCKET_NAME,
+  DEFAULT_TOPIC_IMAGE,
+} from "../../constants/shared";
+import { LESSON_TOPIC_LIST } from "../../constants/routes";
+import { Link } from "react-router-dom";
 // style
 import "./style.scss";
 
 class Read extends Component {
+  cardRef = React.createRef();
   componentDidMount() {
     this.props.firebase.posts().on("value", (snapshot) => {
       const postsObject = snapshot && snapshot.val();
@@ -18,13 +34,9 @@ class Read extends Component {
           uid: key,
         }));
 
-        this.setState({
-          posts: postsList,
-        });
-
-        const setSubCategories = [
+        const setAlltopics = [
           ...new Set(
-            postsList.map((obj, key) => ({
+            postsList.map((obj) => ({
               name: obj.subCategory,
               lessons: postsList.filter(
                 (el) => el.subCategory === obj.subCategory
@@ -33,62 +45,139 @@ class Read extends Component {
           ),
         ];
 
-        // const setFocuses = [...new Set(postsList.map((obj, key) => obj.focus))];
-
         // set posts
         this.props.onGetAllPostsValues({
           allPosts: postsList,
-          subCategories: setSubCategories,
-          //   focuses: setFocuses,
+          allTopics: setAlltopics,
         });
       }
     });
+
+    if (!this.props.posts.allTopicsImages.length) {
+      this.fetchTopicImage();
+    }
   }
+
+  fetchTopicImage = () => {
+    this.props.firebase.storage
+      .ref()
+      .child(`${TOPICS_BUCKET_NAME}/`)
+      .listAll()
+      .then((res) =>
+        res.items.forEach((item) =>
+          item.getDownloadURL().then((url) =>
+            this.props.onGetAllPostsValues({
+              allTopicsImages: this.props.posts.allTopicsImages.concat(url),
+            })
+          )
+        )
+      );
+  };
 
   componentWillUnmount() {
     this.props.firebase.posts().off();
   }
-  render() {
-    const { subCategories } = this.props.posts;
-    console.log(subCategories, "subCategories");
-    return (
-      <Grid className="topics-container">
-        <Grid.Row columns={2}>
-          <Grid.Column>TOPICS</Grid.Column>
-          <Grid.Column>SEARCH </Grid.Column>
-        </Grid.Row>
-        <Grid.Row centered columns={2}>
-          {/* <Card.Group centered fluid itemsPerRow={2}> */}
-          {subCategories &&
-            !!subCategories.length &&
-            subCategories.map((topic, key) => {
-              return (
-                <Grid.Column width={7} className="topics-column" key={key}>
-                  <Card centered fluid key={key}>
-                    {/* <Grid.Column className="topics-column" key={key}> */}
 
-                    <Card.Content className="card-content-topic">
-                      <Card.Content className="card-content-image">
-                        <Image floated="left" size="mini" alt={topic.name} />
-                      </Card.Content>
-                      <Card.Content>
-                        <Card.Header as="h2">{topic.name}</Card.Header>
-                        <Card.Meta>
-                          <Icon name="pencil alternate" />{" "}
-                          <span className="card-lessons-length">
-                            {topic.lessons ? topic.lessons.length : 0}
-                            {topic.lessons && topic.lessons.length === 1
-                              ? " Lesson"
-                              : " Lessons"}
-                          </span>
-                        </Card.Meta>
-                        <Card.Description>
-                          Steve wants to add you to the group{" "}
-                          <strong>best friends</strong>
-                        </Card.Description>
-                      </Card.Content>
-                    </Card.Content>
-                    {/* <Card.Content extra>
+  filterValue = (arr, value) =>
+    arr.filter((element) => element.includes(value));
+  render() {
+    const { allTopics, allTopicsImages } = this.props.posts;
+    // console.log(allTopics, "allTopics");
+
+    const arrTop = [
+      { name: "Culture", lessons: "" },
+      { name: "History", lessons: [""] },
+      { name: "Sport", lessons: "" },
+      { name: "Math", lessons: "" },
+      { name: "Psychology", lessons: "" },
+      { name: "Philosophy", lessons: "" },
+      { name: "Music", lessons: "" },
+      { name: "Biology", lessons: "" },
+      { name: "Opera", lessons: "" },
+    ];
+
+    // console.log(this.cardRef.current, "THIS");
+    return (
+      <div>
+        {!allTopicsImages.length || !allTopics.length ? (
+          <Segment className="loader-admin">
+            <Dimmer active>
+              <Loader size="massive">Loading </Loader>
+            </Dimmer>
+          </Segment>
+        ) : (
+          <Grid className="topics-container">
+            <Grid.Row columns={2}>
+              <Grid.Column>TOPICS</Grid.Column>
+              <Grid.Column>SEARCH </Grid.Column>
+            </Grid.Row>
+            <Grid.Row columns={2}>
+              {arrTop.map((topic, key) => {
+                const imgSrc = allTopicsImages.filter((imgUrl) =>
+                  imgUrl.includes(`${topic.name.toLowerCase()}.`)
+                );
+
+                const defaultImage = allTopicsImages.filter((imgUrl) =>
+                  imgUrl.includes(DEFAULT_TOPIC_IMAGE)
+                );
+                return (
+                  <Grid.Column
+                    widescreen={3}
+                    largeScreen={4}
+                    className="topics-column"
+                    key={key}
+                  >
+                    <Link
+                      ref={this.cardRef}
+                      className="card-topic-link"
+                      to={LESSON_TOPIC_LIST}
+                    >
+                      <Card
+                        centered
+                        fluid
+                        className="card-topic-container"
+                        key={key}
+                      >
+                        <Icon className="card-topic-arrow" name="arrow right" />
+                        <Card.Content className="card-content-topic">
+                          <Card.Content className="card-content-image">
+                            <Image
+                              className="card-topic-image"
+                              src={!!imgSrc.length ? imgSrc : defaultImage}
+                              alt={topic.name}
+                              floated="left"
+                              size="mini"
+                            />
+                          </Card.Content>
+                          <Card.Content className="card-content-topic-text">
+                            <Card.Header as="h2" className="card-topic-header">
+                              {topic.name}
+                            </Card.Header>
+                            <Card.Meta className="card-topic-meta">
+                              <div>
+                                <Icon name="pencil alternate" />{" "}
+                                <span className="card-lessons-length">
+                                  {topic.lessons ? topic.lessons.length : 0}
+                                  {topic.lessons && topic.lessons.length === 1
+                                    ? " Lesson"
+                                    : " Lessons"}
+                                </span>
+                              </div>
+                              <div className="card-meta-time">
+                                <Icon name="eye" />{" "}
+                                <span className="card-lessons-length">
+                                  55 mintues
+                                </span>
+                              </div>
+                            </Card.Meta>
+
+                            {/* <Card.Description>
+                            Steve wants to add you to the group{" "}
+                            <strong>best friends</strong>
+                          </Card.Description> */}
+                          </Card.Content>
+                        </Card.Content>
+                        {/* <Card.Content extra>
                       <div className="ui two buttons">
                         <Button basic color="green">
                           Approve
@@ -98,14 +187,17 @@ class Read extends Component {
                         </Button>
                       </div>
                     </Card.Content> */}
-                  </Card>
-                </Grid.Column>
-              );
-            })}
-          {/* </Card.Group> */}
-          {/* </Card.Group> */}
-        </Grid.Row>
-      </Grid>
+                      </Card>
+                    </Link>
+                  </Grid.Column>
+                );
+              })}
+              {/* </Card.Group> */}
+              {/* </Card.Group> */}
+            </Grid.Row>
+          </Grid>
+        )}
+      </div>
     );
   }
 }
