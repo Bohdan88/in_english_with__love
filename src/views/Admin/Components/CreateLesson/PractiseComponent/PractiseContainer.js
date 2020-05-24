@@ -35,13 +35,14 @@ class PractiseContainer extends PureComponent {
 
   onDropDownChange = (data, dropDownType, exerciseId) => {
     const { newPostExercisesValues } = this.props.newPostState;
+    // console.log(dropDownType, "dropDownType");
     this.props.onSetNewPostValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) =>
         obj.id === exerciseId
           ? {
               ...obj,
               [dropDownType]: data.value,
-              content: [INIT_FIELDS_CONTENT[data.value]],
+              // content: [INIT_FIELDS_CONTENT[data.value]],
             }
           : obj
       ),

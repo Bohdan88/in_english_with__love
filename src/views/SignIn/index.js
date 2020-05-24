@@ -30,9 +30,9 @@ const INITIAL_STATE = {
 
 const SignInPage = () => (
   <Grid columns={2} className="sign-grid">
-    <Grid.Row >
+    <Grid.Row>
       <LeftGridAuth />
-      <Grid.Column  mobile={16} tablet={9} computer={8}className="sign-column">
+      <Grid.Column mobile={16} tablet={9} computer={8} className="sign-column">
         <SignInForm />
       </Grid.Column>
     </Grid.Row>
@@ -82,7 +82,6 @@ class SignInFormBase extends Component {
                 }.`}</p>
               )}
           </div>
-
           <FormInput
             styleVal="email-signin"
             error={error}

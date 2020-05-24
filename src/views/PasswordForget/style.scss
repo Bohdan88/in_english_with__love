@@ -3,7 +3,7 @@
 .container-forgot-password {
   position: relative !important;
   top: -11px;
-  font-size: 18px;
+  font-size: 14px;
   p > a {
     // font-size: 18px;
     color: $red !important;
@@ -11,7 +11,8 @@
     // font-weight: bold;
 
     &:hover {
-      text-shadow: 2px 2px 4px $light-grey;
+      // text-decoration: underline;
+      text-shadow: 1px 1px 4px $light-grey;
     }
   }
 }

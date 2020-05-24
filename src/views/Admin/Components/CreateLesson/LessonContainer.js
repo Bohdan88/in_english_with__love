@@ -5,30 +5,15 @@ import { connect } from "react-redux";
 import { withAuthorization } from "../../../Session";
 import * as ROLES from "../../../../constants/roles";
 import draftToHtml from "draftjs-to-html";
-
 import {
-  ADMIN_TABS,
-  CATEGORIES,
   ADMIN_DROPDOWN_TITLES,
   POSTS_BUCKET_NAME,
   INIT_NEW_POST_VALUES,
-  ICON_POST_STATUS,
   CREATE_LESSON_STAGES,
 } from "../../../../constants/shared";
 import { EditorState, convertToRaw } from "draft-js";
-import {
-  Form,
-  Button,
-  Popup,
-  Icon,
-  Input,
-  Tab,
-  Segment,
-  Dimmer,
-  Loader,
-} from "semantic-ui-react";
+import { Form, Button, Popup, Icon, Tab } from "semantic-ui-react";
 import { getAllPostsValues, setNewPostValues } from "../../../../redux/actions";
-import Swal from "sweetalert2";
 import {
   LESSON_STATUS,
   ICON_POST_REMOVE_STATUS,
@@ -284,7 +269,7 @@ class CreateLesson extends Component {
               const storageRef = firebase.storage.ref(
                 `${POSTS_BUCKET_NAME}/${newPostState.title
                   .split(" ")
-                  .join("_")}${imgSection}/${Object.values(obj)[0].name}`
+                  .join("_")}/${imgSection}/${Object.values(obj)[0].name}`
               );
 
               //  put file in a storage

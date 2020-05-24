@@ -131,7 +131,7 @@ class AdminPage extends Component {
 
   render() {
     const { loading } = this.state;
-    // console.log(this.state,'this.state')
+    // console.log(this.props,'this.state')
     // console.log(this.props.users,'usersusersusers')
     const panes = [
       {

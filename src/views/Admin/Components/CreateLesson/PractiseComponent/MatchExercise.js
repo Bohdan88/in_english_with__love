@@ -87,13 +87,12 @@ class MatchExercise extends PureComponent {
     const charValues = Object.assign({}, this.state.charValues);
 
     if (newPostExercisesValues.content.length === 1) {
-      newPostExercisesValues.content = [];
       delete charValues[objValues.name];
     } else {
-      newPostExercisesValues.content.pop();
       charValues[objValues.name].pop();
     }
 
+    newPostExercisesValues.content.pop();
     this.setState({ charValues });
     this.props.onSetNewPostValues(newPostExercisesValues);
   };

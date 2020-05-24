@@ -29,6 +29,12 @@
 }
 .editor-area {
   border: 1px solid $white-smoke;
+
+  .DraftEditor-root {
+    .DraftEditor-editorContainer {
+      line-height: 4px !important;
+    }
+  }
 }
 
 .editor-toolbar {
