@@ -25,7 +25,7 @@
 }
 
 .loader-topics {
-  margin-top: 10rem!important;
+  margin-top: 10rem !important;
   // height: 100vh !important;
   width: 100vw !important;
   background-color: transparent !important;
@@ -87,12 +87,13 @@
   padding-left: 10px;
 }
 
-.card-topic-header {
-  color: $coral-pearl;
+.card-topic-header,
+.topics-header {
+  color: $coral-pearl !important;
 }
 .card-topic-arrow {
-  top: 5px;
-  right: 0px;
+  top: 8px;
+  right: 5px;
   position: absolute;
   color: transparent;
 }

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { compose } from "recompose";
 import _ from "lodash";
 import { withFirebase } from "../Firebase";
-import { getAllPostsValues, setNewPostValues } from "../../redux/actions";
+import { getAllPostsValues } from "../../redux/actions";
 import {
   Grid,
   Card,
@@ -14,7 +14,7 @@ import {
   Dimmer,
   Header,
   Input,
-  Button,
+  Transition,
 } from "semantic-ui-react";
 import {
   TOPICS_BUCKET_NAME,
@@ -49,7 +49,7 @@ class Read extends Component {
 
     setTimeout(() => {
       if (this.state.value.length < 1) {
-        return this.setState({
+        this.setState({
           stateTopics: arrTop,
           loading: false,
         });
@@ -94,6 +94,7 @@ class Read extends Component {
         // this.setState({
         //   stateTopics: setAlltopics,
         // });
+        // setTimeout(() => this.setState({ loading: false }), 2000);
       }
     });
 
@@ -125,7 +126,6 @@ class Read extends Component {
   render() {
     const { loading, stateTopics } = this.state;
     const { allTopics, allTopicsImages } = this.props.posts;
-
     return (
       <div>
         {!allTopicsImages.length || !allTopics.length ? (
@@ -138,7 +138,9 @@ class Read extends Component {
           <Grid className="topics-container">
             <Grid.Row columns={2} className="topics-header-row">
               <Grid.Column>
-                <Header as="h1"> Topics </Header>
+                <Header className="topics-header" as="h1">
+                  Topics
+                </Header>
               </Grid.Column>
               <Grid.Column className="topics-column-search">
                 <Input
@@ -160,12 +162,12 @@ class Read extends Component {
                     active
                   >
                     <Loader style={{ color: "black" }} size="big">
-                      Loading{" "}
+                      Loading
                     </Loader>
                   </Dimmer>
                 </Segment>
               ) : (
-                stateTopics.map((topic, key) => {
+                stateTopics.map((topic) => {
                   const imgSrc = allTopicsImages.filter((imgUrl) =>
                     imgUrl.includes(`${topic.name.toLowerCase()}.`)
                   );
@@ -174,66 +176,68 @@ class Read extends Component {
                     imgUrl.includes(DEFAULT_TOPIC_IMAGE)
                   );
                   return (
-                    <Grid.Column
-                      widescreen={3}
-                      largeScreen={4}
-                      className="topics-column"
-                      key={key}
+                    <Transition
+                      visible={true}
+                      animation="fade"
+                      duration={1500}
+                      transitionOnMount={true}
+                      key={topic.name}
                     >
-                      <Link
-                        ref={this.cardRef}
-                        className="card-topic-link"
-                        to={LESSON_TOPIC_LIST}
+                      <Grid.Column
+                        widescreen={3}
+                        largeScreen={4}
+                        className="topics-column"
                       >
-                        <Card
-                          centered
-                          fluid
-                          className="card-topic-container"
-                          key={key}
+                        <Link
+                          className="card-topic-link"
+                          to={`${LESSON_TOPIC_LIST}?topic=${topic.name.toLowerCase()}`}
                         >
-                          <Icon
-                            className="card-topic-arrow"
-                            name="arrow right"
-                          />
-                          <Card.Content className="card-content-topic">
-                            <Card.Content className="card-content-image">
-                              <Image
-                                className="card-topic-image"
-                                src={!!imgSrc.length ? imgSrc : defaultImage}
-                                alt={topic.name}
-                                floated="left"
-                                size="mini"
-                              />
+                          <Card centered fluid className="card-topic-container">
+                            <Icon
+                              className="card-topic-arrow"
+                              name="arrow right"
+                            />
+                            <Card.Content className="card-content-topic">
+                              <Card.Content className="card-content-image">
+                                <Image
+                                  className="card-topic-image"
+                                  src={!!imgSrc.length ? imgSrc : defaultImage}
+                                  alt={topic.name}
+                                  floated="left"
+                                  size="mini"
+                                />
+                              </Card.Content>
+                              <Card.Content className="card-content-topic-text">
+                                <Card.Header
+                                  as="h2"
+                                  className="card-topic-header"
+                                >
+                                  {topic.name}
+                                </Card.Header>
+                                <Card.Meta className="card-topic-meta">
+                                  <div>
+                                    <Icon name="pencil alternate" />{" "}
+                                    <span className="card-lessons-length">
+                                      {topic.lessons ? topic.lessons.length : 0}
+                                      {topic.lessons &&
+                                      topic.lessons.length === 1
+                                        ? " Lesson"
+                                        : " Lessons"}
+                                    </span>
+                                  </div>
+                                  <div className="card-meta-time">
+                                    <Icon name="eye" />{" "}
+                                    <span className="card-lessons-length">
+                                      55 mintues
+                                    </span>
+                                  </div>
+                                </Card.Meta>
+                              </Card.Content>
                             </Card.Content>
-                            <Card.Content className="card-content-topic-text">
-                              <Card.Header
-                                as="h2"
-                                className="card-topic-header"
-                              >
-                                {topic.name}
-                              </Card.Header>
-                              <Card.Meta className="card-topic-meta">
-                                <div>
-                                  <Icon name="pencil alternate" />{" "}
-                                  <span className="card-lessons-length">
-                                    {topic.lessons ? topic.lessons.length : 0}
-                                    {topic.lessons && topic.lessons.length === 1
-                                      ? " Lesson"
-                                      : " Lessons"}
-                                  </span>
-                                </div>
-                                <div className="card-meta-time">
-                                  <Icon name="eye" />{" "}
-                                  <span className="card-lessons-length">
-                                    55 mintues
-                                  </span>
-                                </div>
-                              </Card.Meta>
-                            </Card.Content>
-                          </Card.Content>
-                        </Card>
-                      </Link>
-                    </Grid.Column>
+                          </Card>
+                        </Link>
+                      </Grid.Column>
+                    </Transition>
                   );
                 })
               )}
@@ -246,14 +250,13 @@ class Read extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { posts, newPostState } = state;
-  return { posts, newPostState };
+  const { posts } = state;
+  return { posts };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetNewPostValues: (values) => dispatch(setNewPostValues(values)),
   };
 };
 export default compose(

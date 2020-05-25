@@ -12,6 +12,7 @@ const initState = {
   allPosts: [],
   allTopics: [],
   allTopicsImages: [],
+  // selectedTopics: [],
   categories: CATEGORIES,
   subCategories: [],
   focuses: [],

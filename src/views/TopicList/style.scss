@@ -1,0 +1,140 @@
+@import "../../style/variables.scss";
+
+.topics-container {
+  margin: 2rem !important;
+}
+
+.topics-header-row {
+  border-bottom: 2px solid $chetwode-blue;
+}
+
+.topics-column {
+  margin-top: 0.7rem !important;
+  margin-bottom: 2rem !important;
+}
+
+.topics-column-search {
+  display: flex !important;
+  justify-content: flex-end !important;
+}
+
+.topics-input-search:hover,
+.topics-input-search:focus {
+  outline: none !important;
+  border-color: none !important;
+}
+
+.loader-topics {
+  margin-top: 10rem !important;
+  // height: 100vh !important;
+  width: 100vw !important;
+  background-color: transparent !important;
+  color: transparent !important;
+}
+
+.dimmer-topics {
+  background-color: transparent !important;
+  color: transparent !important;
+}
+.card-selected-topic-container {
+  border: 1px solid $white !important; // $light-sea
+  padding: 25px!important;
+}
+
+.card-selected-topic-container:hover {
+  border: 1px solid $light-sea !important; // $light-sea
+  outline: 0;
+  box-shadow: none !important;
+}
+
+.card-content-topic {
+  display: flex;
+  border-top: none !important;
+}
+
+.card-content-image {
+  width: 25%;
+  height: auto;
+}
+
+.card-topic-link {
+  color: $black !important;
+}
+
+.card-content-topic-text {
+  padding-left: 1rem;
+}
+
+.card-lessons-length {
+  padding-left: 0px;
+}
+
+.card-topic-image {
+  width: 60px !important;
+  height: 60px !important;
+}
+
+.card-topic-meta {
+  display: flex;
+  flex-direction: row;
+  float: right;
+  padding-top: 10px;
+}
+
+// .card-content-image {
+//   // clip-path: polygon(56% 0, 95% 25%, 100% 75%, 49% 91%, 0 69%, 10% 26%);
+//   // background-color: rgba(86, 172, 138, 0.1);
+// }
+
+.card-meta-time {
+  padding-left: 10px;
+}
+
+.card-topic-header,
+.topics-header {
+  color: $coral-pearl !important;
+}
+.card-topic-arrow {
+  top: 8px;
+  right: 5px;
+  position: absolute;
+  color: transparent;
+}
+
+.card-selected-topic-container:hover .card-topic-arrow {
+  color: $light-sea !important;
+}
+
+.card-selected-topic-description {
+  padding: 10px;
+  padding-right: 0px;
+  //   border: 1px solid $dark-grey;
+}
+
+.selected-topic-focus {
+  padding: 6px;
+  border-radius: 2px;
+  font-size: 18px;
+  font-weight: 600;
+  //   border: 1px solid $dark-grey;
+  color: $dark-grey;
+  background-color: $white-smoke;
+}
+
+.card-icon-circle {
+  position: relative;
+  padding: 0px 1px;
+  bottom: 3px;
+  left: -4px;
+  font-size: 0.3rem !important;
+}
+.card-icon-star {
+  position: relative;
+  bottom: 1px;
+}
+
+@media only screen and (max-width: 1919px) {
+  .card-meta-time {
+    padding-left: 2px;
+  }
+}
