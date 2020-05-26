@@ -12,7 +12,16 @@ import {
   CREATE_LESSON_STAGES,
 } from "../../../../constants/shared";
 import { EditorState, convertToRaw } from "draft-js";
-import { Form, Button, Popup, Icon, Tab } from "semantic-ui-react";
+import {
+  Form,
+  Button,
+  Popup,
+  Icon,
+  Tab,
+  Segment,
+  Dimmer,
+  Loader,
+} from "semantic-ui-react";
 import { getAllPostsValues, setNewPostValues } from "../../../../redux/actions";
 import {
   LESSON_STATUS,
@@ -21,41 +30,13 @@ import {
 } from "../../../../constants/shared";
 import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
 import { transformToOptions, fireAlert } from "../../../../utils";
-// const transformToOptions = (arr) => {
-//   // console.log(arr, "arr");
-//   return arr && arr[0] !== undefined
-//     ? arr.map((el) => ({
-//         key: el,
-//         text: el,
-//         value: el,
-//       }))
-//     : [];
-// };
-
-// const fireAlert = (state, values, error = null) => {
-//   Swal.fire({
-//     icon: state ? values.icon.success : values.icon.error,
-//     heightAuto: false,
-//     title: state ? values.title.success : values.title.error,
-//     text: state ? values.text.success : error ? error : values.text.error,
-//     customClass: {
-//       confirmButton: "ui green basic button",
-//       container: "alert-container-class",
-//     },
-//     position: "top-end",
-//     popup: "swal2-show",
-//     className: "admit-sweet-alert",
-//   });
-
-//   setTimeout(() => Swal.close(), 4000);
-// };
 
 class CreateLesson extends Component {
   constructor(props) {
     super(props);
     this.fileInputRef = React.createRef();
     this.state = {
-      loading: false,
+      isLoading: false,
       users: [],
       posts: [],
       iconFile: null,
@@ -87,7 +68,7 @@ class CreateLesson extends Component {
 
   fetchPostsFromDb = () => {
     // reload the page
-    // this.setState({ loading: true });
+    // this.setState({ isLoading: true });
     // on posts
     this.props.firebase.posts().on("value", (snapshot) => {
       const postsObject = snapshot && snapshot.val();
@@ -158,8 +139,6 @@ class CreateLesson extends Component {
     const { iconFile } = this.state;
     const { iconPath } = this.props.newPostState;
     const { firebase } = this.props;
-    // console.log(!iconPath.length, "ICON_PATH");
-    // console.log(iconPath, "iconPathINIT");
 
     if (!iconPath.length && iconFile && iconFile[0]) {
       const storageRef = firebase.storage.ref(
@@ -213,8 +192,6 @@ class CreateLesson extends Component {
     // }
   };
 
-  //
-
   onPreview = () => {
     this.setState({
       preview: !this.state.preview,
@@ -240,78 +217,116 @@ class CreateLesson extends Component {
     return isAllFieldFilled;
   };
 
-  convertEditorStateToContentState = () => {
+  convertEditorStateToHtml = () => {
+    this.setState({ isLoading: true });
     // clone an opbject to avoid immutability
     const post = Object.assign({}, this.props.newPostState.post);
+    const assets = this.props.newPostState.assets;
 
     Object.entries(post).forEach((arr) => {
       // if string is not empty
       if (!!arr[1]) {
-        post[arr[0]] = convertToRaw(arr[1].getCurrentContent());
+        // entityMap => uploaded images
+        const editorRow = Object.values(
+          convertToRaw(arr[1].getCurrentContent()).entityMap
+        );
+        // filter by uploaded images (it can be not uplaoded images like links)
+        if (!!Object.entries(editorRow).length) {
+          const filterEditor = editorRow.filter((obj) =>
+            obj.data.src.includes("blob")
+          );
+          // once we found some values , reassign links from local machine to db
+          if (!!filterEditor.length) {
+            filterEditor.map(
+              (obj, key) =>
+                (obj.data.src = Object.values(assets[arr[0]][key])[0])
+            );
+          }
+        }
+        // convert editor to html because EditorState has undefined values which is why we can't push it into DB
+        post[arr[0]] = draftToHtml(convertToRaw(arr[1].getCurrentContent()));
       }
     });
-    return new Promise((resolve, reject) => {
+
+    // change props values
+    return new Promise((resolve) => {
       resolve(this.props.onSetNewPostValues({ post }));
+    }).then(() => {
+      // push to db afterwards
+      this.pushPostToDb();
     });
   };
 
-  uploadAllAssetsIntoDb = () => {
+  uploadAssetsToDb = () => {
     const { newPostState, firebase } = this.props;
     const assets = Object.assign({}, newPostState.assets);
-    return new Promise((resolve, reject) => {
-      resolve(
-        Object.values(assets).map((arrayOfObj) => {
-          if (arrayOfObj && !!arrayOfObj.length) {
-            arrayOfObj.map((obj) => {
-              const imgSection = Object.values(obj)[0].section;
-              const imgUrl = Object.keys(obj)[0];
-              // build a path like this => posts/title/about/imageUrl
-              const storageRef = firebase.storage.ref(
-                `${POSTS_BUCKET_NAME}/${newPostState.title
-                  .split(" ")
-                  .join("_")}/${imgSection}/${Object.values(obj)[0].name}`
-              );
 
-              //  put file in a storage
-              storageRef
-                .put(Object.values(obj)[0])
-                .then(() => {
-                  // once assets inserted in our db we change their path in redux
-                  const assetIndex = assets[imgSection].findIndex(
-                    (file) => Object.keys(file)[0] === imgUrl
-                  );
-                  assets[imgSection][assetIndex][imgUrl] = storageRef.fullPath;
+    Object.values(assets).map((arrayOfObj) => {
+      if (arrayOfObj && !!arrayOfObj.length) {
+        arrayOfObj.map((obj) => {
+          const imgSection = Object.values(obj)[0].section;
+          const imgUrl = Object.keys(obj)[0];
+          // build a path like this => posts/title/about/imageUrl
+          const storageRef = firebase.storage.ref(
+            `${POSTS_BUCKET_NAME}/${newPostState.title
+              .split(" ")
+              .join("_")}/${imgSection}/${Object.values(obj)[0].name}`
+          );
 
-                  this.props.onSetNewPostValues({ assets });
-                })
-                .catch((error) =>
-                  fireAlert(false, ICON_POST_ADD_STATUS, error)
+          //  put file in a storage
+          storageRef.put(Object.values(obj)[0]).then(() => {
+            this.props.firebase.storage
+              .ref()
+              .child(storageRef.fullPath)
+              .getDownloadURL()
+              .then((url) => {
+                const index = assets[imgSection].findIndex(
+                  (img) => Object.keys(img)[0] === imgUrl
                 );
-            });
-          }
-        })
-      );
+
+                console.log(
+                  assets[imgSection][index][imgUrl],
+                  "assets[imgSection][index][imgUrl]"
+                );
+                assets[imgSection][index][imgUrl] = url;
+                this.props.onSetNewPostValues({ assets });
+              })
+              .then(() => {
+                this.convertEditorStateToHtml();
+              });
+          });
+        });
+      }
     });
+  };
+
+  pushPostToDb = () => {
+    this.props.firebase
+      .posts()
+      .push()
+      .set(this.props.newPostState)
+      .then(() => {
+        this.setState({ isLoading: false });
+        // call success modal and refresh props
+        fireAlert(true, LESSON_STATUS).then(() => this.fetchPostsFromDb());
+      })
+      .catch((error) => fireAlert(false, LESSON_STATUS, error));
   };
 
   onSubmitPost = () => {
     if (this.checkEachRequiredField()) {
-      // insert into db users assets and convert editor state
-      this.uploadAllAssetsIntoDb()
-        .then(() => this.convertEditorStateToContentState())
-        .then(() => {
-          this.props.firebase
-            .posts()
-            .push()
-            .set(this.props.newPostState)
-            .then(() => {
-              // call success modal and refresh props
-              fireAlert(true, LESSON_STATUS).then(() =>
-                this.fetchPostsFromDb()
-              );
-            })
-            .catch((error) => fireAlert(false, LESSON_STATUS, error));
-        });
+      // check if user uploaded some values
+      if (
+        Object.values(this.props.newPostState.assets).some(
+          (arr) => !!arr.length
+        )
+      ) {
+        // insert into db users assets and convert editor state
+        this.uploadAssetsToDb();
+      } else {
+        // if not we just converting into html and pushing it into db
+        this.convertEditorStateToHtml();
+      }
     }
   };
 
@@ -319,7 +334,7 @@ class CreateLesson extends Component {
 
   render() {
     const {
-      loading,
+      isLoading,
       iconFile,
       iconSrc,
       iconVisibility,
@@ -338,17 +353,7 @@ class CreateLesson extends Component {
       iconPath,
     } = this.props.newPostState;
     const { categories, focuses, subCategories } = this.props.posts;
-    // console.log(this.props.newPostState.post, "POST_POST");
-    // console.log(this.props.newPostState, "POST");
-    // // post[sectionKey]
-    // if (post["about"] !== "") {
-    //   console.log(
-    //     draftToHtml(convertToRaw(post["about"].getCurrentContent()), "POST")
-    //   );
-    // }
-    // console.log(errorFields, "TITLEERROR");
-    // console.log(load÷ing, "LOOOOADING");
-    // console.log(this.props.newPostState,'this.props')
+
     const panes = [
       {
         menuItem: CREATE_LESSON_STAGES.before,
@@ -388,7 +393,13 @@ class CreateLesson extends Component {
       },
     ];
 
-    return (
+    return isLoading ? (
+      <Segment className="loader-admin">
+        <Dimmer active>
+          <Loader size="massive"> Loading </Loader>
+        </Dimmer>
+      </Segment>
+    ) : (
       <div>
         <Form>
           <Form.Group widths="equal">

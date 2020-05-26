@@ -24,6 +24,15 @@
   border-color: none !important;
 }
 
+.selected-topic-header-row {
+  border-bottom: 2px solid $chetwode-blue;
+  margin: -0.35rem 5.2rem 1rem;
+
+  .column {
+    padding: 0px !important;
+  }
+}
+
 .loader-topics {
   margin-top: 10rem !important;
   // height: 100vh !important;
@@ -38,7 +47,8 @@
 }
 .card-selected-topic-container {
   border: 1px solid $white !important; // $light-sea
-  padding: 25px!important;
+  padding: 25px !important;
+  padding-right: 0px !important;
 }
 
 .card-selected-topic-container:hover {
@@ -49,6 +59,7 @@
 
 .card-content-topic {
   display: flex;
+  justify-content: space-between;
   border-top: none !important;
 }
 

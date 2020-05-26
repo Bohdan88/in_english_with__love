@@ -152,7 +152,7 @@ class Read extends Component {
                 />
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row columns={2}>
+            <Grid.Row className="topics-cards-row">
               {loading ? (
                 <Segment inverted className="loader-topics">
                   <Dimmer
@@ -179,7 +179,7 @@ class Read extends Component {
                     <Transition
                       visible={true}
                       animation="fade"
-                      duration={1500}
+                      duration={2000}
                       transitionOnMount={true}
                       key={topic.name}
                     >
@@ -192,7 +192,7 @@ class Read extends Component {
                           className="card-topic-link"
                           to={`${LESSON_TOPIC_LIST}?topic=${topic.name.toLowerCase()}`}
                         >
-                          <Card centered fluid className="card-topic-container">
+                          <Card  fluid className="card-topic-container">
                             <Icon
                               className="card-topic-arrow"
                               name="arrow right"

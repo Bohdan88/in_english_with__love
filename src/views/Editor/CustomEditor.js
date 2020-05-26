@@ -259,15 +259,20 @@ class CustomEditor extends Component {
 
     // we check on blocks in case it's not editor state
     const currentEditor =
-      post[sectionKey] === "" || post[sectionKey].blocks
+      post[sectionKey] === "" || post[sectionKey].blocks || post[sectionKey][0] === '<'
         ? EditorState.createEmpty()
         : post[sectionKey];
     // EditorState.createWithContent(convertFromRaw(post[sectionKey]));
 
     // console.log(
-    //   draftToHtml(convertToRaw(currentEditor.getCurrentContent()), "OOOK")
+    //   convertFromRaw(convertToRaw(currentEditor.getCurrentContent())),
+    //   "post[sectionKey]"
     // );
 
+    // console.log(this.props);
+    // console.log(convertToRaw(currentEdit or.getCurrentContent()), "OOOK");
+    console.log(currentEditor,'currentEditor')
+    // console.log(currentEditor.getCurrentContent(), "get");
     // console.log(currentEditor, "CURRENTEDITOR");
     // console.log(
     //   this.state.try &&
