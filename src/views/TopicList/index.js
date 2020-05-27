@@ -270,7 +270,7 @@ class TopicList extends Component {
                       <Transition
                         visible={true}
                         animation="fade"
-                        duration={2000}
+                        duration={2500}
                         transitionOnMount={true}
                       >
                         {/* <Transition

@@ -1,0 +1,242 @@
+@import "../../style/variables.scss";
+
+.columns-container {
+  display: flex;
+}
+
+.title {
+  padding: 8px;
+}
+
+// .tasks-container {
+//   padding: 10px;
+//   border: 1px solid grey;
+//   margin-bottom: 10px;
+//   margin-left: 10px;
+//   margin-right: 10px;
+//   border-radius: 2px;
+//   background-color: white;
+//   flex-grow: 1;
+//   min-height: 100px;
+// }
+
+.lightgreen {
+  /* color: lightgreen !important; */
+  background-color: lightgreen !important;
+}
+
+.skyblue {
+  background-color: skyblue !important;
+}
+
+//
+
+.lesson-view-grid {
+  margin: 1rem !important;
+  // border: 1px solid black;
+}
+
+.lesson-view-steps-container {
+  background-color: $white-grey !important;
+}
+
+// match exercise
+
+.lesson-view-match-container {
+  display: flex !important;
+  flex-direction: row;
+}
+
+.lesson-view-math-segment-group {
+  .segment {
+    // background-color: lightskyblue !important;
+  }
+  // .segment::after {
+  //   content: "before";
+  //   // padding: 2em 1em;
+  //   font-size: 1rem;
+  //   width: 20px;
+  //   height: 50px;
+  //   // padding-top: 10px;
+  //   position: relative;
+  //   left: 0px;
+  //   background-color: $white-grey !important;
+  // }
+}
+
+.lesson-view-segment {
+  display: flex;
+}
+
+.lesson-view-after-segment {
+  // height: 49px;
+  // border: 1px solid black;
+  // background: red;
+  // position: relative;
+  // width: 20px;
+  // position: relative;
+  // width: 0;
+  // height: 0px;
+  // border-top: 0px solid transparent;
+  // border-right: 13px solid red;
+  // transform: rotate(-136deg);
+  // left: -26px;
+  // top: 31px;
+  // border-top-left-radius: 1px;
+  // border-top-right-radius: 1px;
+  // border-bottom-right-radius: 2px;
+  // width: 0px;
+  // height: 0px;
+  // position: relative;
+  // left: -5px;
+  // border-right: 14px solid transparent;
+  // border-top: 24px solid lightskyblue;
+  // border-left: 12px solid lightskyblue;
+  // border-bottom: 25px solid lightskyblue;
+  // border-top-left-radius: 20px;
+  // border-top-right-radius: 20px;
+  // border-bottom-left-radius: 20px;
+  // border-bottom-right-radius: 20px;
+}
+
+.lesson-view-after-segment::after {
+  // content: "";
+  // position: absolute;
+  // border: 0 solid transparent;
+  // border-top: 3px solid red;
+  // border-radius: 20px 0 0 0;
+  // top: -12px;
+  // left: -9px;
+  // width: 12px;
+  // height: 12px;
+  // transform: rotate(45deg);
+  // width: 20px;
+  // height: 0;
+  // position: absolute;
+  // bottom: 0;
+  // left: 0;
+  // border-top: 29px solid red;
+  // border-left: 29px solid #eee;
+  // border-right: 29px solid #eee;
+
+  // content: "";
+  // position: absolute;
+  // border: 0 solid transparent;
+  // border-top: 5px solid red;
+  // border-radius: 20px 17px 1px 5px;
+  // top: 14px;
+  // left: -29px;
+  // width: 51px;
+  // height: 12px;
+  // transform: rotate(45deg);
+
+  // position: absolute;
+  // z-index: 2;
+  // // content: "";
+  // top: 50%;
+  // right: 0;
+  // border: medium none;
+  // background-color: #fff;
+  // width: 1.14285714em;
+  // height: 1.14285714em;
+  // border-style: solid;
+  // border-color: rgba(34, 36, 38, 0.15);
+  // border-width: 0 1px 1px 0;
+  // transition: background-color 0.1s ease, opacity 0.1s ease, color 0.1s ease,
+  //   box-shadow 0.1s ease;
+  // transform: translateY(-50%) translateX(50%) rotate(-45deg);
+}
+
+.lesson-view-match-column {
+  display: flex;
+  flex-direction: column;
+  // margin: 20px;
+  // border: 1px solid lightgreen;
+  width: auto;
+}
+
+.tasks-container-contentId,
+.tasks-container-contentLetter {
+  // padding: 10px;
+  // border: 1px solid grey;
+  background-color: #3583e0 !important;
+  margin-bottom: 10px;
+  // margin-left: 10px;
+  // margin-right: 10px;
+  border-radius: 2px;
+  background-color: white;
+  flex-grow: 1;
+  min-height: 100px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  //@extend
+  padding-left: 5px;
+  padding-top: 20px;
+  font-weight: 500;
+  color: white;
+  font-size: 16px;
+}
+
+.tasks-container-contentId {
+  position: relative;
+  left: 38px;
+  z-index: 100;
+}
+
+.tasks-container-contentLetter {
+  padding-left: 40px;
+  padding-top: 20px;
+  font-weight: 500;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+}
+
+.task-blocks {
+  display: flex;
+}
+
+.after-column-contentId {
+  width: 0px;
+  height: 0px;
+  border-right: 15px solid transparent;
+  border-top: 50px solid #3583e0;
+  border-left: 15px solid #3583e0;
+  border-bottom: 50px solid #3583e0;
+  z-index: 105;
+  left: 27px;
+  position: relative;
+  // vasa
+}
+
+// .after-column-contentId::before {
+//   content: "";
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   height: 100%;
+//   width: 51%;
+//   background: red;
+//   transform: skew(0deg, 6deg);
+// }
+
+.after-column-contentId::after {
+  // content: "";
+  // position: absolute;
+  // top: 0;
+  // right: 0;
+  // height: 100%;
+  // width: 50%;
+  // background: red;
+  // transform: skew(0deg, -6deg);
+}
+
+.after-column-contentLetter {
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  border-right: 15px solid transparent;
+  border-top: 50px solid white;
+  border-left: 15px solid white;
+  border-bottom: 50px solid white;
+}
