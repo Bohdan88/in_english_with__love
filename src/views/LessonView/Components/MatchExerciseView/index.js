@@ -1,7 +1,17 @@
 import React, { Component } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
+import { connect } from "react-redux";
+
 import Column from "./Column";
-import { Container, Segment } from "semantic-ui-react";
+import {
+  Container,
+  Segment,
+  Header,
+  Label,
+  Button,
+  Icon,
+  Progress,
+} from "semantic-ui-react";
 
 const matchExercise = {
   description: "Match the following sentences to their meanings below.",
@@ -46,86 +56,117 @@ const matchExercise = {
 const initData = {
   tasks: {
     "0": {
-      contentId: "1.It is death-defying",
-      contentLetter: "It’s very dangerous.",
+      contentId: "It is death-defying",
+      contentLetter: "c) It’s very dangerous.",
       id: "0",
       letter: "C",
     },
     "1": {
-      contentId: "2.What we do is life-affirming",
+      contentId: "What we do is life-affirming",
       contentLetter:
-        "What we do shows that we support and believe strongly in life.",
+        "e) What we do shows that we support and believe strongly in life.",
       id: "1",
       letter: "E",
     },
     "2": {
-      contentId: "3.The dance activates those spaces",
-      contentLetter: "The dance makes those places alive and active.",
+      contentId: "The dance activates those spaces",
+      contentLetter: "d) The dance makes those places alive and active.",
       id: "2",
       letter: "D",
     },
     "3": {
-      contentId: "4.It made sense to me.",
-      contentLetter: "It felt right to me.",
+      contentId: "It made sense to me.",
+      contentLetter: "a) It felt right to me.",
       id: "3",
       letter: "A",
     },
     "4": {
-      contentId: "5.My goal is to achieve the state of non-thinking",
-      contentLetter: "I want to feel completely present and in the moment.",
+      contentId: "5. My goal is to achieve the state of non-thinking",
+      contentLetter: "b) I want to feel completely present and in the moment.",
       id: "4",
       letter: "B",
     },
   },
-  columns: {
-    "column-1": {
-      id: "column-1",
-      title: "Sentences",
-      taskIds: ["0", "1", "2", "3", "4"],
-    },
+  column: {
+    id: "column",
+    title: "Sentences",
+    taskIds: ["0", "1", "2", "3", "4"],
   },
 
-  columnOrder: ["column-1"],
+  columnOrder: ["column"],
 };
-
-// initData.columns["column-1"].taskIds = ["0", "1", "2", "3", "4"]
-//   .map((a) => [Math.random(), a])
-//   .sort((a, b) => a[0] - b[0])
-//   .map((a) => a[1]);
-
-// console.log(initData.columns,'initData.columns.taskIds')
-// var shuffled = array.map((a) => [Math.random(),a]).sort((a,b) => a[0]-b[0]).map((a) => a[1]);
 
 const shuffleArray = (arr) =>
   arr
     .map((a) => [Math.random(), a])
     .sort((a, b) => a[0] - b[0])
     .map((a) => a[1]);
-// const shuffledVasa =
+
 class MatchExerciseView extends Component {
   state = {
-    meaning: initData,
+    meaningColumn: initData,
     initData,
+    checked: false,
+    correctAnswers: [],
+    isShowingSolution: false,
   };
 
   componentDidMount() {
     this.setState({
-      meaning: {
-        ...this.state.meaning,
-        columns: {
-          ...this.state.meaning.columns,
-          "column-1": {
-            ...this.state.meaning.columns["column-1"],
-            taskIds: shuffleArray(["0", "1", "2", "3", "4"]),
-          },
+      meaningColumn: {
+        ...this.state.meaningColumn,
+        column: {
+          ...this.state.meaningColumn.column,
+          taskIds: shuffleArray(initData.column.taskIds),
         },
       },
     });
   }
-  onDragStart = () => {};
-  onDragEnd = (result, stateValue) => {
-    // console.log(stateValue,'stateValue')
-    // const { initData } = this.state;
+
+  checkTask = () => {
+    this.setState({
+      checked: true,
+      checkedValues: this.state.meaningColumn.column.taskIds,
+      correctAnswers: this.state.meaningColumn.column.taskIds.filter(
+        (id, key) => initData.column.taskIds[key] === id
+      ),
+    });
+  };
+
+  retryTask = () => {
+    const { meaningColumn } = this.state;
+    this.setState({
+      checked: false,
+      checkedValues: [],
+      meaningColumn: {
+        ...meaningColumn,
+        column: {
+          ...meaningColumn.column,
+          taskIds: shuffleArray(initData.column.taskIds),
+        },
+      },
+      isShowingSolution: false,
+    });
+  };
+
+  showSolution = () => {
+    const { meaningColumn } = this.state;
+    this.setState({
+      isShowingSolution: true,
+      checkedValues: initData.column.taskIds,
+      correctAnswers: initData.column.taskIds,
+      meaningColumn: {
+        ...meaningColumn,
+        column: {
+          ...meaningColumn.column,
+          taskIds: initData.column.taskIds,
+        },
+      },
+    });
+  };
+
+  onDragEnd = (result) => {
+    const { meaningColumn } = this.state;
     const { destination, source, draggableId } = result;
 
     if (!destination) {
@@ -138,120 +179,174 @@ class MatchExerciseView extends Component {
     ) {
       return;
     }
-    // console.log(initData,'this.state.columns')
-    const start = this.state[stateValue].columns[source.droppableId];
-    const finish = this.state[stateValue].columns[destination.droppableId];
+    // copy new array
+    const newTasksIds = Array.from(meaningColumn.column.taskIds);
+    console.log(newTasksIds, "newTasksIdsnewTasksIds");
+    newTasksIds.splice(source.index, 1);
+    newTasksIds.splice(destination.index, 0, draggableId);
 
-    // console.log(destination,'destination.droppableId')
-    // console.log(start,'start')
-    // console.log(finish,'FINISH')
-
-    if (start === finish) {
-      // copy new array
-      const newTasksIds = Array.from(start.taskIds);
-      newTasksIds.splice(source.index, 1);
-      newTasksIds.splice(destination.index, 0, draggableId);
-      // console.log(newTasksIds, "newTasksIds");
-
-      const newColumn = {
-        ...start,
-        taskIds: newTasksIds,
-      };
-
-      // console.log(newColumn,'newColumn.id]')
-      const newState = {
-        ...this.state[stateValue],
-        columns: {
-          ...this.state[stateValue].columns,
-          [newColumn.id]: newColumn,
+    this.setState({
+      meaningColumn: {
+        ...meaningColumn,
+        column: {
+          ...meaningColumn.column,
+          taskIds: newTasksIds,
         },
-      };
-
-      this.setState({ [stateValue]: newState });
-    } else {
-      // moving from one list to another
-      // const startTasksIds = Array.from(start.taskIds);
-      // startTasksIds.splice(source.index, 1);
-      // // console.log(startTasksIds, "startTasksIds");
-      // const newStart = {
-      //   ...start,
-      //   taskIds: startTasksIds,
-      // };
-      // const finishTasksIds = Array.from(finish.taskIds);
-      // finishTasksIds.splice(destination.index, 0, draggableId);
-      // const newFinish = {
-      //   ...finish,
-      //   taskIds: finishTasksIds,
-      // };
-      // // console.log(newStart, "newStart");
-      // // console.log(draggableId,'draggableId')
-      // console.log(finishTasksIds, "newFinish");
-      // console.log(finish, "finish");
-      // const newState = {
-      //   ...this.state.initData,
-      //   columns: {
-      //     ...this.state.initData.columns,
-      //     [newStart.id]: newStart,
-      //     [newFinish.id]: newFinish,
-      //   },
-      // };
-      // // console.log(newState, "newState");
-      // this.setState({ initData: newState });
-    }
+      },
+    });
   };
 
   render() {
-    const { initData, meaning } = this.state;
-    // console.log(initData, "THIs STATE");
-    console.log(this.state, "thisdtate");
+    const {
+      meaningColumn,
+      checked,
+      checkedValues,
+      correctAnswers,
+      isShowingSolution,
+    } = this.state;
+
     return (
-      this.state.meaning.columns["column-1"].taskIds.length && (
-        <div>
-          <Container className="lesson-view-match-container">
-            {/* <Segment.Group className="lesson-view-math-segment-group">
-            {matchExercise.content.map((obj) => {
-              return (
-                <div className="lesson-view-segment" key={obj.id}>
-                  <Segment key={obj.id}> {obj.contentId}</Segment>
-                  <p className="lesson-view-after-segment"> a</p>
+      !!meaningColumn.column.taskIds.length && (
+        <div className="lesson-view-match-container">
+          <Label size="big" className="lesson-view-match-label">
+            From the Video
+          </Label>
+
+          <p className="lesson-view-match-explanation">
+            Match the following sentences to their meanings below.
+          </p>
+
+          {checked && (
+            <Progress
+              size={"tiny"}
+              className="lesson-view-match-progress"
+              total={this.state.meaningColumn.column.taskIds.length}
+              value={this.state.correctAnswers.length}
+              success={
+                correctAnswers.length ===
+                this.state.meaningColumn.column.taskIds.length
+                  ? true
+                  : false
+              }
+              warning={
+                correctAnswers.length >= 1 &&
+                correctAnswers.length <
+                  this.state.meaningColumn.column.taskIds.length
+                  ? true
+                  : false
+              }
+              error={correctAnswers.length === 0}
+            />
+          )}
+
+          <Container className="lesson-view-match-content">
+            <div className="columns-sentences-container">
+              <Header
+                as="h4"
+                textAlign="center"
+                className="lesson-view-match-header"
+              >
+                Sentences
+              </Header>
+              {initData.column.taskIds.map((taskId, key) => (
+                <div className="tasks-container-contentId" key={key}>
+                  <div>
+                    {`${+initData.tasks[taskId].id + 1}. `}
+                    {initData.tasks[taskId].contentId}
+                  </div>
                 </div>
-              );
-            })}
-          </Segment.Group> */}
-            <DragDropContext
-              onDragStart={this.onDragStart}
-              onDragEnd={(result) => this.onDragEnd(result, "initData")}
-            >
+              ))}
+            </div>
+
+            <DragDropContext onDragEnd={this.onDragEnd}>
               <div className="columns-container">
                 <Column
-                  key={initData.columns[initData.columnOrder[0]].id}
-                  column={initData.columns[initData.columnOrder[0]]}
-                  content={"contentId"}
-                  tasks={initData.columns[initData.columnOrder[0]].taskIds.map(
-                    (taskId) => initData.tasks[taskId]
-                  )}
-                />
-              </div>
-            </DragDropContext>
-
-            {/*  */}
-
-            <DragDropContext
-              onDragStart={this.onDragStart}
-              onDragEnd={(result) => this.onDragEnd(result, "meaning")}
-            >
-              <div className="columns-container">
-                <Column
-                  key={meaning.columns[meaning.columnOrder[0]].id}
-                  column={meaning.columns[meaning.columnOrder[0]]}
+                  key={meaningColumn.column.id}
+                  column={meaningColumn.column}
                   content={"contentLetter"}
-                  tasks={meaning.columns[meaning.columnOrder[0]].taskIds.map(
-                    (taskId) => meaning.tasks[taskId]
+                  title={"Meaning"}
+                  tasks={meaningColumn.column.taskIds.map(
+                    (taskId) => meaningColumn.tasks[taskId]
                   )}
+                  checkedValues={checkedValues}
+                  checked={checked}
                 />
               </div>
             </DragDropContext>
+            <div className="lesson-match-view-container-answers">
+              {initData.column.taskIds.map((taskId, key) => (
+                <div className="lesson-match-view-check-answer" key={key}>
+                  <Icon
+                    className="lesson-match-view-check-icon"
+                    style={{ display: checked ? "inline-block" : "none" }}
+                    name={
+                      checked && checkedValues[key] === key.toString()
+                        ? "check"
+                        : "close"
+                    }
+                    color={
+                      checked && checkedValues[key] === key.toString()
+                        ? "green"
+                        : "red"
+                    }
+                    size="large"
+                  />
+                </div>
+              ))}
+            </div>
           </Container>
+          {checked ? (
+            <div className="lesson-view-match-retry-container">
+              <Button
+                primary
+                className="lesson-view-match-check"
+                onClick={this.retryTask}
+              >
+                Retry
+                <Icon
+                  fitted
+                  className="lesson-view-match-icon-check"
+                  name="repeat"
+                />
+              </Button>
+              <Button
+                color="teal"
+                disabled={
+                  meaningColumn.column.taskIds.length ===
+                    correctAnswers.length || isShowingSolution
+                    ? true
+                    : false
+                }
+                className="lesson-view-match-check"
+                onClick={this.showSolution}
+              >
+                Solution
+                <Icon
+                  fitted
+                  className="lesson-view-match-icon-check"
+                  name={
+                    meaningColumn.column.taskIds.length ===
+                      correctAnswers.length || isShowingSolution
+                      ? "lock open"
+                      : "lock"
+                  }
+                />
+              </Button>
+            </div>
+          ) : (
+            <Button
+              primary
+              className="lesson-view-match-check"
+              onClick={this.checkTask}
+            >
+              Check
+              <Icon
+                fitted
+                className="lesson-view-match-icon-check"
+                name="check"
+              />
+            </Button>
+          )}
         </div>
       )
     );

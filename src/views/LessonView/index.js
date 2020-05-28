@@ -80,7 +80,7 @@ class LessonView extends Component {
                   stackable="tablet"
                   size="mini"
                 >
-                  <Step active={0} key={1}>
+                  <Step active key={1}>
                     <Icon name="info" />
                     <Step.Content>
                       <Step.Title>Before Watching</Step.Title>
