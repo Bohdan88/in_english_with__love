@@ -31,16 +31,10 @@
   background-color: #deebff !important;
 }
 
-.skyblue {
+.dragging-over {
   border: rgba(9, 30, 66, 0.71);
-  // background-color: skyblue !important;
   background-color: rgb(255, 235, 230);
 }
-
-.blue {
-  // background-color: skyblue !important;
-}
-//
 
 .lesson-view-grid {
   margin: 1rem !important;
@@ -54,6 +48,7 @@
 .lesson-view-match-content {
   display: flex !important;
   flex-direction: row;
+  justify-content: space-between;
 }
 
 .lesson-view-segment {
@@ -63,34 +58,25 @@
 .lesson-view-match-column {
   display: flex;
   flex-direction: column;
-  // margin: 20px;
-  // border: 1px solid lightgreen;
+
   width: auto;
 }
 
 .tasks-container-contentId,
 .tasks-container-contentLetter,
-// .lesson-match-view-check-answer
 .lesson-match-view-check-icon {
-  // border: 5px solid $white-grey;
-  // background-color: #3583e0 !important;
-  // margin-top: 5px;
+  display: flex;
+  justify-content: left !important;
+  font-size: 15px;
+  flex-grow: 1;
+  min-height: 50px;
+  padding: 5px;
   margin-bottom: 5px;
   margin-left: 10px;
   margin-right: 10px;
-  border-radius: 2px;
-  background-color: white;
-  flex-grow: 1;
-  min-height: 50px;
-  // padding:20px;
-  padding: 5px;
-  border-top-left-radius: 2px;
-  border-bottom-left-radius: 2px;
-  display: flex;
-  justify-content: left !important;
+  background-color: $white;
+  border-radius: 5px;
   // border: 1px solid black;
-  // border: 1px solid black;
-  // outline: none;
 }
 
 .lesson-match-view-check-answer {
@@ -109,22 +95,18 @@
 .tasks-container-contentId,
 .lesson-match-view-check-icon {
   margin-top: 10px !important;
-
-  // border: 1px solid black;
 }
 
 .lesson-view-match-container {
   display: flex;
   flex-direction: column;
   margin-left: 5px !important;
-  // border: 1px solid black;
 }
 
 .lesson-view-match-label {
   background-color: grey !important;
   color: $white !important;
   font-weight: 300 !important;
-
   margin-bottom: 10px !important;
   width: 130px;
   border-radius: 0px !important;
@@ -132,6 +114,8 @@
 }
 
 .lesson-view-match-explanation {
+  font-size: 16px;
+  padding: 20px 0px;
   color: grey;
 }
 
@@ -146,8 +130,6 @@
 
 .tasks-container-contentId,
 .tasks-container-contentLetter {
-  // margin-top: 10px;
-  // margin-left: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,58 +146,42 @@
   margin-bottom: 19px !important;
 }
 
-.columns-sentences-container {
-}
-
 .lesson-match-view-container-answers {
   display: flex;
   flex-direction: column;
-  // margin: 5px;
-  // border: 1px solid black;
   margin-top: 25px;
-}
-
-.lesson-match-view-check-answer {
-  // padding-top: 35px;
-  // border: 1px solid black;
-  // padding: 10px;
 }
 
 .lesson-match-view-check-icon {
   top: 50%;
-  // display: inline-block;
   position: relative;
   transform: translate(0px, -40%);
-  // border:1px solid black;
 }
 
 .lesson-view-match-retry-container {
   display: flex;
-  // justify-content: space-between;
+  margin-top: 20px;
 }
 
 .lesson-view-match-progress {
-  // margin: 10px !important;
-  // position: relative;
-  // // margin-left: 14.4% !important;
-  // width: 295px;
-
-  // .bar {
-  //   height: 36px !important;
-  // }
   position: absolute !important;
-  // top: -20px;
   right: 43px !important;
-  top: 45px !important;
+  top: 68px !important;
   width: 150px;
-  // min-width: 1px !important;
   .bar {
     min-width: 10px !important;
   }
 }
 
+.lesson-view-match-icon {
+  cursor: pointer;
+  font-size: 1.1rem !important;
+  padding-left: 5px;
+}
 @media only screen and (max-width: 1919px) {
-  .lesson-view-match-progress {
-    // margin-left: 200px !important;
+  .tasks-container-contentId,
+  .tasks-container-contentLetter,
+  .lesson-match-view-check-icon {
+    font-size: 14px;
   }
 }

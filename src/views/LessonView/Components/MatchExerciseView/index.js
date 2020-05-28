@@ -11,6 +11,7 @@ import {
   Button,
   Icon,
   Progress,
+  Popup,
 } from "semantic-ui-react";
 
 const matchExercise = {
@@ -20,32 +21,32 @@ const matchExercise = {
   type: "From the video",
   content: [
     {
-      contentId: "1.It is death-defying",
+      contentId: "It is death-defying",
       contentLetter: "It’s very dangerous.",
       id: 0,
       letter: "C",
     },
     {
-      contentId: "2.What we do is life-affirming",
+      contentId: "What we do is life-affirming",
       contentLetter:
         "What we do shows that we support and believe strongly in life.",
       id: 1,
       letter: "E",
     },
     {
-      contentId: "3.The dance activates those spaces",
+      contentId: "The dance activates those spaces",
       contentLetter: "The dance makes those places alive and active.",
       id: 2,
       letter: "D",
     },
     {
-      contentId: "4.It made sense to me.",
+      contentId: "It made sense to me.",
       contentLetter: "It felt right to me.",
       id: 3,
       letter: "A",
     },
     {
-      contentId: "5.My goal is to achieve the state of non-thinking",
+      contentId: "My goal is to achieve the state of non-thinking",
       contentLetter: "I want to feel completely present and in the moment.",
       id: 4,
       letter: "B",
@@ -55,52 +56,46 @@ const matchExercise = {
 
 const initData = {
   tasks: {
-    "0": {
+    c: {
       contentId: "It is death-defying",
       contentLetter: "c) It’s very dangerous.",
-      id: "0",
-      letter: "C",
+      id: "c",
+      answer: "0",
     },
-    "1": {
+    e: {
       contentId: "What we do is life-affirming",
       contentLetter:
         "e) What we do shows that we support and believe strongly in life.",
-      id: "1",
-      letter: "E",
+      id: "e",
+      answer: "1",
     },
-    "2": {
+    d: {
       contentId: "The dance activates those spaces",
       contentLetter: "d) The dance makes those places alive and active.",
-      id: "2",
-      letter: "D",
+      id: "d",
+      answer: "2",
     },
-    "3": {
+    a: {
       contentId: "It made sense to me.",
       contentLetter: "a) It felt right to me.",
-      id: "3",
-      letter: "A",
+      id: "a",
+      answer: "3",
     },
-    "4": {
+    b: {
       contentId: "5. My goal is to achieve the state of non-thinking",
       contentLetter: "b) I want to feel completely present and in the moment.",
-      id: "4",
-      letter: "B",
+      id: "b",
+      answer: "4",
     },
   },
   column: {
     id: "column",
     title: "Sentences",
-    taskIds: ["0", "1", "2", "3", "4"],
+    taskIds: ["a", "b", "c", "d", "e"],
   },
 
   columnOrder: ["column"],
 };
-
-const shuffleArray = (arr) =>
-  arr
-    .map((a) => [Math.random(), a])
-    .sort((a, b) => a[0] - b[0])
-    .map((a) => a[1]);
 
 class MatchExerciseView extends Component {
   state = {
@@ -112,23 +107,22 @@ class MatchExerciseView extends Component {
   };
 
   componentDidMount() {
+    let solutions = [];
+    Object.values(initData.tasks).map(
+      (obj) => (solutions[obj.answer] = obj.id)
+    );
     this.setState({
-      meaningColumn: {
-        ...this.state.meaningColumn,
-        column: {
-          ...this.state.meaningColumn.column,
-          taskIds: shuffleArray(initData.column.taskIds),
-        },
-      },
+      correctSequence: solutions,
     });
   }
 
   checkTask = () => {
     this.setState({
       checked: true,
-      checkedValues: this.state.meaningColumn.column.taskIds,
       correctAnswers: this.state.meaningColumn.column.taskIds.filter(
-        (id, key) => initData.column.taskIds[key] === id
+        (id, key) => {
+          return this.state.correctSequence[key] === id;
+        }
       ),
     });
   };
@@ -137,12 +131,12 @@ class MatchExerciseView extends Component {
     const { meaningColumn } = this.state;
     this.setState({
       checked: false,
-      checkedValues: [],
+      correctAnswers: [],
       meaningColumn: {
         ...meaningColumn,
         column: {
           ...meaningColumn.column,
-          taskIds: shuffleArray(initData.column.taskIds),
+          taskIds: initData.column.taskIds,
         },
       },
       isShowingSolution: false,
@@ -150,16 +144,16 @@ class MatchExerciseView extends Component {
   };
 
   showSolution = () => {
-    const { meaningColumn } = this.state;
+    const { meaningColumn, correctSequence } = this.state;
+
     this.setState({
       isShowingSolution: true,
-      checkedValues: initData.column.taskIds,
-      correctAnswers: initData.column.taskIds,
+      correctAnswers: correctSequence,
       meaningColumn: {
         ...meaningColumn,
         column: {
           ...meaningColumn.column,
-          taskIds: initData.column.taskIds,
+          taskIds: correctSequence,
         },
       },
     });
@@ -181,7 +175,6 @@ class MatchExerciseView extends Component {
     }
     // copy new array
     const newTasksIds = Array.from(meaningColumn.column.taskIds);
-    console.log(newTasksIds, "newTasksIdsnewTasksIds");
     newTasksIds.splice(source.index, 1);
     newTasksIds.splice(destination.index, 0, draggableId);
 
@@ -200,11 +193,10 @@ class MatchExerciseView extends Component {
     const {
       meaningColumn,
       checked,
-      checkedValues,
       correctAnswers,
       isShowingSolution,
+      correctSequence,
     } = this.state;
-
     return (
       !!meaningColumn.column.taskIds.length && (
         <div className="lesson-view-match-container">
@@ -214,6 +206,18 @@ class MatchExerciseView extends Component {
 
           <p className="lesson-view-match-explanation">
             Match the following sentences to their meanings below.
+            <Popup
+              inverted
+              className="lesson-view-match-popup"
+              content="Please use your mouse or touchpad to move sentences with letters in the front in an appropriate field."
+              trigger={
+                <Icon
+                  name="circle question"
+                  className="lesson-view-match-icon"
+                  size="small"
+                />
+              }
+            />
           </p>
 
           {checked && (
@@ -248,11 +252,11 @@ class MatchExerciseView extends Component {
               >
                 Sentences
               </Header>
-              {initData.column.taskIds.map((taskId, key) => (
+              {matchExercise.content.map((taskId, key) => (
                 <div className="tasks-container-contentId" key={key}>
                   <div>
-                    {`${+initData.tasks[taskId].id + 1}. `}
-                    {initData.tasks[taskId].contentId}
+                    {`${taskId.id + 1}. `}
+                    {taskId.contentId}
                   </div>
                 </div>
               ))}
@@ -268,7 +272,6 @@ class MatchExerciseView extends Component {
                   tasks={meaningColumn.column.taskIds.map(
                     (taskId) => meaningColumn.tasks[taskId]
                   )}
-                  checkedValues={checkedValues}
                   checked={checked}
                 />
               </div>
@@ -280,12 +283,14 @@ class MatchExerciseView extends Component {
                     className="lesson-match-view-check-icon"
                     style={{ display: checked ? "inline-block" : "none" }}
                     name={
-                      checked && checkedValues[key] === key.toString()
+                      checked &&
+                      meaningColumn.column.taskIds[key] === correctSequence[key]
                         ? "check"
                         : "close"
                     }
                     color={
-                      checked && checkedValues[key] === key.toString()
+                      checked &&
+                      meaningColumn.column.taskIds[key] === correctSequence[key]
                         ? "green"
                         : "red"
                     }
@@ -334,18 +339,20 @@ class MatchExerciseView extends Component {
               </Button>
             </div>
           ) : (
-            <Button
-              primary
-              className="lesson-view-match-check"
-              onClick={this.checkTask}
-            >
-              Check
-              <Icon
-                fitted
-                className="lesson-view-match-icon-check"
-                name="check"
-              />
-            </Button>
+            <div className="lesson-view-match-retry-container">
+              <Button
+                primary
+                className="lesson-view-match-check"
+                onClick={this.checkTask}
+              >
+                Check
+                <Icon
+                  fitted
+                  className="lesson-view-match-icon-check"
+                  name="check"
+                />
+              </Button>
+            </div>
           )}
         </div>
       )

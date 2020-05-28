@@ -5,16 +5,7 @@ import { Header } from "semantic-ui-react";
 
 class Column extends Component {
   render() {
-    const {
-      column,
-      tasks,
-      content,
-      title,
-      checked,
-      checkedValues,
-    } = this.props;
-    // console.log(this.props, "column");
-    // console.log(column.id, "column.id");
+    const { column, tasks, content, title, checked } = this.props;
     return (
       <>
         <div className={`lesson-view-match-column column-${content}`}>
@@ -24,13 +15,12 @@ class Column extends Component {
           <Droppable isDropDisabled={checked && true} droppableId={column.id}>
             {(provided, snaphot) => (
               <div
-                /*  skyblue : blue"*/
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={`tasks ${snaphot.isDraggingOver ? "skyblue" : ""}`}
+                className={`tasks ${
+                  snaphot.isDraggingOver ? "dragging-over" : ""
+                }`}
               >
-                {/* {console.log(provided,'PROVIDED')}
-              {console.log(snaphot,'snaphot')} */}
                 {tasks.map((task, index) => {
                   return (
                     <Task
@@ -40,11 +30,9 @@ class Column extends Component {
                       content={content}
                       index={index}
                       checked={checked}
-                      checkedValues={checkedValues}
                     />
                   );
                 })}
-
                 {provided.placeholder}
               </div>
             )}
