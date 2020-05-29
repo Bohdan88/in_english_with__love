@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
   getAllPostsValues,
-  setNewPostValues,
+  setNewValues,
 } from "../../../../../redux/actions";
 import {
   Segment,
@@ -67,7 +67,7 @@ class CompleteSentencesExercise extends Component {
         : 0;
 
     //
-    this.props.onSetNewPostValues({
+    this.props.onSetPostNewValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) =>
         obj.id === objValues.id
           ? {
@@ -84,7 +84,7 @@ class CompleteSentencesExercise extends Component {
 
   onChangePostExerciseValues = (data, objValues, fieldId) => {
     const { newPostExercisesValues } = this.props.newPostState;
-    this.props.onSetNewPostValues({
+    this.props.onSetPostNewValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) => {
         let answer;
         const wordsInCurlyBraces = /\{.*?\}/g;
@@ -116,7 +116,7 @@ class CompleteSentencesExercise extends Component {
 
   // identifyAnswerInSentence = (objValues, fieldId) => {
   //   const { newPostExercisesValues } = this.props.newPostState;
-  //   this.props.onSetNewPostValues({
+  //   this.props.onSetPostNewValues({
   //     newPostExercisesValues: newPostExercisesValues.map((obj) =>
   //       obj.id === objValues.id
   //         ? {
@@ -147,7 +147,7 @@ class CompleteSentencesExercise extends Component {
 
   // identifyAllAnswersInSentences = () => {
   //   const { newPostExercisesValues } = this.props.newPostState;
-  //   this.props.onSetNewPostValues({
+  //   this.props.onSetPostNewValues({
   //     newPostExercisesValues: newPostExercisesValues.map((obj) => {
   //       return {
   //         ...obj,
@@ -198,7 +198,7 @@ class CompleteSentencesExercise extends Component {
     // remove last field
     newPostExercisesValues.content.pop();
 
-    this.props.onSetNewPostValues(newPostExercisesValues);
+    this.props.onSetPostNewValues(newPostExercisesValues);
   };
 
   render() {
@@ -427,7 +427,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetNewPostValues: (values) => dispatch(setNewPostValues(values)),
+    onSetPostNewValues: (values) => dispatch (setNewValues(values)),
   };
 };
 export default connect(

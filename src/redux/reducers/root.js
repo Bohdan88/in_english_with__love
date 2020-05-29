@@ -3,7 +3,7 @@ import { posts } from "./posts";
 import { newPostReducer } from "./newpost";
 import sessionReducer from "./session";
 import userReducer from "./users";
-
+import userActivityReducer from "./userActivity";
 // import { newPost } from "./newpost";
 
 const rootReducer = combineReducers({
@@ -11,6 +11,7 @@ const rootReducer = combineReducers({
   sessionState: sessionReducer,
   userState: userReducer,
   newPostState: newPostReducer,
+  userActivity: userActivityReducer,
 });
 // root reducer
 // const rootReducer = combineReducers({

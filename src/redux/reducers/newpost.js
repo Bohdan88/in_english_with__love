@@ -1,4 +1,4 @@
-import { SET_NEW_POST_VALUES } from "../constants/actionTypes";
+import { SET_NEW_VALUES } from "../constants/actionTypes";
 import {
   CREATE_LESSON_STAGES,
   CATEGORIES,
@@ -46,7 +46,7 @@ const initState = {
 
 export const newPostReducer = (state = initState, action) => {
   switch (action.type) {
-    case SET_NEW_POST_VALUES:
+    case SET_NEW_VALUES:
       return {
         ...state,
         ...action.payload,

@@ -23,7 +23,7 @@ import {
 } from "../../constants/shared";
 import { CustomColorPicker, VideoPlayer } from "./CustomComponents";
 import sanitizeHtml from "sanitize-html-react";
-import { setNewPostValues } from "../../redux/actions";
+import { setNewValues } from "../../redux/actions";
 import { connect } from "react-redux";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
@@ -117,7 +117,7 @@ class CustomEditor extends Component {
       );
 
     //--------------
-    this.props.onSetNewPostValues({
+    this.props.onSetPostNewValues({
       // if a user remove an image from editor => we remove it from redux store
       assets: {
         ...this.props.newPostState.assets,
@@ -201,7 +201,7 @@ class CustomEditor extends Component {
     file.section = sectionKey;
 
     // upload an asset into Redux
-    this.props.onSetNewPostValues({
+    this.props.onSetPostNewValues({
       assets: {
         ...this.props.newPostState.assets,
         [sectionKey]: this.props.newPostState.assets[sectionKey].concat({
@@ -259,9 +259,15 @@ class CustomEditor extends Component {
 
     // we check on blocks in case it's not editor state
     const currentEditor =
-      post[sectionKey] === "" || post[sectionKey].blocks || post[sectionKey][0] === '<'
+      post[sectionKey] === "" ||
+      post[sectionKey].blocks ||
+      post[sectionKey][0] === "<"
         ? EditorState.createEmpty()
         : post[sectionKey];
+
+    console.log(
+      draftToHtml(convertToRaw(currentEditor.getCurrentContent()), "OOOK")
+    );
     // EditorState.createWithContent(convertFromRaw(post[sectionKey]));
 
     // console.log(
@@ -271,7 +277,7 @@ class CustomEditor extends Component {
 
     // console.log(this.props);
     // console.log(convertToRaw(currentEdit or.getCurrentContent()), "OOOK");
-    console.log(currentEditor,'currentEditor')
+    // console.log(currentEditor, "currentEditor");
     // console.log(currentEditor.getCurrentContent(), "get");
     // console.log(currentEditor, "CURRENTEDITOR");
     // console.log(
@@ -407,7 +413,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSetNewPostValues: (values) => dispatch(setNewPostValues(values)),
+    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
   };
 };
 

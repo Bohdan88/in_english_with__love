@@ -22,7 +22,7 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { getAllPostsValues, setNewPostValues } from "../../../../redux/actions";
+import { getAllPostsValues, setNewValues } from "../../../../redux/actions";
 import {
   LESSON_STATUS,
   ICON_POST_REMOVE_STATUS,
@@ -106,7 +106,7 @@ class CreateLesson extends Component {
         INIT_NEW_POST_VALUES.focus = setFocuses[0] && setFocuses[0].text;
 
         // set init
-        this.props.onSetNewPostValues(INIT_NEW_POST_VALUES);
+        this.props.onSetPostNewValues(INIT_NEW_POST_VALUES);
       }
     });
   };
@@ -115,7 +115,7 @@ class CreateLesson extends Component {
   }
 
   onDropDownChange = (data, dropDownType) => {
-    this.props.onSetNewPostValues({
+    this.props.onSetPostNewValues({
       [dropDownType]: data.value,
     });
 
@@ -148,7 +148,7 @@ class CreateLesson extends Component {
         .put(iconFile[0])
         .then(() => {
           fireAlert(true, ICON_POST_ADD_STATUS);
-          this.props.onSetNewPostValues({
+          this.props.onSetPostNewValues({
             iconPath: storageRef.fullPath,
           });
         })
@@ -163,7 +163,7 @@ class CreateLesson extends Component {
         .delete()
         .then(() => {
           fireAlert(true, ICON_POST_REMOVE_STATUS);
-          this.props.onSetNewPostValues({ iconPath: "" });
+          this.props.onSetPostNewValues({ iconPath: "" });
           this.setState({ iconFile: null });
         })
         .catch((error) => {
@@ -250,7 +250,7 @@ class CreateLesson extends Component {
 
     // change props values
     return new Promise((resolve) => {
-      resolve(this.props.onSetNewPostValues({ post }));
+      resolve(this.props.onSetPostNewValues({ post }));
     }).then(() => {
       // push to db afterwards
       this.pushPostToDb();
@@ -289,7 +289,7 @@ class CreateLesson extends Component {
                   "assets[imgSection][index][imgUrl]"
                 );
                 assets[imgSection][index][imgUrl] = url;
-                this.props.onSetNewPostValues({ assets });
+                this.props.onSetPostNewValues({ assets });
               })
               .then(() => {
                 this.convertEditorStateToHtml();
@@ -608,7 +608,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetNewPostValues: (values) => dispatch(setNewPostValues(values)),
+    onSetPostNewValues: (values) => dispatch (setNewValues(values)),
   };
 };
 

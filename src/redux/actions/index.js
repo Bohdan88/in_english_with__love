@@ -2,7 +2,7 @@ import {
   API_REQUEST,
   GET_ALL_POSTS,
   GET_ALL_CATEGORIES,
-  SET_NEW_POST_VALUES,
+  SET_NEW_VALUES,
 } from "../constants/actionTypes";
 
 export const fetchPosts = () => ({
@@ -23,9 +23,9 @@ export const getAllPostsValues = (firebase) => {
   };
 };
 
-export const setNewPostValues = (values) => {
+export const setNewValues = (values) => {
   return {
-    type: SET_NEW_POST_VALUES,
+    type: SET_NEW_VALUES,
     payload: {
       ...values,
     },

@@ -375,3 +375,17 @@ export const EXERCISES_LABELS_COLORS = [
   "red",
   "orange",
 ];
+
+//
+
+export const CHAPTERS_ICONS = {
+  about: "info",
+  before: "paperclip",
+};
+
+export const CHAPTERS_SEQUENCE = {
+  0: "about",
+  1: "before",
+  2: "exercises",
+  3: "conlusion",
+};

@@ -21,11 +21,66 @@
 //   min-height: 100px;
 // }
 
-// .lightgreen {
-//   /* color: lightgreen !important; */
-//   background-color: #deebff !important;
-//   border: 5px solid rgba(9, 30, 66, 0.71) !important;
-// }
+// actuall lesson
+
+.lesson-view-grid {
+  align-items: stretch !important;
+  .row {
+    padding-bottom: 0px !important;
+    align-items: stretch !important;
+    .column {
+      padding: 0px !important;
+      .step {
+        background-color: $magnolia;
+      }
+    }
+  }
+}
+
+.lesson-view-chapter-container {
+  height: 70vh;
+}
+
+.lesson-view-segment-bottom {
+  position: relative;
+
+  top: -1px;
+}
+
+.lesson-view-fixed-container {
+  padding: 0px !important;
+  position: relative;
+  left: -1px;
+  .segment {
+    border-top-right-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+    width: 100.2% !important;
+    height: 64px;
+    background-color: $magnolia !important;
+  }
+}
+
+.lesson-view-icon {
+  font-size: 1.5em !important;
+  color: $dark-grey;
+}
+
+.chapter-content {
+  overflow-y: scroll;
+  div {
+    iframe {
+      display: block;
+      margin: auto !important;
+      min-width: 450px;
+      min-height: 300px;
+      border-bottom: 1px solid red !important;
+    }
+    p {
+      line-height: 15px;
+    }
+  }
+}
+// end lesson
 
 .dragging {
   background-color: #deebff !important;
@@ -178,6 +233,7 @@
   font-size: 1.1rem !important;
   padding-left: 5px;
 }
+
 @media only screen and (max-width: 1919px) {
   .tasks-container-contentId,
   .tasks-container-contentLetter,

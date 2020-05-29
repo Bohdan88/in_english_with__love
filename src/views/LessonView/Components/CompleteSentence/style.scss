@@ -1,0 +1,47 @@
+.lesson-complete-container {
+  border: 1px solid black;
+  padding: 20px;
+}
+
+.lesson-complete-column-answers-container {
+  border: 1px solid green;
+  padding: 5px;
+  margin-bottom: 40px;
+}
+
+.lesson-complete-column-tasks-container {
+  border: 1px solid black;
+  padding: 5px;
+  //   margin-bottom: 40px;
+}
+
+.lesson-complete-answers-content {
+  display: flex;
+}
+
+.lesson-complete-answer-word {
+  padding: 10px;
+  margin: 2px;
+  margin-right: 10px;
+  background: pink;
+}
+
+.lesson-complete-answers-content {
+  display: flex;
+}
+
+.lesson-complete-sentence {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+}
+
+
+.lesson-complete-key-word-holder {
+  width: 200px;
+  height: 100px;
+  margin-left: 20px;
+  margin-right: 5px;
+  padding: 5px;
+  border: 1px solid pink;
+}

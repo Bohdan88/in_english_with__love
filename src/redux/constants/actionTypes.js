@@ -19,4 +19,8 @@ export const USER_SET = "USER_SET";
 
 /* */
 
-export const SET_NEW_POST_VALUES = "SET_NEW_POST_VALUES";
+export const SET_NEW_VALUES = "SET_NEW_VALUES";
+
+/* user activity */
+
+export const SET_USER_ACTIVITY_VALUES = "SET_USER_ACTIVITY_VALUES";

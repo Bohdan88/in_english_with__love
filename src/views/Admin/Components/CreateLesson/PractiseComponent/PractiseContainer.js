@@ -13,7 +13,7 @@ import {
 } from "../../../../../constants/shared";
 import {
   getAllPostsValues,
-  setNewPostValues,
+  setNewValues,
 } from "../../../../../redux/actions";
 import {
   Form,
@@ -35,7 +35,7 @@ class PractiseContainer extends PureComponent {
   onDropDownChange = (data, dropDownType, exerciseId) => {
     const { newPostExercisesValues } = this.props.newPostState;
     // console.log(dropDownType, "dropDownType");
-    this.props.onSetNewPostValues({
+    this.props.onSetPostNewValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) =>
         obj.id === exerciseId
           ? {
@@ -53,7 +53,7 @@ class PractiseContainer extends PureComponent {
     fireAlert(true, REMOVE_EXERCISE, null, CONFIRMATION_REMOVE_ALERT).then(
       (res) => {
         if (res.value) {
-          this.props.onSetNewPostValues({
+          this.props.onSetPostNewValues({
             newPostExercisesValues: newPostExercisesValues.filter((obj) => {
               const filterObjects = obj.id !== exerciseId;
               //  decrement values which are higher than removed obj.id
@@ -77,7 +77,7 @@ class PractiseContainer extends PureComponent {
   addExercise = () => {
     const { newPostExercisesValues } = this.props.newPostState;
     const currentId = newPostExercisesValues.length;
-    this.props.onSetNewPostValues({
+    this.props.onSetPostNewValues({
       newPostExercisesValues: newPostExercisesValues.concat({
         id: currentId,
         name: EXERCISES_NAMES[0].text,
@@ -354,7 +354,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetNewPostValues: (values) => dispatch(setNewPostValues(values)),
+    onSetPostNewValues: (values) => dispatch (setNewValues(values)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(PractiseContainer);

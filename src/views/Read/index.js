@@ -120,7 +120,7 @@ class Read extends Component {
   };
 
   componentWillUnmount() {
-    this.props.firebase.posts().off();
+    // this.props.firebase.posts().off();
   }
 
   render() {

@@ -11,7 +11,7 @@ import {
 } from "../../../../../constants/shared";
 import {
   getAllPostsValues,
-  setNewPostValues,
+  setNewValues,
 } from "../../../../../redux/actions";
 import {
   Form,
@@ -43,7 +43,7 @@ class MatchExercise extends PureComponent {
         : 0;
 
     if (incrementedNumber < CHAR_SEQUENCE.length) {
-      this.props.onSetNewPostValues({
+      this.props.onSetPostNewValues({
         newPostExercisesValues: newPostExercisesValues.map((obj) =>
           obj.id === objValues.id
             ? {
@@ -94,12 +94,12 @@ class MatchExercise extends PureComponent {
 
     newPostExercisesValues.content.pop();
     this.setState({ charValues });
-    this.props.onSetNewPostValues(newPostExercisesValues);
+    this.props.onSetPostNewValues(newPostExercisesValues);
   };
 
   onChangePostExerciseValues = (data, objValues, fieldId, keyName) => {
     const { newPostExercisesValues } = this.props.newPostState;
-    this.props.onSetNewPostValues({
+    this.props.onSetPostNewValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) =>
         obj.id === objValues.id
           ? {
@@ -172,7 +172,7 @@ class MatchExercise extends PureComponent {
 
     this.setState({ charValues });
 
-    this.props.onSetNewPostValues(newPostExercisesValues);
+    this.props.onSetPostNewValues(newPostExercisesValues);
   };
 
   render() {
@@ -406,7 +406,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetNewPostValues: (values) => dispatch(setNewPostValues(values)),
+    onSetPostNewValues: (values) => dispatch (setNewValues(values)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(MatchExercise);
