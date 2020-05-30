@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { getAllPostsValues, setNewValues } from "../../redux/actions";
 import { withFirebase } from "../Firebase";
 import { Editor } from "react-draft-wysiwyg";
-import { MatchExerciseView, CompleteSentence } from "./Components";
+import { MatchExerciseView, CompleteSentence, SideBarMenu } from "./Components";
 import { CHAPTERS_ICONS, CHAPTERS_SEQUENCE } from "../../constants/shared";
 
 import "./style.scss";
@@ -165,8 +165,9 @@ class LessonView extends Component {
     isLoading: false,
     currentStep: 0,
     fullLeson: fullLeson,
+    isMenuOpen: false,
   };
-  ƒ;
+
   componentDidMount() {
     // const { currentTopic } = this.state;
     // console.log(currentTopic, "thisProps");
@@ -200,13 +201,23 @@ class LessonView extends Component {
   componentWillMount() {
     // this.props.firebase.posts().off();
   }
-  render() {
-    const { currentTopicValues, currentStep, fullLeson } = this.state;
-    console.log(fullLeson, "fullLesonfullLesonfullLeson");
 
+  checkMenu = (menu) => this.setState({ isMenuOpen: menu });
+  render() {
+    const {
+      currentTopicValues,
+      currentStep,
+      fullLeson,
+      isMenuOpen,
+    } = this.state;
+    // console.log(fullLeson.post, "fullLesonfullLesonfullLeson");
+    // console.log(isMenuOpen, "isMenuOpen");
+    // const hamburgerClass = isMenuOpen ? "open" : "";
+    // const menuClass = isMenuOpen ? "mobile-open-menu" : "mobile-close-menu";
+    const menu = isMenuOpen ? "menu-open" : "";
     return (
       <div>
-        <Grid className="lesson-view-grid">
+        <Grid className={`lesson-view-grid lesson-view-${menu}`}>
           <Grid.Row stretched columns={2}>
             <Grid.Column width={8}>
               <Container fluid>
@@ -218,7 +229,10 @@ class LessonView extends Component {
                     </Step.Content>
                   </Step>
                 </Step.Group>
-                <Segment attached className="lesson-view-chapter-container">
+                <Segment
+                  attached
+                  className={`lesson-view-chapter-container lesson-view-${menu}`}
+                >
                   Segment
                 </Segment>
               </Container>
@@ -314,7 +328,13 @@ class LessonView extends Component {
           </Grid.Row>
           <Grid.Row className="lesson-view-fixed-container">
             <Grid.Column>
-              <Segment>
+              <Segment className="lesson-view-footer-menu">
+                <SideBarMenu
+                  lessonItems={Object.keys(fullLeson.post)}
+                  exercises={Object.values(fullLeson.newPostExercisesValues)}
+                  checkMenu={this.checkMenu}
+                />
+
                 <Button>Next</Button>
                 <Button>Previous</Button>
               </Segment>

@@ -1,0 +1,131 @@
+@import "../../../../style/variables.scss";
+
+.menu-icon-wrapper {
+  height: 35px;
+  display: block;
+  cursor: pointer;
+  // margin-left: -57px;
+}
+
+#hamburger {
+  // position: absolute;
+  top: 10px;
+  width: 60px;
+  // height: 45px;
+  cursor: pointer;
+  transform: rotate(0deg) scale(0.5);
+  transition: 0.5s ease-in-out;
+}
+
+#hamburger span {
+  display: block;
+  position: absolute;
+  height: 6px;
+  width: 50%;
+  background: $dark-grey;
+  opacity: 1;
+  transform: rotate(0deg);
+  transition: 0.25s ease-in-out;
+}
+
+#hamburger span:nth-child(even) {
+  left: 50%;
+  border-radius: 0 9px 9px 0;
+}
+
+#hamburger span:nth-child(odd) {
+  left: 0px;
+  border-radius: 9px 0 0 9px;
+}
+
+#hamburger span:nth-child(1),
+#hamburger span:nth-child(2) {
+  top: 0px;
+}
+
+#hamburger span:nth-child(3),
+#hamburger span:nth-child(4) {
+  top: 18px;
+}
+
+#hamburger span:nth-child(5),
+#hamburger span:nth-child(6) {
+  top: 36px;
+}
+
+#hamburger.open span:nth-child(1),
+#hamburger.open span:nth-child(6) {
+  transform: rotate(45deg);
+}
+
+#hamburger.open span:nth-child(2),
+#hamburger.open span:nth-child(5) {
+  transform: rotate(-45deg);
+}
+
+#hamburger.open span:nth-child(1) {
+  left: 5px;
+  top: 7px;
+}
+
+#hamburger.open span:nth-child(2) {
+  left: calc(50% - 5px);
+  top: 7px;
+}
+
+#hamburger.open span:nth-child(3) {
+  left: -50%;
+  opacity: 0;
+}
+
+#hamburger.open span:nth-child(4) {
+  left: 100%;
+  opacity: 0;
+}
+
+#hamburger.open span:nth-child(5) {
+  left: 5px;
+  top: 29px;
+}
+
+#hamburger.open span:nth-child(6) {
+  left: calc(50% - 5px);
+  top: 29px;
+}
+
+// sidebar
+
+.mobile-sidebar-menu {
+  padding-top: 20px !important;
+}
+
+/*sidebar*/
+.close-menu {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 50;
+  top: 55px;
+  transition: 0.3s;
+  left: -175px;
+}
+
+.open-menu {
+  position: fixed;
+  height: 69.9vh;
+  width: 25%;
+  z-index: 50;
+  top: 174px;
+  left: 14px;
+  background: #f6f5fa !important;
+  overflow-x: hidden;
+  transition: 0.3s;
+  //   border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.body-open-menu {
+  width: 100vw;
+  height: 100vw;
+  background: black;
+  z-index: 0;
+}

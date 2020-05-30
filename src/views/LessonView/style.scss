@@ -23,6 +23,10 @@
 
 // actuall lesson
 
+.lesson-view-menu-open {
+  // background: $white-grey!important;
+  // opacity: 0.5!important;
+}
 .lesson-view-grid {
   align-items: stretch !important;
   .row {
@@ -80,7 +84,12 @@
     }
   }
 }
+
 // end lesson
+
+/*menu hamburger*/
+
+// end burger
 
 .dragging {
   background-color: #deebff !important;
@@ -97,6 +106,10 @@
 
 .lesson-view-steps-container {
   background-color: $white-grey !important;
+}
+
+.lesson-view-footer-menu {
+  display: flex;
 }
 
 // match exercise
