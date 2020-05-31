@@ -20,12 +20,6 @@ class SideBarMenu extends Component {
 
   componentDidMount() {
     const { filteredLessonItems } = this.props;
-    // remove content and conclustion
-    // let filteredLessonItems = lessonItems.filter(
-    //   (item) => item !== "content" && item !== "conclusion"
-    // );
-    // // push conclusion in the end
-    // filteredLessonItems.push("conclusion");
 
     this.setState({
       filteredLessonItems: filteredLessonItems,
@@ -37,11 +31,9 @@ class SideBarMenu extends Component {
     const { currentChapter } = this.props;
     const hamburgerClass = isMenuOpen ? "open" : "";
     const menuClass = isMenuOpen ? "open-menu" : "close-menu";
-    // console.log(this.props.currentChapter,'Propds')
 
     return (
       <div>
-        {/* <div className={`body-${menuClass}`} /> */}
         <div className="burger-menu">
           <div
             className="menu-icon-wrapper float-left"
@@ -56,7 +48,6 @@ class SideBarMenu extends Component {
               <span></span>
             </div>
           </div>
-          {/* <div className={menuClass}> */}
           <Transition
             visible={isMenuOpen ? true : false}
             animation="slide right"
@@ -78,7 +69,7 @@ class SideBarMenu extends Component {
                     <Label className="lesson-view-label-name" color="teal">
                       {key + 1}
                     </Label>
-                    {/* <Icon  name={CHAPTERS_ICONS[item]} /> */}
+                    {/* <Icon name={CHAPTERS_ICONS[item]} /> */}
                     <p className="capitalize">{item} </p>
                   </Menu.Item>
                 );

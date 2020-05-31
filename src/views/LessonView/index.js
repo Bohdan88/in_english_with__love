@@ -18,6 +18,7 @@ import {
   Container,
   Button,
   Progress,
+  Label,
 } from "semantic-ui-react";
 
 const fullLeson = {
@@ -120,8 +121,10 @@ const fullLeson = {
     },
   },
   post: {
-    about:
-      "<p></p> <p></p> <h1>About the Video&nbsp;</h1> <p>For the past 25 years, the dance company BANDALOOP has been merging rock climbing with dancing.</p>  <p>Founded by Amelia Rudolph, the goal of the dance company is to give life to natural and artifcial vertical</p><p>spaces with amazing performances.&nbsp;</p> <p></p> <p></p> <h1>Before Watching&nbsp;</h1> <ul> <li>&nbsp;Do you enjoy dancing? Have you ever taken dance lessons? Are there any traditional dances in your country? How important is dance in your culture?</li> <li>Have you ever tried rock-climbing? If not, would you like to one day? Why or why not?</li> <li>Describe an activity that you like doing (or one that you used to do or would like to try in the future). How did you get into it? Why do you like it?&nbsp;</li> </ul> ",
+    "About The Video":
+      "<p></p> <p></p> <p>For the past 25 years, the dance company BANDALOOP has been merging rock climbing with dancing.</p>  <p>Founded by Amelia Rudolph, the goal of the dance company is to give life to natural and artifcial vertical spaces with amazing performances.&nbsp;</p>",
+    "Before Watching":
+      "<ul> <li>Do you enjoy dancing? Have you ever taken dance lessons? Are there any traditional dances in your country? How important is dance in your culture?</li> <li>Have you ever tried rock-climbing? If not, would you like to one day? Why or why not?</li> <li>Describe an activity that you like doing (or one that you used to do or would like to try in the future). How did you get into it? Why do you like it?&nbsp;</li> </ul> ",
     content: `<p></p>
   <iframe width="auto" height="auto" src="https://www.youtube.com/embed/BYujQ4MinDE" frameBorder="0"></iframe>
   <h2>Transcript&nbsp;</h2>
@@ -153,8 +156,8 @@ const fullLeson = {
   <p>there's beauty, there's grace, there's power in this site that you oveflook every day.”&nbsp;</p>
   `,
 
-    conclusion:
-      "<h2>After watching&nbsp;</h2> <ul> <li>What did you think of the video? Did you know about sky dancing before watching this video?</li> </ul><p>•   What’s another way to say “mix”? What are the things that sky dancing mixes?</p> <p>•   Who’s the newest member of the company and why did the owner pick her?</p><p>•.  What’s another way to say “risk-taker”? Are you a risk-taker? Do you think it’s a good quality?.</p>  <p>• What does tenacity mean? Can you give an example of a situation that requires tenacity?</p><p>• What’s another way to say restless? When do you feel that way?</p> <p>• Are you afraid of heights? Do you have any fears that you’d like to overcome?</p> <p>• Some people believe that we’re born with certain talents, for instance for music and sport. But</p> <p>other people feel that anyone can be taught to become a good sports person, musician, etc. What’s</p><p>your opinion and why?&nbsp;</p> ",
+    "After Watching":
+      "<p>•   What’s another way to say “mix”? What are the things that sky dancing mixes?</p> <p>•   Who’s the newest member of the company and why did the owner pick her?</p><p>•.  What’s another way to say “risk-taker”? Are you a risk-taker? Do you think it’s a good quality?</p>  <p>• What does tenacity mean? Can you give an example of a situation that requires tenacity?</p><p>• What’s another way to say restless? When do you feel that way?</p> <p>• Are you afraid of heights? Do you have any fears that you’d like to overcome?</p> <p>• Some people believe that we’re born with certain talents, for instance for music and sport. But</p> <p>other people feel that anyone can be taught to become a good sports person, musician, etc. What’s</p><p>your opinion and why?&nbsp;</p> ",
   },
 };
 
@@ -208,10 +211,10 @@ class LessonView extends Component {
     });
 
     const filteredLessonItems = Object.keys(fullLeson.post).filter(
-      (item) => item !== "content" && item !== "conclusion"
+      (item) => item !== "content" && item !== "After Watching"
     );
     // push conclusion in the end
-    filteredLessonItems.push("conclusion");
+    filteredLessonItems.push("After Watching");
 
     this.setState({
       filteredLessonItems,
@@ -228,7 +231,7 @@ class LessonView extends Component {
 
     this.setState({
       currentChapter: chapter,
-      // currentStep: findCurrentChapterIndex,
+      currentStep: findCurrentChapterIndex + 1,
       isNextDisabled:
         findCurrentChapterIndex === filteredLessonItems.length - 1,
       isPreviousDisabled: findCurrentChapterIndex === 0,
@@ -316,20 +319,9 @@ class LessonView extends Component {
       isNextDisabled,
       isPreviousDisabled,
     } = this.state;
-    // console.log(currentChapter, "fullLesonfullLesonfullLeson");
-    // console.log(fullLeson.post, "fullLeson");
-    // console.log(this.state, "THIS_STATE");
-    // const hamburgerClass = isMenuOpen ? "open" : "";
-    // const menuClass = isMenuOpen ? "mobile-open-menu" : "mobile-close-menu";
-    const menu = isMenuOpen ? "menu-open" : "";
-    // console.log(currentStep, "currentStep");
-    // const filteredLessonItems = Object.keys(fullLeson.post).filter(
-    //   (item) => item !== "content" && item !== "conclusion"
-    // );
-    // // push conclusion in the end
-    // filteredLessonItems.push("conclusion");
 
-    // console.log(filteredLessonItems, "filteredLessonItems");
+    const menu = isMenuOpen ? "menu-open" : "";
+
     return (
       currentChapter &&
       filteredLessonItems && (
@@ -355,6 +347,9 @@ class LessonView extends Component {
                     attached
                     className={`lesson-view-chapter-container lesson-view-${menu}`}
                   >
+                    <Label size="big" className="lesson-view-label capitalize">
+                      {currentChapter}
+                    </Label>
                     {this.visualizeChapterContent(currentChapter)}
                   </Segment>
                 </Container>
@@ -433,7 +428,6 @@ class LessonView extends Component {
                       <Icon name="right arrow" />
                     </Button>
                   </div>
-                  {/* <Progress percent={20} indicating></Progress> */}
                 </Segment>
               </Grid.Column>
             </Grid.Row>

@@ -5,9 +5,7 @@ import { connect } from "react-redux";
 import Column from "./Column";
 import {
   Container,
-  Segment,
   Header,
-  Label,
   Button,
   Icon,
   Progress,
@@ -200,15 +198,11 @@ class MatchExerciseView extends Component {
     return (
       !!meaningColumn.column.taskIds.length && (
         <div className="lesson-view-match-container">
-          <Label size="big" className="lesson-view-match-label">
-            From the Video
-          </Label>
-
-          <p className="lesson-view-match-explanation">
+          <p className="lesson-view-exercise-explanation">
             Match the following sentences to their meanings below.
             <Popup
               inverted
-              className="lesson-view-match-popup"
+              className="lesson-view-exercise-popup"
               content="Please use your mouse or touchpad to move sentences with letters in the front in an appropriate field."
               trigger={
                 <Icon
@@ -301,10 +295,10 @@ class MatchExerciseView extends Component {
             </div>
           </Container>
           {checked ? (
-            <div className="lesson-view-match-retry-container">
+            <div className="lesson-view-exercise-check-container">
               <Button
                 primary
-                className="lesson-view-match-check"
+                className="lesson-view-button-exercise-check"
                 onClick={this.retryTask}
               >
                 Retry
@@ -322,7 +316,7 @@ class MatchExerciseView extends Component {
                     ? true
                     : false
                 }
-                className="lesson-view-match-check"
+                className="lesson-view-button-exercise-check"
                 onClick={this.showSolution}
               >
                 Solution
@@ -339,10 +333,10 @@ class MatchExerciseView extends Component {
               </Button>
             </div>
           ) : (
-            <div className="lesson-view-match-retry-container">
+            <div className="lesson-view-exercise-check-container">
               <Button
                 primary
-                className="lesson-view-match-check"
+                className="lesson-view-button-exercise-check"
                 onClick={this.checkTask}
               >
                 Check

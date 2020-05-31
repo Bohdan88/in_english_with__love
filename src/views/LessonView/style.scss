@@ -28,6 +28,7 @@
   // opacity: 0.5!important;
 }
 .lesson-view-grid {
+  margin: 1rem !important;
   align-items: stretch !important;
   .row {
     padding-bottom: 0px !important;
@@ -41,9 +42,40 @@
   }
 }
 
+.chapter-content,
+.lesson-view-chapter-container {
+  overflow-y: scroll;
+  font-size: 15px !important;
+  font-family: sans-serif;
+
+  li {
+    padding-top: 20px;
+  }
+
+  p {
+    margin: 0 0 0.5em !important;
+  }
+
+  ul {
+    margin-top: 0px !important;
+    padding-left: 10px;
+  }
+}
+
 .lesson-view-chapter-container {
   height: 70vh;
-  overflow-y: scroll;
+}
+
+.chapter-content {
+  div {
+    iframe {
+      display: block;
+      margin: auto !important;
+      min-width: 450px;
+      min-height: 300px;
+      border-bottom: 1px solid red !important;
+    }
+  }
 }
 
 .lesson-view-segment-bottom {
@@ -67,22 +99,6 @@
 .lesson-view-icon {
   font-size: 1.5em !important;
   color: $dark-grey;
-}
-
-.chapter-content {
-  overflow-y: scroll;
-  div {
-    iframe {
-      display: block;
-      margin: auto !important;
-      min-width: 450px;
-      min-height: 300px;
-      border-bottom: 1px solid red !important;
-    }
-    p {
-      line-height: 15px;
-    }
-  }
 }
 
 .lesson-view-footer-buttons {
@@ -113,9 +129,9 @@
   background-color: rgb(255, 235, 230);
 }
 
-.lesson-view-grid {
-  margin: 1rem !important;
-}
+// .lesson-view-grid {
+//   margin: 1rem !important;
+// }
 
 .lesson-view-steps-container {
   background-color: $white-grey !important;
@@ -184,23 +200,24 @@
   margin-left: 5px !important;
 }
 
-.lesson-view-match-label {
+.lesson-view-label {
   background-color: grey !important;
   color: $white !important;
   font-weight: 300 !important;
   margin-bottom: 10px !important;
-  width: 130px;
+  // min-width: 130px;
+
   border-radius: 0px !important;
-  padding: 5px 0px 5px 5px !important;
+  padding: 7px !important;
 }
 
-.lesson-view-match-explanation {
+.lesson-view-exercise-explanation {
   font-size: 16px;
   padding: 20px 0px;
   color: grey;
 }
 
-.lesson-view-match-check {
+.lesson-view-button-exercise-check {
   margin: 10px !important;
   width: 150px;
 }
@@ -228,9 +245,9 @@
 }
 
 .lesson-match-view-container-answers {
-  display: flex;
-  flex-direction: column;
-  margin-top: 25px;
+  display: block;
+  position: relative;
+  top: 55px;
 }
 
 .lesson-match-view-check-icon {
@@ -239,7 +256,7 @@
   transform: translate(0px, -40%);
 }
 
-.lesson-view-match-retry-container {
+.lesson-view-button-exercise-check-container {
   display: flex;
   margin-top: 20px;
 }
@@ -247,7 +264,7 @@
 .lesson-view-match-progress {
   position: absolute !important;
   right: 43px !important;
-  top: 68px !important;
+  top: 72px !important;
   width: 150px;
   .bar {
     min-width: 10px !important;
@@ -258,6 +275,16 @@
   cursor: pointer;
   font-size: 1.1rem !important;
   padding-left: 5px;
+}
+
+.lesson-view-exercise-check-container {
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 1350px) {
+  .lesson-view-match-progress {
+    display: none!important;
+  }
 }
 
 @media only screen and (max-width: 1919px) {

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import ColumnAnswers from "./ColumnAnswers";
 import ColumnTasks from "./ColumnTasks";
+import { Popup, Icon, Button } from "semantic-ui-react";
 // styles
 import "./style.scss";
 
@@ -112,6 +113,13 @@ const initData = {
 
 class CompleteSentence extends Component {
   state = initData;
+
+  removeWordFromColumn = (word, column) => {
+    const state = Object.assign({}, this.state);
+    state.columns[column].taskIds = [];
+    state.columns["column-1"].taskIds.push(word);
+    this.setState({ state });
+  };
   onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
 
@@ -134,14 +142,12 @@ class CompleteSentence extends Component {
       const newTasksIds = Array.from(start.taskIds);
       newTasksIds.splice(source.index, 1);
       newTasksIds.splice(destination.index, 0, draggableId);
-      // console.log(newTasksIds, "newTasksIds");
 
       const newColumn = {
         ...start,
         taskIds: newTasksIds,
       };
 
-      // console.log(newColumn,'newColumn.id]')
       const newState = {
         ...this.state,
         columns: {
@@ -154,14 +160,11 @@ class CompleteSentence extends Component {
     } else {
       // moving from one list to another
       const startTasksIds = Array.from(start.taskIds);
-      console.log(source.index,'source.index')
       startTasksIds.splice(source.index, 1);
       const newStart = {
         ...start,
         taskIds: startTasksIds,
       };
-
-      // console.log(start.taskIds,'start.taskIds')
 
       const finishTasksIds = Array.from(finish.taskIds);
       finishTasksIds.splice(destination.index, 0, draggableId);
@@ -170,9 +173,6 @@ class CompleteSentence extends Component {
         taskIds: finishTasksIds,
       };
 
-      // console.log(newStart,'newStart')
-      // console.log(newFinish,'newFINISH')
-      // console.log(newStart.id, "NEWSTARTID");
       const newState = {
         ...this.state,
         columns: {
@@ -185,10 +185,27 @@ class CompleteSentence extends Component {
       this.setState(newState);
     }
   };
+
+  checkTask = () => {};
   render() {
-    console.log(this.state, "this.state");
     return (
       <div className="lesson-complete-container">
+        <p className="lesson-view-exercise-explanation">
+          Complete the sentences with one of the words below.
+          <Popup
+            inverted
+            basic
+            className="lesson-view-exercise-popup"
+            content="Please use your mouse or touchpad to move words from the box into an empty field in an appropriate sentence."
+            trigger={
+              <Icon
+                name="circle question"
+                className="lesson-view-match-icon"
+                size="small"
+              />
+            }
+          />
+        </p>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <div className="lesson-complete-column-answers-container">
             <ColumnAnswers
@@ -198,9 +215,26 @@ class CompleteSentence extends Component {
             />
           </div>
           <div className="lesson-complete-column-tasks-container">
-            <ColumnTasks values={this.state} />
+            <ColumnTasks
+              removeWordFromColumn={this.removeWordFromColumn}
+              values={this.state}
+            />
           </div>
         </DragDropContext>
+        <div className="lesson-view-exercise-check-container">
+          <Button
+            primary
+            className="lesson-view-button-exercise-check"
+            onClick={this.checkTask}
+          >
+            Check
+            <Icon
+              fitted
+              className="lesson-view-match-icon-check"
+              name="check"
+            />
+          </Button>
+        </div>
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
 class ColumnTasks extends Component {
   render() {
     const { values } = this.props;
@@ -12,10 +12,8 @@ class ColumnTasks extends Component {
 
           return (
             <div className="lesson-complete-sentence" key={obj.id}>
-              <span> {dividedSentence[0]}</span>
-
-              <span className="lesson-complete-key-word-holder">
-                {/* {values.columns["column-2"].taskIds[key] || "______"} */}
+              {`${key + 1}.  `} {dividedSentence[0]}
+              <div className="lesson-complete-key-word-taken-holder">
                 <Droppable
                   isDropDisabled={
                     values.columns[`answer-${key + 1}`].taskIds.length === 1
@@ -29,45 +27,30 @@ class ColumnTasks extends Component {
                       ref={provided.innerRef}
                       {...provided.droppableProps}
                       className={`lesson-complete-sentences-content ${
-                        snaphot.isDraggingOver ? "dragging-over" : ""
+                        snaphot.isDraggingOver ? "dragging-over-complete" : ""
                       }`}
                     >
-                      <Draggable
-                        draggableId={
-                          values.columns[`answer-${key + 1}`].taskIds[0] ||
-                          key.toString()
-                        }
-                        /* values.columns[`answer-${key + 1}`].taskIds[0] || */
-
-                        index={0}
+                      <span
+                        className="lesson-complete-answer-span"
+                        onClick={() => {
+                          this.props.removeWordFromColumn(
+                            values.columns[`answer-${key + 1}`].taskIds[0],
+                            `answer-${key + 1}`
+                          );
+                        }}
                       >
-                        {(provided, snaphot) => (
-                          <>
-                            <div
-                              className=""
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              ref={provided.innerRef}
-                            >
-                              {values.columns[`answer-${key + 1}`].taskIds[0]}
-                            </div>
-                          </>
-                        )}
-                      </Draggable>
+                        {values.columns[`answer-${key + 1}`].taskIds[0]}
+                      </span>
 
-                      {/* {values.columns[`answer-${key + 1}`].taskIds[0]} */}
                       {provided.placeholder}
                     </div>
                   )}
                 </Droppable>
-              </span>
-              <span style={{ paddingLeft: "50px" }}> {dividedSentence[1]}</span>
+              </div>
+              {dividedSentence[1]}
             </div>
           );
         })}
-        {/* {provided.placeholder} */}
-        {/* </div> */}
-        )}
       </div>
     );
   }

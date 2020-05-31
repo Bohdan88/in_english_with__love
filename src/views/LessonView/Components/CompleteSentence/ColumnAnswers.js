@@ -13,7 +13,7 @@ class ColumnAnswers extends Component {
               ref={provided.innerRef}
               {...provided.droppableProps}
               className={`lesson-complete-answers-content ${
-                snaphot.isDraggingOver ? "dragging-over" : ""
+                snaphot.isDraggingOver ? "dragging-over-complete-answers" : ""
               }`}
             >
               {tasks.map((task, index) => {
