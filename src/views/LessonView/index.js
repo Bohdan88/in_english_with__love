@@ -17,6 +17,7 @@ import {
   Item,
   Container,
   Button,
+  Progress,
 } from "semantic-ui-react";
 
 const fullLeson = {
@@ -121,8 +122,6 @@ const fullLeson = {
   post: {
     about:
       "<p></p> <p></p> <h1>About the Video&nbsp;</h1> <p>For the past 25 years, the dance company BANDALOOP has been merging rock climbing with dancing.</p>  <p>Founded by Amelia Rudolph, the goal of the dance company is to give life to natural and artifcial vertical</p><p>spaces with amazing performances.&nbsp;</p> <p></p> <p></p> <h1>Before Watching&nbsp;</h1> <ul> <li>&nbsp;Do you enjoy dancing? Have you ever taken dance lessons? Are there any traditional dances in your country? How important is dance in your culture?</li> <li>Have you ever tried rock-climbing? If not, would you like to one day? Why or why not?</li> <li>Describe an activity that you like doing (or one that you used to do or would like to try in the future). How did you get into it? Why do you like it?&nbsp;</li> </ul> ",
-    conclusion:
-      "<h2>After watching&nbsp;</h2> <ul> <li>What did you think of the video? Did you know about sky dancing before watching this video?</li> </ul><p>•   What’s another way to say “mix”? What are the things that sky dancing mixes?</p> <p>•   Who’s the newest member of the company and why did the owner pick her?</p><p>•.  What’s another way to say “risk-taker”? Are you a risk-taker? Do you think it’s a good quality?.</p>  <p>• What does tenacity mean? Can you give an example of a situation that requires tenacity?</p><p>• What’s another way to say restless? When do you feel that way?</p> <p>• Are you afraid of heights? Do you have any fears that you’d like to overcome?</p> <p>• Some people believe that we’re born with certain talents, for instance for music and sport. But</p> <p>other people feel that anyone can be taught to become a good sports person, musician, etc. What’s</p><p>your opinion and why?&nbsp;</p> ",
     content: `<p></p>
   <iframe width="auto" height="auto" src="https://www.youtube.com/embed/BYujQ4MinDE" frameBorder="0"></iframe>
   <h2>Transcript&nbsp;</h2>
@@ -153,6 +152,9 @@ const fullLeson = {
   <p>“There you are, hanging off the skyscraper, and people look up and suddenly there's a stage, there's art,</p>
   <p>there's beauty, there's grace, there's power in this site that you oveflook every day.”&nbsp;</p>
   `,
+
+    conclusion:
+      "<h2>After watching&nbsp;</h2> <ul> <li>What did you think of the video? Did you know about sky dancing before watching this video?</li> </ul><p>•   What’s another way to say “mix”? What are the things that sky dancing mixes?</p> <p>•   Who’s the newest member of the company and why did the owner pick her?</p><p>•.  What’s another way to say “risk-taker”? Are you a risk-taker? Do you think it’s a good quality?.</p>  <p>• What does tenacity mean? Can you give an example of a situation that requires tenacity?</p><p>• What’s another way to say restless? When do you feel that way?</p> <p>• Are you afraid of heights? Do you have any fears that you’d like to overcome?</p> <p>• Some people believe that we’re born with certain talents, for instance for music and sport. But</p> <p>other people feel that anyone can be taught to become a good sports person, musician, etc. What’s</p><p>your opinion and why?&nbsp;</p> ",
   },
 };
 
@@ -163,9 +165,12 @@ class LessonView extends Component {
     ),
     currentTopicValues: "",
     isLoading: false,
-    currentStep: 0,
+    currentStep: 1,
     fullLeson: fullLeson,
     isMenuOpen: false,
+    currentChapter: "",
+    isPreviousDisabled: true,
+    isNextDisabled: false,
   };
 
   componentDidMount() {
@@ -197,151 +202,244 @@ class LessonView extends Component {
     //     });
     //   }
     // }
+    let fullLeson = Object.assign({}, this.state.fullLeson);
+    Object.values(fullLeson.newPostExercisesValues).map((obj) => {
+      fullLeson.post[obj.type] = obj;
+    });
+
+    const filteredLessonItems = Object.keys(fullLeson.post).filter(
+      (item) => item !== "content" && item !== "conclusion"
+    );
+    // push conclusion in the end
+    filteredLessonItems.push("conclusion");
+
+    this.setState({
+      filteredLessonItems,
+      fullLeson,
+      currentChapter: Object.keys(fullLeson.post)[0],
+    });
   }
+
+  setCurrentChapter = (chapter) => {
+    const { filteredLessonItems } = this.state;
+    const findCurrentChapterIndex = filteredLessonItems.findIndex(
+      (name) => name === chapter
+    );
+
+    this.setState({
+      currentChapter: chapter,
+      // currentStep: findCurrentChapterIndex,
+      isNextDisabled:
+        findCurrentChapterIndex === filteredLessonItems.length - 1,
+      isPreviousDisabled: findCurrentChapterIndex === 0,
+    });
+  };
+
+  visualizeChapterContent = (currentChapter) => {
+    const lessonChapter = fullLeson.post[currentChapter];
+
+    // check if it's json string
+    if (typeof lessonChapter === "string") {
+      return (
+        <div
+          dangerouslySetInnerHTML={{
+            __html: lessonChapter,
+          }}
+        />
+      );
+    }
+
+    if (lessonChapter.name) {
+      if (lessonChapter.name.includes("Complete")) {
+        return <CompleteSentence />;
+      }
+
+      if (lessonChapter.name.includes("Match")) {
+        return <MatchExerciseView />;
+      }
+    }
+    return null;
+  };
   componentWillMount() {
     // this.props.firebase.posts().off();
   }
 
   checkMenu = (menu) => this.setState({ isMenuOpen: menu });
+
+  onNextChapter = () => {
+    const { currentStep, filteredLessonItems, currentChapter } = this.state;
+    // find index and set  current step
+    const findCurrentChapterIndex = filteredLessonItems.findIndex(
+      (chapter) => chapter === currentChapter
+    );
+
+    const nextChapterIndex =
+      findCurrentChapterIndex === filteredLessonItems.length - 1
+        ? filteredLessonItems.length - 1
+        : findCurrentChapterIndex + 1;
+
+    console.log(nextChapterIndex, "findCurrentChapterIndex");
+    console.log(filteredLessonItems, "filteredLessonItems");
+    this.setState({
+      currentStep: nextChapterIndex + 1,
+      isPreviousDisabled: nextChapterIndex === 0,
+      isNextDisabled: nextChapterIndex === filteredLessonItems.length - 1,
+      currentChapter: filteredLessonItems[nextChapterIndex],
+    });
+  };
+
+  onPreviousChapter = () => {
+    const { currentStep, filteredLessonItems, currentChapter } = this.state;
+    // find index and set  current step
+    const findCurrentChapterIndex = filteredLessonItems.findIndex(
+      (chapter) => chapter === currentChapter
+    );
+
+    const previousChapterIndex =
+      findCurrentChapterIndex > 0 ? findCurrentChapterIndex - 1 : 0;
+
+    this.setState({
+      currentStep: previousChapterIndex === 0 ? 1 : previousChapterIndex + 1,
+      isNextDisabled: false,
+      isPreviousDisabled: previousChapterIndex === 0,
+      currentChapter: filteredLessonItems[previousChapterIndex],
+    });
+  };
   render() {
     const {
       currentTopicValues,
       currentStep,
       fullLeson,
       isMenuOpen,
+      currentChapter,
+      filteredLessonItems,
+      isNextDisabled,
+      isPreviousDisabled,
     } = this.state;
-    // console.log(fullLeson.post, "fullLesonfullLesonfullLeson");
-    // console.log(isMenuOpen, "isMenuOpen");
+    // console.log(currentChapter, "fullLesonfullLesonfullLeson");
+    // console.log(fullLeson.post, "fullLeson");
+    // console.log(this.state, "THIS_STATE");
     // const hamburgerClass = isMenuOpen ? "open" : "";
     // const menuClass = isMenuOpen ? "mobile-open-menu" : "mobile-close-menu";
     const menu = isMenuOpen ? "menu-open" : "";
+    // console.log(currentStep, "currentStep");
+    // const filteredLessonItems = Object.keys(fullLeson.post).filter(
+    //   (item) => item !== "content" && item !== "conclusion"
+    // );
+    // // push conclusion in the end
+    // filteredLessonItems.push("conclusion");
+
+    // console.log(filteredLessonItems, "filteredLessonItems");
     return (
-      <div>
-        <Grid className={`lesson-view-grid lesson-view-${menu}`}>
-          <Grid.Row stretched columns={2}>
-            <Grid.Column width={8}>
-              <Container fluid>
-                <Step.Group attached="top" widths={1} fluid stackable="tablet">
-                  <Step>
-                    <Icon className="lesson-view-icon" name="info" />
-                    <Step.Content>
-                      <Step.Title>About the Lesson</Step.Title>
-                    </Step.Content>
-                  </Step>
-                </Step.Group>
-                <Segment
-                  attached
-                  className={`lesson-view-chapter-container lesson-view-${menu}`}
-                >
-                  Segment
-                </Segment>
-              </Container>
-              {/* <Container className="lesson-view-steps-container" fluid>
-                <Step.Group
-                  attached="top"
-                  widths={4}
-                  fluid
-                  stackable="tablet"
-                  size="mini"
-                >
-                  <Step active key={1}>
-                    <Icon name="info" />
-                    <Step.Content>
-                      <Step.Title>Before Watching</Step.Title>
-                       <Step.Description>
-                      Do you enjoy dancing? Have you ever taken dance lessons?
-                      Are there any traditional dances in your country? How
-                      important is dance in your culture?
-                    </Step.Description> 
-                    </Step.Content>
-                  </Step>
-                  <Step link>
-                    <Icon name="edit" />
-                    <Step.Content>
-                      <Step.Title>Exercises</Step.Title>
-                      <Step.Description>
-                      </Step.Description>
-                    </Step.Content>
-                  </Step>
-                  <Step link>
-                    <Icon name="child" />
-                    <Step.Content>
-                      <Step.Title>After watching</Step.Title>
-                       <Step.Description>
-                      • What did you think of the video? Did you know about sky
-                      dancing before watching this video? • What’s another way
-                      to say “mix”? What are the things that sky dancing mixes?
-                      • Who’s the newest member of the company and why did the
-                      owner pick her? • What’s another way to say “risk-taker”?
-                      Are you a risk-taker? Do you think it’s a good quality?
-                      Explain. • What does tenacity mean? Can you give an
-                      example of a situation that requires tenacity? • What’s
-                      another way to say restless? When do you feel that way? •
-                      Are you afraid of heights? Do you have any fears that
-                      you’d like to overcome? • Some people believe that we’re
-                      born with certain talents, for instance for music and
-                      sport. But other people feel that anyone can be taught to
-                      become a good sports person, musician, etc. What’s your
-                      opinion and why?
-                    </Step.Description> 
-                    </Step.Content>
-                  </Step>
-                </Step.Group>
-                <Segment attached>
-                   <MatchExerciseView /> 
-
-                 <CompleteSentence /> 
-                </Segment>
-              </Container> */}
-            </Grid.Column>
-            <Grid.Column width={8}>
-              <Container fluid>
-                <Step.Group attached="top" widths={1} fluid stackable="tablet">
-                  <Step>
-                    <Icon
-                      className="lesson-view-icon"
-                      size="mini"
-                      name="picture"
+      currentChapter &&
+      filteredLessonItems && (
+        <div>
+          <Grid className={`lesson-view-grid lesson-view-${menu}`}>
+            <Grid.Row stretched columns={2}>
+              <Grid.Column width={8}>
+                <Container fluid>
+                  <Step.Group
+                    attached="top"
+                    widths={1}
+                    fluid
+                    stackable="tablet"
+                  >
+                    <Step>
+                      <Icon className="lesson-view-icon" name="book" />
+                      <Step.Content>
+                        <Step.Title>Learn</Step.Title>
+                      </Step.Content>
+                    </Step>
+                  </Step.Group>
+                  <Segment
+                    attached
+                    className={`lesson-view-chapter-container lesson-view-${menu}`}
+                  >
+                    {this.visualizeChapterContent(currentChapter)}
+                  </Segment>
+                </Container>
+              </Grid.Column>
+              <Grid.Column width={8}>
+                <Container fluid>
+                  <Step.Group
+                    attached="top"
+                    widths={1}
+                    fluid
+                    stackable="tablet"
+                  >
+                    <Step>
+                      <Icon
+                        className="lesson-view-icon"
+                        size="mini"
+                        name="picture"
+                      />
+                      <Step.Content>
+                        <Step.Title>Content</Step.Title>
+                      </Step.Content>
+                    </Step>
+                  </Step.Group>
+                  <Segment
+                    attached
+                    className="lesson-view-chapter-container chapter-content"
+                  >
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: fullLeson.post.content,
+                      }}
                     />
-                    <Step.Content>
-                      <Step.Title>Content</Step.Title>
-                      {/* <Step.Description> */}
-                      {/* Do you enjoy dancing? Have you ever taken dance lessons?
-                        Are there any traditional dances in your country? How
-                        important is dance in your culture? */}
-                      {/* </Step.Description> */}
-                    </Step.Content>
-                  </Step>
-                </Step.Group>
-                <Segment
-                  attached
-                  className="lesson-view-chapter-container chapter-content"
-                >
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: fullLeson.post.content,
-                    }}
+                  </Segment>
+                </Container>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row className="lesson-view-fixed-container">
+              <Grid.Column>
+                <Segment className="lesson-view-footer-menu">
+                  <SideBarMenu
+                    filteredLessonItems={filteredLessonItems}
+                    currentChapter={currentChapter}
+                    checkMenu={this.checkMenu}
+                    setCurrentChapter={this.setCurrentChapter}
                   />
-                </Segment>
-              </Container>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row className="lesson-view-fixed-container">
-            <Grid.Column>
-              <Segment className="lesson-view-footer-menu">
-                <SideBarMenu
-                  lessonItems={Object.keys(fullLeson.post)}
-                  exercises={Object.values(fullLeson.newPostExercisesValues)}
-                  checkMenu={this.checkMenu}
-                />
 
-                <Button>Next</Button>
-                <Button>Previous</Button>
-              </Segment>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </div>
+                  <div className="lesson-view-footer-buttons">
+                    <Button
+                      icon
+                      basic
+                      color="grey"
+                      labelPosition="left"
+                      disabled={isPreviousDisabled}
+                      onClick={() => this.onPreviousChapter()}
+                    >
+                      <Icon name="left arrow" />
+                      Back
+                    </Button>
+                    <Progress
+                      className={"lesson-view-footer-progress"}
+                      value={currentStep}
+                      total={filteredLessonItems.length}
+                      progress="ratio"
+                      color={isNextDisabled ? "green" : "grey"}
+                    />
+
+                    <Button
+                      basic
+                      color="teal"
+                      icon
+                      labelPosition="right"
+                      disabled={isNextDisabled}
+                      onClick={() => this.onNextChapter()}
+                    >
+                      Next
+                      <Icon name="right arrow" />
+                    </Button>
+                  </div>
+                  {/* <Progress percent={20} indicating></Progress> */}
+                </Segment>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </div>
+      )
     );
   }
 }

@@ -6,7 +6,7 @@
 }
 
 .title {
-  padding: 8px;
+  // padding: 8px;
 }
 
 // .tasks-container {
@@ -43,11 +43,11 @@
 
 .lesson-view-chapter-container {
   height: 70vh;
+  overflow-y: scroll;
 }
 
 .lesson-view-segment-bottom {
   position: relative;
-
   top: -1px;
 }
 
@@ -83,6 +83,19 @@
       line-height: 15px;
     }
   }
+}
+
+.lesson-view-footer-buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 90%;
+}
+
+.lesson-view-footer-progress {
+  min-width: 250px;
+  margin: 5px !important;
+  // margin-top: 0px !important;
+  // height: 30px!important;
 }
 
 // end lesson

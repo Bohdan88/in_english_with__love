@@ -74,8 +74,8 @@ export const INIT_NEW_POST = {};
 export const CREATE_LESSON_STAGES = {
   before: { key: "about", content: "About", icon: "info" },
   practise: { key: "exercises", content: "Exercises", icon: "legal" }, //lab
-  after: { key: "conclusion", content: "Conclusion", icon: "law" },
   content: { key: "content", content: "Content", icon: "picture" },
+  after: { key: "conclusion", content: "Conclusion", icon: "law" },
 };
 
 export const CATEGORIES = [
@@ -155,16 +155,16 @@ export const INIT_NEW_POST_VALUES = {
   focus: "",
   post: {
     [CREATE_LESSON_STAGES.before.key]: "",
-    [CREATE_LESSON_STAGES.after.key]: "",
     [CREATE_LESSON_STAGES.content.key]: "",
+    [CREATE_LESSON_STAGES.after.key]: "",
     // [CREATE_LESSON_STAGES.practise.key]: "",
   },
   title: "",
   iconPath: "",
   assets: {
     [CREATE_LESSON_STAGES.before.key]: [],
-    [CREATE_LESSON_STAGES.after.key]: [],
     [CREATE_LESSON_STAGES.content.key]: [],
+    [CREATE_LESSON_STAGES.after.key]: [],
   },
   newPostExercisesValues: [
     // match init
