@@ -389,3 +389,10 @@ export const CHAPTERS_SEQUENCE = {
   2: "exercises",
   3: "conlusion",
 };
+
+// category topics
+
+export const CATEGORY_TOPICS = {
+  listen: "allListenTopics",
+  read: "allReadTopics",
+};

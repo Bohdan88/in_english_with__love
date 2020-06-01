@@ -37,7 +37,7 @@ const arrTop = [
   { name: "Opera", lessons: "" },
 ];
 
-class Read extends Component {
+class ListenTopics extends Component {
   state = {
     searchedTopic: "",
     loading: false,
@@ -74,21 +74,25 @@ class Read extends Component {
           uid: key,
         }));
 
-        const setAlltopics = [
+        const setAllListentopics = [
           ...new Set(
             postsList.map((obj) => ({
               name: obj.subCategory,
               lessons: postsList.filter(
-                (el) => el.subCategory === obj.subCategory
+                (el) =>
+                  el.category.toLowerCase() ===
+                    this.props.location.pathname.slice(1) &&
+                  el.subCategory === obj.subCategory
               ),
             }))
           ),
         ];
 
+        console.log(setAllListentopics, "setAllListentopics");
         // set posts
         this.props.onGetAllPostsValues({
           allPosts: postsList,
-          allTopics: setAlltopics,
+          allListenTopics: setAllListentopics,
         });
 
         // this.setState({
@@ -125,10 +129,12 @@ class Read extends Component {
 
   render() {
     const { loading, stateTopics } = this.state;
-    const { allTopics, allTopicsImages } = this.props.posts;
+    const { allListenTopics, allTopicsImages } = this.props.posts;
+    // console.log(this.state,'state')
+    // console.log(this.props,'props')
     return (
       <div>
-        {!allTopicsImages.length || !allTopics.length ? (
+        {!allTopicsImages.length || !allListenTopics.length ? (
           <Segment className="loader-admin">
             <Dimmer active>
               <Loader size="massive">Loading </Loader>
@@ -180,7 +186,8 @@ class Read extends Component {
                       visible={true}
                       animation="fade"
                       duration={2000}
-                      transitionOnMount={true}
+                      transitionOnMount={false}
+                      unmountOnHide={true}
                       key={topic.name}
                     >
                       <Grid.Column
@@ -192,7 +199,7 @@ class Read extends Component {
                           className="card-topic-link"
                           to={`${LESSON_TOPIC_LIST}?topic=${topic.name.toLowerCase()}`}
                         >
-                          <Card  fluid className="card-topic-container">
+                          <Card fluid className="card-topic-container">
                             <Icon
                               className="card-topic-arrow"
                               name="arrow right"
@@ -262,4 +269,4 @@ const mapDispatchToProps = (dispatch) => {
 export default compose(
   withFirebase,
   connect(mapStateToProps, mapDispatchToProps)
-)(Read);
+)(ListenTopics);

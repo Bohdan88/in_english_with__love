@@ -28,7 +28,7 @@
   border-color: none !important;
 }
 
-.loader-topics {
+.segment-loading-topics {
   margin-top: 10rem !important;
   // height: 100vh !important;
   width: 100vw !important;
@@ -38,7 +38,10 @@
 
 .dimmer-topics {
   background-color: transparent !important;
-  color: transparent !important;
+  color: $black !important;
+}
+.loader-topic {
+  color: $black !important;
 }
 .card-topic-container {
   border: 1px solid $white !important; // $light-sea
@@ -80,12 +83,11 @@
 .card-topic-meta {
   display: flex;
   flex-direction: row;
-}
 
-// .card-content-image {
-//   // clip-path: polygon(56% 0, 95% 25%, 100% 75%, 49% 91%, 0 69%, 10% 26%);
-//   // background-color: rgba(86, 172, 138, 0.1);
-// }
+  div {
+    display: flex;
+  }
+}
 
 .card-meta-time {
   padding-left: 10px;
@@ -104,6 +106,14 @@
 
 .card-topic-container:hover .card-topic-arrow {
   color: $light-sea !important;
+}
+
+.category-topics-error-message {
+  margin: auto !important;
+
+  .header {
+    text-align: center;
+  }
 }
 
 @media only screen and (max-width: 1919px) {

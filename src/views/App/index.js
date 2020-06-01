@@ -9,8 +9,8 @@ import PasswordForgetPage from "../PasswordForget";
 import HomePage from "../Home";
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
-import Read from "../Read";
-import Listen from "../Listen";
+import CategoryTopics from "../CategoryTopics";
+import ListenTopics from "../ListenTopics";
 import Write from "../Write";
 import TopicList from "../TopicList";
 import LessonView from "../LessonView";
@@ -40,8 +40,8 @@ const App = () => {
             <Route path={ROUTES.ACCOUNT} component={AccountPage} />
             <Route path={ROUTES.ADMIN} component={AdminPage} />
             <Route path={ROUTES.WRITE} component={Write} />
-            <Route path={ROUTES.READ} component={Read} />
-            <Route path={ROUTES.LISTEN} component={Listen} />
+            <Route path={ROUTES.READ} component={CategoryTopics} />
+            <Route path={ROUTES.LISTEN} component={CategoryTopics} />
             {/* <Route path={ROUTES.BLOG} component={Blog} /> */}
             <Route path={ROUTES.ABOUT} component={About} />
             <Route path={ROUTES.LESSON_TOPIC_LIST} component={TopicList} />

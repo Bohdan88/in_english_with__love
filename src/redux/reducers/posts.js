@@ -11,9 +11,13 @@ const initState = {
   error: false,
   allPosts: [],
   allTopics: [],
+  allListenTopics: { names: [], images: [] },
+  allReadTopics: { names: [], images: [] },
   allTopicsImages: [],
   allIconImagesByTopic: {},
   // selectedTopics: [],
+
+  // admin page
   categories: CATEGORIES,
   subCategories: [],
   focuses: [],
