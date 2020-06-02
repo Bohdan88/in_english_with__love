@@ -30,6 +30,7 @@ import {
 } from "../../../../constants/shared";
 import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
 import { transformToOptions, fireAlert } from "../../../../utils";
+import AboutTheLesson from "./AboutTheLesson";
 
 class CreateLesson extends Component {
   constructor(props) {
@@ -356,6 +357,14 @@ class CreateLesson extends Component {
 
     const panes = [
       {
+        menuItem: CREATE_LESSON_STAGES.about,
+        render: () => (
+          <Tab.Pane>
+            <AboutTheLesson sectionKey={CREATE_LESSON_STAGES.about.key} />
+          </Tab.Pane>
+        ),
+      },
+      {
         menuItem: CREATE_LESSON_STAGES.before,
         render: () => (
           <Tab.Pane>
@@ -608,7 +617,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetPostNewValues: (values) => dispatch (setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
   };
 };
 

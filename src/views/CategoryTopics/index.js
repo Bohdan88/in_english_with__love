@@ -121,6 +121,7 @@ class CategoryTopics extends Component {
                   ...this.props.posts[CATEGORY_TOPICS[categoryType]],
                   names: uniqueTopics,
                 },
+                transitionDuration: 4000,
               });
             }
           },
@@ -138,6 +139,7 @@ class CategoryTopics extends Component {
           [CATEGORY_TOPICS[categoryType]]: this.props.posts[
             CATEGORY_TOPICS[categoryType]
           ],
+          transitionDuration: 300,
         });
       }
     }
@@ -190,12 +192,11 @@ class CategoryTopics extends Component {
       categoryType,
       error,
       errorText,
+      transitionDuration,
     } = this.state;
-
-    console.log(this.state[categoryType], "CATEGORY_TYPE");
-    // console.log(this.state[categoryType], "dbValuesLoading");
     const { posts } = this.props;
     const { allPosts } = posts;
+
     return categoryType ? (
       <div>
         {dbValuesLoading && !error ? (
@@ -260,7 +261,7 @@ class CategoryTopics extends Component {
                     <Transition
                       visible={true}
                       animation="fade"
-                      duration={2000}
+                      duration={transitionDuration}
                       transitionOnMount={true}
                       unmountOnHide={true}
                       key={topic}

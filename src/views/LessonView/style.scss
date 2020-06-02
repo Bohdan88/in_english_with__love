@@ -185,7 +185,7 @@
 }
 
 .correct-match {
-  background-color: #20ba45;
+  background-color: $green-success;
   color: $white;
 }
 
@@ -283,7 +283,7 @@
 
 @media only screen and (max-width: 1350px) {
   .lesson-view-match-progress {
-    display: none!important;
+    display: none !important;
   }
 }
 

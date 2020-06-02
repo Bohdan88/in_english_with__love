@@ -3,6 +3,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import ColumnAnswers from "./ColumnAnswers";
 import ColumnTasks from "./ColumnTasks";
 import { Popup, Icon, Button } from "semantic-ui-react";
+import { shuffleArray } from "../../../../utils";
 // styles
 import "./style.scss";
 
@@ -86,26 +87,32 @@ const initData = {
     "answer-1": {
       id: "answer-1",
       taskIds: [],
+      isCorrect: false,
     },
     "answer-2": {
       id: "answer-2",
       taskIds: [],
+      isCorrect: false,
     },
     "answer-3": {
       id: "answer-3",
       taskIds: [],
+      isCorrect: false,
     },
     "answer-4": {
       id: "answer-4",
       taskIds: [],
+      isCorrect: false,
     },
     "answer-5": {
       id: "answer-5",
       taskIds: [],
+      isCorrect: false,
     },
     "answer-6": {
       id: "answer-6",
       taskIds: [],
+      isCorrect: false,
     },
   },
   // columnOrder: ["column-1", "column-2"],
@@ -114,6 +121,19 @@ const initData = {
 class CompleteSentence extends Component {
   state = initData;
 
+  componentDidMount() {
+    this.setState({
+      ...this.state,
+      columns: {
+        ...this.state.columns,
+        ["column-1"]: {
+          ...this.state.columns["column-1"],
+          taskIds: shuffleArray(this.state.columns["column-1"].taskIds),
+        },
+      },
+    });
+    // console.log(shuffleArray(["merge", "overlook", "daredevil", "defy", "antsy", "tenacity"]))
+  }
   removeWordFromColumn = (word, column) => {
     const state = Object.assign({}, this.state);
     state.columns[column].taskIds = [];
@@ -186,8 +206,39 @@ class CompleteSentence extends Component {
     }
   };
 
-  checkTask = () => {};
+  checkTask = () => {
+    const correctValues = [
+      "merge",
+      "overlook",
+      "daredevil",
+      "defy",
+      "antsy",
+      "tenacity",
+    ];
+
+    // check if answer was correct
+    Object.values(this.state.columns)
+      .filter((obj) => obj.id !== "column-1")
+      .forEach((obj, key) => {
+        if (correctValues[key] === obj.taskIds[0]) {
+          obj.isCorrect = true;
+
+          this.setState({
+            ...this.state,
+            columns: {
+              ...this.state.columns,
+              [obj.id]: obj,
+            },
+          });
+        }
+      });
+
+    this.setState({
+      isChecked: true,
+    });
+  };
   render() {
+    console.log(this.state, "THIS_STATE");
     return (
       <div className="lesson-complete-container">
         <p className="lesson-view-exercise-explanation">
@@ -222,7 +273,9 @@ class CompleteSentence extends Component {
           </div>
         </DragDropContext>
         <div className="lesson-view-exercise-check-container">
+          
           <Button
+            /* disabled={!!this.state.columns["column-1"].taskIds.length} */
             primary
             className="lesson-view-button-exercise-check"
             onClick={this.checkTask}

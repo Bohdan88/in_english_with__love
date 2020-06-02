@@ -3,6 +3,7 @@ import { Droppable } from "react-beautiful-dnd";
 class ColumnTasks extends Component {
   render() {
     const { values } = this.props;
+
     const wordsInCurlyBraces = /\{.*?\}/g;
     return (
       <div>
@@ -31,7 +32,9 @@ class ColumnTasks extends Component {
                       }`}
                     >
                       <span
-                        className="lesson-complete-answer-span"
+                        className={`lesson-complete-answer-span ${
+                          values.isChecked ? "correct-answer" : "wrong-answer"
+                        }`}
                         onClick={() => {
                           this.props.removeWordFromColumn(
                             values.columns[`answer-${key + 1}`].taskIds[0],

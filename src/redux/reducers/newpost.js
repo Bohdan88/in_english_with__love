@@ -12,6 +12,7 @@ const initState = {
   subCategory: "",
   focus: "",
   post: {
+    [CREATE_LESSON_STAGES.about.key]: "",
     [CREATE_LESSON_STAGES.before.key]: "",
     [CREATE_LESSON_STAGES.after.key]: "",
     [CREATE_LESSON_STAGES.content.key]: "",
@@ -20,6 +21,7 @@ const initState = {
   title: "",
   iconPath: "",
   assets: {
+    [CREATE_LESSON_STAGES.about.key]: [],
     [CREATE_LESSON_STAGES.before.key]: [],
     [CREATE_LESSON_STAGES.after.key]: [],
     [CREATE_LESSON_STAGES.content.key]: [],

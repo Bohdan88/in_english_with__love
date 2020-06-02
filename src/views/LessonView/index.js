@@ -350,7 +350,8 @@ class LessonView extends Component {
                     <Label size="big" className="lesson-view-label capitalize">
                       {currentChapter}
                     </Label>
-                    {this.visualizeChapterContent(currentChapter)}
+                    {/* {this.visualizeChapterContent(currentChapter)} */}
+                    <CompleteSentence />
                   </Segment>
                 </Container>
               </Grid.Column>

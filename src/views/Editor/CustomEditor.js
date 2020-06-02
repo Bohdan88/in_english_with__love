@@ -174,18 +174,11 @@ class CustomEditor extends Component {
     // const fontFamilies = document.querySelectorAll(
     //   ".rdw-dropdown-optionwrapper"
     // );
-    // console.log(fontFamilies, "fontFamilies");
-    // console.log(fontFamilies, "fontFamilies");
-    // document.querySelector('rdw-dropdownoption-default').fontFamily
-    // console.log(this.props.firebase.users(), "FIRE");
   }
   _uploadImageCallBack = (file) => {
-    console.log(file, "file");
     const { iconPath } = this.props.newPostState;
     const { firebase } = this.props;
     const { sectionKey } = this.props;
-    console.log(sectionKey, "sectionKey");
-    // console.log(this.state, "STATUSINCALLVAKC");
 
     // every time we upload an image, we
     // need to save it to the state so we can get it's data
@@ -245,18 +238,7 @@ class CustomEditor extends Component {
     const { editorState } = this.state;
     const { post } = this.props.newPostState;
     const { sectionKey } = this.props;
-    // console.log(
-    //   draftToHtml(convertToRaw(editorState.getCurrentContent()), "OOOK")
-    // );
-    // console.log(editorState, "ost");
-    // // console.log(editorState, "editorState");
-    // localStorage.setItem(
-    //   "writtenContent",
-    //   draftToHtml(convertToRaw(editorState.getCurrentContent()))
-    // );
-
-    // console.log(this.state, "statusinrender");
-
+    
     // we check on blocks in case it's not editor state
     const currentEditor =
       post[sectionKey] === "" ||
@@ -265,9 +247,10 @@ class CustomEditor extends Component {
         ? EditorState.createEmpty()
         : post[sectionKey];
 
-    console.log(
-      draftToHtml(convertToRaw(currentEditor.getCurrentContent()), "OOOK")
-    );
+    // console.log(post[sectionKey].blocks, "sectionKeysectionKey");
+    // console.log(
+    //   draftToHtml(convertToRaw(currentEditor.getCurrentContent()), "OOOK")
+    // );
     // EditorState.createWithContent(convertFromRaw(post[sectionKey]));
 
     // console.log(
@@ -289,7 +272,6 @@ class CustomEditor extends Component {
     // let ed = !this.state.try
     //   ? EditorState.createEmpty()
     //   : EditorState.set(this.state.try);
-    // console.log(ed, "EDIK");
 
     // // console.log(currentEditor, "cURREN");
     // ed.getSelection().getIsBackward(true)
@@ -301,8 +283,7 @@ class CustomEditor extends Component {
     //     isBackward: true,
     //   })
     // );
-    // console.log(currentEditor, "EDITOR");
-    // console.log(ed.getSelection().getIsBackward())
+
     return (
       <div className="editor-component">
         <div className="container-editor">

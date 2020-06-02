@@ -87,3 +87,8 @@
   background-color: rgb(255, 235, 230);
   border-radius: 10px;
 }
+
+.correct-answer {
+  background-color: $green-success;
+  color: $white;
+}

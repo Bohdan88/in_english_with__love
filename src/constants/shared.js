@@ -72,10 +72,11 @@ export const ADMIN_TABS = {
 export const INIT_NEW_POST = {};
 
 export const CREATE_LESSON_STAGES = {
-  before: { key: "about", content: "About", icon: "info" },
+  about: { key: "about", content: "About the Video", icon: "info" },
+  before: { key: "before", content: "Before Watching", icon: "eye" },
   practise: { key: "exercises", content: "Exercises", icon: "legal" }, //lab
   content: { key: "content", content: "Content", icon: "picture" },
-  after: { key: "conclusion", content: "Conclusion", icon: "law" },
+  after: { key: "after", content: "After Watching", icon: "law" },
 };
 
 export const CATEGORIES = [
@@ -154,6 +155,7 @@ export const INIT_NEW_POST_VALUES = {
   subCategory: "",
   focus: "",
   post: {
+    [CREATE_LESSON_STAGES.about.key]: "",
     [CREATE_LESSON_STAGES.before.key]: "",
     [CREATE_LESSON_STAGES.content.key]: "",
     [CREATE_LESSON_STAGES.after.key]: "",
@@ -162,6 +164,7 @@ export const INIT_NEW_POST_VALUES = {
   title: "",
   iconPath: "",
   assets: {
+    [CREATE_LESSON_STAGES.about.key]: [],
     [CREATE_LESSON_STAGES.before.key]: [],
     [CREATE_LESSON_STAGES.content.key]: [],
     [CREATE_LESSON_STAGES.after.key]: [],
