@@ -10,6 +10,11 @@ class ColumnTasks extends Component {
         {Object.values(values.tasks).map((obj, key) => {
           const answerValues = obj.sentence.match(wordsInCurlyBraces);
           const dividedSentence = obj.sentence.split(answerValues[0]);
+          {/* console.log(
+            this.props.values.columns[`answer-${key + 1}`],
+            "this.props"
+          ); */}
+          const currentColumn = values.columns[`answer-${key + 1}`];
 
           return (
             <div className="lesson-complete-sentence" key={obj.id}>
@@ -17,9 +22,7 @@ class ColumnTasks extends Component {
               <div className="lesson-complete-key-word-taken-holder">
                 <Droppable
                   isDropDisabled={
-                    values.columns[`answer-${key + 1}`].taskIds.length === 1
-                      ? true
-                      : false
+                    currentColumn.taskIds.length === 1 ? true : false
                   }
                   droppableId={`answer-${key + 1}`}
                 >
@@ -29,17 +32,24 @@ class ColumnTasks extends Component {
                       {...provided.droppableProps}
                       className={`lesson-complete-sentences-content ${
                         snaphot.isDraggingOver ? "dragging-over-complete" : ""
+                      } ${
+                        values.isChecked
+                          ? currentColumn.isCorrect
+                            ? "correct-answer"
+                            : "wrong-answer"
+                          : ""
                       }`}
                     >
                       <span
-                        className={`lesson-complete-answer-span ${
-                          values.isChecked ? "correct-answer" : "wrong-answer"
+                        className={`${
+                          !values.isChecked ? "lesson-complete-answer-span" : ""
                         }`}
                         onClick={() => {
-                          this.props.removeWordFromColumn(
-                            values.columns[`answer-${key + 1}`].taskIds[0],
-                            `answer-${key + 1}`
-                          );
+                          !values.isChecked &&
+                            this.props.removeWordFromColumn(
+                              values.columns[`answer-${key + 1}`].taskIds[0],
+                              `answer-${key + 1}`
+                            );
                         }}
                       >
                         {values.columns[`answer-${key + 1}`].taskIds[0]}

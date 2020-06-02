@@ -28,6 +28,7 @@
   display: none !important;
 }
 .editor-area {
+  min-height: 300px;
   border: 1px solid $white-smoke;
 
   .DraftEditor-root {

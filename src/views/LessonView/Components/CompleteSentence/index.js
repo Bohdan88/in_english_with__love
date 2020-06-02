@@ -118,12 +118,55 @@ const initData = {
   // columnOrder: ["column-1", "column-2"],
 };
 
+const initColumns = {
+  "answer-1": {
+    id: "answer-1",
+    taskIds: [],
+    isCorrect: false,
+  },
+  "answer-2": {
+    id: "answer-2",
+    taskIds: [],
+    isCorrect: false,
+  },
+  "answer-3": {
+    id: "answer-3",
+    taskIds: [],
+    isCorrect: false,
+  },
+  "answer-4": {
+    id: "answer-4",
+    taskIds: [],
+    isCorrect: false,
+  },
+  "answer-5": {
+    id: "answer-5",
+    taskIds: [],
+    isCorrect: false,
+  },
+  "answer-6": {
+    id: "answer-6",
+    taskIds: [],
+    isCorrect: false,
+  },
+};
+
+const correctValues = [
+  "merge",
+  "overlook",
+  "daredevil",
+  "defy",
+  "antsy",
+  "tenacity",
+];
+
 class CompleteSentence extends Component {
   state = initData;
 
   componentDidMount() {
     this.setState({
       ...this.state,
+
       columns: {
         ...this.state.columns,
         ["column-1"]: {
@@ -132,6 +175,7 @@ class CompleteSentence extends Component {
         },
       },
     });
+
     // console.log(shuffleArray(["merge", "overlook", "daredevil", "defy", "antsy", "tenacity"]))
   }
   removeWordFromColumn = (word, column) => {
@@ -207,38 +251,98 @@ class CompleteSentence extends Component {
   };
 
   checkTask = () => {
-    const correctValues = [
-      "merge",
-      "overlook",
-      "daredevil",
-      "defy",
-      "antsy",
-      "tenacity",
-    ];
+    // if all words were dragged from a box of words by user
+    if (!this.state.columns["column-1"].taskIds.length) {
+      // check if answer was correct
+      Object.values(this.state.columns)
+        .filter((obj) => obj.id !== "column-1")
+        .forEach((obj, key) => {
+          if (correctValues[key] === obj.taskIds[0]) {
+            obj.isCorrect = true;
 
-    // check if answer was correct
-    Object.values(this.state.columns)
+            this.setState({
+              ...this.state,
+              columns: {
+                ...this.state.columns,
+                [obj.id]: obj,
+              },
+            });
+          }
+        });
+
+      this.setState({
+        isChecked: true,
+      });
+    }
+  };
+
+  retryTask = () => {
+    this.setState({
+      ...this.state,
+      isShowingSolution: false,
+      isChecked: false,
+      columns: {
+        "answer-1": {
+          id: "answer-1",
+          taskIds: [],
+          isCorrect: false,
+        },
+        "answer-2": {
+          id: "answer-2",
+          taskIds: [],
+          isCorrect: false,
+        },
+        "answer-3": {
+          id: "answer-3",
+          taskIds: [],
+          isCorrect: false,
+        },
+        "answer-4": {
+          id: "answer-4",
+          taskIds: [],
+          isCorrect: false,
+        },
+        "answer-5": {
+          id: "answer-5",
+          taskIds: [],
+          isCorrect: false,
+        },
+        "answer-6": {
+          id: "answer-6",
+          taskIds: [],
+          isCorrect: false,
+        },
+        ["column-1"]: {
+          ...this.state.columns["column-1"],
+          taskIds: shuffleArray(initData.columns["column-1"].taskIds),
+        },
+      },
+    });
+  };
+
+  showSolution = () => {
+    const clonedState = Object.assign({}, this.state);
+
+    Object.values(clonedState.columns)
       .filter((obj) => obj.id !== "column-1")
       .forEach((obj, key) => {
-        if (correctValues[key] === obj.taskIds[0]) {
-          obj.isCorrect = true;
-
-          this.setState({
-            ...this.state,
-            columns: {
-              ...this.state.columns,
-              [obj.id]: obj,
-            },
-          });
-        }
+        obj.taskIds[0] = correctValues[key];
+        obj.isCorrect = true;
       });
 
+    clonedState.columns["column-1"].taskIds = [];
+
     this.setState({
+      ...this.state,
+      columns: clonedState.columns,
       isChecked: true,
+      isShowingSolution: true,
     });
   };
   render() {
     console.log(this.state, "THIS_STATE");
+    console.log(initColumns, "initColumns");
+    const { isChecked, isShowingSolution } = this.state;
     return (
       <div className="lesson-complete-container">
         <p className="lesson-view-exercise-explanation">
@@ -272,22 +376,63 @@ class CompleteSentence extends Component {
             />
           </div>
         </DragDropContext>
-        <div className="lesson-view-exercise-check-container">
-          
-          <Button
-            /* disabled={!!this.state.columns["column-1"].taskIds.length} */
-            primary
-            className="lesson-view-button-exercise-check"
-            onClick={this.checkTask}
-          >
-            Check
-            <Icon
-              fitted
-              className="lesson-view-match-icon-check"
-              name="check"
+        {isChecked ? (
+          <div className="lesson-view-exercise-check-container">
+            <Button
+              primary
+              className="lesson-view-button-exercise-check"
+              onClick={this.retryTask}
+            >
+              Retry
+              <Icon
+                fitted
+                className="lesson-view-match-icon-check"
+                name="repeat"
+              />
+            </Button>
+            <Button
+              disabled={isShowingSolution}
+              color="teal"
+              className="lesson-view-button-exercise-check"
+              onClick={this.showSolution}
+            >
+              Solution
+              <Icon
+                fitted
+                className="lesson-view-match-icon-check"
+                name={isShowingSolution ? "lock open" : "lock"}
+              />
+            </Button>
+          </div>
+        ) : (
+          <div className="lesson-view-exercise-check-container">
+            <Popup
+              inverted
+              on="hover"
+              disabled={!this.state.columns["column-1"].taskIds.length}
+              content={"Please fill all the empty fields to check your result."}
+              trigger={
+                <Button
+                  /* disabled={!!this.state.columns["column-1"].taskIds.length} */
+                  primary
+                  onClick={this.checkTask}
+                  className={` lesson-view-button-exercise-check ${
+                    !!this.state.columns["column-1"].taskIds.length
+                      ? "button-disabled"
+                      : ""
+                  }  `}
+                >
+                  Check
+                  <Icon
+                    fitted
+                    className="lesson-view-match-icon-check"
+                    name="check"
+                  />
+                </Button>
+              }
             />
-          </Button>
-        </div>
+          </div>
+        )}
       </div>
     );
   }

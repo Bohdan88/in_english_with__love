@@ -90,5 +90,18 @@
 
 .correct-answer {
   background-color: $green-success;
+  border-radius: 2px;
   color: $white;
+}
+
+.wrong-answer {
+  background-color: lightcoral;
+  border-radius: 2px;
+  color: $white;
+}
+
+
+.button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed!important;
 }
