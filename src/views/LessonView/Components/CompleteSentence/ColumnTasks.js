@@ -79,7 +79,7 @@ class ColumnTasks extends Component {
                 key,
                 !clonedSentence[2]
                   ? column.taskIds[0]
-                  : column.taskIds[0].split(" ")[0]
+                  : column.taskIds[0] && column.taskIds[0].split(" ")[0]
               )}
               {clonedSentence[1]}
               {!!clonedSentence[2] &&
