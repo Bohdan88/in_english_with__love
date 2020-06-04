@@ -9,10 +9,7 @@ import {
   ICON_POST_REMOVE_STATUS,
   EXERCISES_LABELS_COLORS,
 } from "../../../../../constants/shared";
-import {
-  getAllPostsValues,
-  setNewValues,
-} from "../../../../../redux/actions";
+import { getAllPostsValues, setNewValues } from "../../../../../redux/actions";
 import {
   Form,
   Grid,
@@ -220,7 +217,7 @@ class MatchExercise extends PureComponent {
               disabled={currentExerciseValues.content.length > 0 ? false : true}
               onClick={() => this.removeField(currentExerciseValues)}
             >
-              Remove field <Icon name="minus" />
+              Remove last field <Icon name="minus" />
             </Button>
             <Button
               icon
@@ -406,7 +403,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetPostNewValues: (values) => dispatch (setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(MatchExercise);

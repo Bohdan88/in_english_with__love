@@ -61,15 +61,14 @@ export const SIGN_IN_METHODS = [
 // admin page
 export const CONFIRMATION_REMOVE_ALERT = "CONFIRMATION_REMOVE_ALERT";
 export const MATCHING = "Matching";
-export const COMPLETE_THE_SENTENCES = "Complete The Sentences";
+export const COMPLETE_THE_SENTENCES = "Complete the Sentences";
+export const ANOTHER_WAY_TO_SAY = "Another way to say";
 export const REPLACED_ANSWER = " ______________ ";
 export const ADMIN_TABS = {
   create_lesson: { key: "lesson ", content: "Create a lesson", icon: "add" },
   all_lessons: { key: "all_lessons ", content: "All lessons", icon: "list" },
   users: { key: "users ", content: "Users", icon: "users" },
 };
-
-export const INIT_NEW_POST = {};
 
 export const CREATE_LESSON_STAGES = {
   about: { key: "about", content: "About the Video", icon: "info" },
@@ -92,14 +91,24 @@ export const EXERCISES_TYPES = [
     value: "Vocabulary Practise",
   },
   { key: "from_the_video", text: "From the video", value: "From the video" },
+  {
+    key: "another_way_to_say",
+    text: "Another way to say",
+    value: "Another way to say",
+  },
 ];
 
 export const EXERCISES_NAMES = [
-  { key: "matching", text: "Matching", value: "Matching" },
+  { key: "matching", text: MATCHING, value: MATCHING },
   {
     key: "complete",
-    text: "Complete The Sentences",
-    value: "Complete The Sentences",
+    text: COMPLETE_THE_SENTENCES,
+    value: COMPLETE_THE_SENTENCES,
+  },
+  {
+    key: "another_way_to_say",
+    text: ANOTHER_WAY_TO_SAY,
+    value: ANOTHER_WAY_TO_SAY,
   },
 ];
 
@@ -132,6 +141,11 @@ const COMPLETE_THE_SENTENCES_DESC = {
   value: "Complete the sentences with one of the words below.",
 };
 
+const ANOTHER_WAY_TO_SAY_DESC = {
+  key: "another_way_to_say",
+  value:
+    "Insert the new words you learned today in the correct form (talk – talking or talked).",
+};
 export const EXERCISES_DESCRIPTIONS = [
   {
     key: MATCH_THE_WORDS_DESC.key,
@@ -147,6 +161,11 @@ export const EXERCISES_DESCRIPTIONS = [
     key: COMPLETE_THE_SENTENCES_DESC.key,
     text: COMPLETE_THE_SENTENCES_DESC.value,
     value: COMPLETE_THE_SENTENCES_DESC.value,
+  },
+  {
+    key: ANOTHER_WAY_TO_SAY_DESC.key,
+    text: ANOTHER_WAY_TO_SAY_DESC.value,
+    value: ANOTHER_WAY_TO_SAY_DESC.value,
   },
 ];
 

@@ -4,7 +4,12 @@ import { connect } from "react-redux";
 import { getAllPostsValues, setNewValues } from "../../redux/actions";
 import { withFirebase } from "../Firebase";
 import { Editor } from "react-draft-wysiwyg";
-import { MatchExerciseView, CompleteSentence, SideBarMenu } from "./Components";
+import {
+  MatchExerciseView,
+  CompleteSentence,
+  SideBarMenu,
+  AnotherWay,
+} from "./Components";
 import { CHAPTERS_ICONS, CHAPTERS_SEQUENCE } from "../../constants/shared";
 
 import "./style.scss";
@@ -351,7 +356,9 @@ class LessonView extends Component {
                       {currentChapter}
                     </Label>
                     {/* {this.visualizeChapterContent(currentChapter)} */}
+                    {/* <CompleteSentence /> */}
                     <CompleteSentence />
+                    {/* <AnotherWay /> */}
                   </Segment>
                 </Container>
               </Grid.Column>

@@ -357,6 +357,17 @@ class CreateLesson extends Component {
 
     const panes = [
       {
+        menuItem: CREATE_LESSON_STAGES.practise,
+        render: () => (
+          <Tab.Pane>
+            <Practise
+              exercises={exercises}
+              sectionKey={CREATE_LESSON_STAGES.practise.key}
+            />
+          </Tab.Pane>
+        ),
+      },
+      {
         menuItem: CREATE_LESSON_STAGES.about,
         render: () => (
           <Tab.Pane>
@@ -369,17 +380,6 @@ class CreateLesson extends Component {
         render: () => (
           <Tab.Pane>
             <BeforeWatch sectionKey={CREATE_LESSON_STAGES.before.key} />
-          </Tab.Pane>
-        ),
-      },
-      {
-        menuItem: CREATE_LESSON_STAGES.practise,
-        render: () => (
-          <Tab.Pane>
-            <Practise
-              exercises={exercises}
-              sectionKey={CREATE_LESSON_STAGES.practise.key}
-            />
           </Tab.Pane>
         ),
       },

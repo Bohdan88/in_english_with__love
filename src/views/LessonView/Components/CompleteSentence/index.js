@@ -76,12 +76,38 @@ const initData = {
       id: 6,
       sentence: "We’ve always admired him for his {tenacity} and dedication.",
     },
+
+    "set out": {
+      answer: "set out",
+      id: 7,
+      id2: "71",
+      sentence: "{Set} me {out}",
+    },
+
+    car: {
+      answer: "car",
+      id: 8,
+      sentence: "She loves the best {car} ever.",
+    },
+    // answer: " set   off "
+    // answer: " set  out "
+    // sentence: "we  {set} bomb {off}"
   },
   columns: {
     "column-1": {
       id: "column-1",
       title: "Sentences",
-      taskIds: ["merge", "overlook", "daredevil", "defy", "antsy", "tenacity"],
+      taskIds: [
+        "merge",
+        "overlook",
+        "daredevil",
+        "defy",
+        "antsy",
+        "tenacity",
+        "set out",
+        //  "out",
+        "car",
+      ],
     },
 
     "answer-1": {
@@ -111,6 +137,21 @@ const initData = {
     },
     "answer-6": {
       id: "answer-6",
+      taskIds: [],
+      isCorrect: false,
+    },
+    "answer-7": {
+      id: "answer-7",
+      taskIds: [],
+      isCorrect: false,
+    },
+    // "answer-71": {
+    //   id: "answer-71",
+    //   taskIds: [],
+    //   isCorrect: false,
+    // },
+    "answer-8": {
+      id: "answer-8",
       taskIds: [],
       isCorrect: false,
     },
@@ -149,6 +190,16 @@ const initColumns = {
     taskIds: [],
     isCorrect: false,
   },
+  "answer-7": {
+    id: "answer-7",
+    taskIds: [],
+    isCorrect: false,
+  },
+  "answer-8": {
+    id: "answer-8",
+    taskIds: [],
+    isCorrect: false,
+  },
 };
 
 const correctValues = [
@@ -158,6 +209,8 @@ const correctValues = [
   "defy",
   "antsy",
   "tenacity",
+  "set out",
+  "car",
 ];
 
 class CompleteSentence extends Component {
@@ -186,7 +239,7 @@ class CompleteSentence extends Component {
   };
   onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
-
+    // console.log(result,'result')
     if (!destination) {
       return;
     }
@@ -196,6 +249,10 @@ class CompleteSentence extends Component {
       destination.index === source.index
     ) {
       return;
+    }
+
+    if (destination.droppableId.includes("second")) {
+      destination.droppableId = destination.droppableId.replace("second", "");
     }
 
     const start = this.state.columns[source.droppableId];
@@ -221,7 +278,18 @@ class CompleteSentence extends Component {
       };
 
       this.setState(newState);
+    } else if (destination.droppableId.includes("JUKA")) {
+      // console.log('ALO')
+
+      console.log(start, "start");
+      // const startTasksIds = Array.from(start.taskIds);
+
+      // console.log(startTasksIds,'startTasksIds')
     } else {
+      destination.droppableId = destination.droppableId.replace("second", "");
+      console.log(result, "result");
+      console.log(finish, "finish.taskIds");
+      // console.log( destination.droppableId,' destination.droppableId')
       // moving from one list to another
       const startTasksIds = Array.from(start.taskIds);
       startTasksIds.splice(source.index, 1);
@@ -252,28 +320,28 @@ class CompleteSentence extends Component {
 
   checkTask = () => {
     // if all words were dragged from a box of words by user
-    if (!this.state.columns["column-1"].taskIds.length) {
-      // check if answer was correct
-      Object.values(this.state.columns)
-        .filter((obj) => obj.id !== "column-1")
-        .forEach((obj, key) => {
-          if (correctValues[key] === obj.taskIds[0]) {
-            obj.isCorrect = true;
+    // if (!this.state.columns["column-1"].taskIds.length) {
+    // check if answer was correct
+    Object.values(this.state.columns)
+      .filter((obj) => obj.id !== "column-1")
+      .forEach((obj, key) => {
+        if (correctValues[key] === obj.taskIds[0]) {
+          obj.isCorrect = true;
 
-            this.setState({
-              ...this.state,
-              columns: {
-                ...this.state.columns,
-                [obj.id]: obj,
-              },
-            });
-          }
-        });
-
-      this.setState({
-        isChecked: true,
+          this.setState({
+            ...this.state,
+            columns: {
+              ...this.state.columns,
+              [obj.id]: obj,
+            },
+          });
+        }
       });
-    }
+
+    this.setState({
+      isChecked: true,
+    });
+    // }
   };
 
   retryTask = () => {
@@ -312,6 +380,16 @@ class CompleteSentence extends Component {
           taskIds: [],
           isCorrect: false,
         },
+        "answer-7": {
+          id: "answer-7",
+          taskIds: [],
+          isCorrect: false,
+        },
+        "answer-8": {
+          id: "answer-8",
+          taskIds: [],
+          isCorrect: false,
+        },
         ["column-1"]: {
           ...this.state.columns["column-1"],
           taskIds: shuffleArray(initData.columns["column-1"].taskIds),
@@ -332,6 +410,7 @@ class CompleteSentence extends Component {
 
     clonedState.columns["column-1"].taskIds = [];
 
+    console.log(clonedState,'clonedState')
     this.setState({
       ...this.state,
       columns: clonedState.columns,
@@ -341,7 +420,7 @@ class CompleteSentence extends Component {
   };
   render() {
     console.log(this.state, "THIS_STATE");
-    console.log(initColumns, "initColumns");
+    // console.log(initColumns, "initColumns");
     const { isChecked, isShowingSolution } = this.state;
     return (
       <div className="lesson-complete-container">
@@ -416,11 +495,11 @@ class CompleteSentence extends Component {
                   /* disabled={!!this.state.columns["column-1"].taskIds.length} */
                   primary
                   onClick={this.checkTask}
-                  className={` lesson-view-button-exercise-check ${
+                  /* className={` lesson-view-button-exercise-check ${
                     !!this.state.columns["column-1"].taskIds.length
                       ? "button-disabled"
                       : ""
-                  }  `}
+                  }  `} */
                 >
                   Check
                   <Icon

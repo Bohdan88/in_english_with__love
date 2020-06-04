@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  getAllPostsValues,
-  setNewValues,
-} from "../../../../../redux/actions";
+import { getAllPostsValues, setNewValues } from "../../../../../redux/actions";
 import {
   Segment,
   Icon,
@@ -59,7 +56,6 @@ class CompleteSentencesExercise extends Component {
 
   addField = (objValues) => {
     const { newPostExercisesValues } = this.props.newPostState;
-    // console.log(objValues.name, "objValues.name");
     const incrementedNumber =
       newPostExercisesValues[objValues.id] &&
       !!newPostExercisesValues[objValues.id].content.length
@@ -93,9 +89,12 @@ class CompleteSentencesExercise extends Component {
         const answerValues = data.value.match(wordsInCurlyBraces);
         if (answerValues) {
           answer = answerValues.map((element) =>
-            element.replace(removeSpecialCharacters, "")
+            element.replace(removeSpecialCharacters, " ")
           );
         }
+
+        console.log(answerValues, "answerValues");
+        console.log(answer, "ACTUAL ANSWER");
         return obj.id === objValues.id
           ? {
               ...obj,
@@ -104,7 +103,7 @@ class CompleteSentencesExercise extends Component {
                   ? {
                       ...nestedObj,
                       sentence: data.value,
-                      answer: answer && answer.join(" "),
+                      answer: answer && answer.join("").trim(),
                     }
                   : nestedObj;
               }),
@@ -204,7 +203,7 @@ class CompleteSentencesExercise extends Component {
   render() {
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
-
+    console.log(newPostExercisesValues, "newPostExercisesValues");
     return (
       <div>
         <Segment className="exercises-container">
@@ -283,7 +282,7 @@ class CompleteSentencesExercise extends Component {
                 }
                 onClick={() => this.removeField(currentExerciseValues)}
               >
-                Remove field <Icon name="minus" />
+                Remove last field <Icon name="minus" />
               </Button>
               <Button
                 icon
@@ -427,7 +426,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetPostNewValues: (values) => dispatch (setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
   };
 };
 export default connect(

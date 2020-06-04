@@ -10,11 +10,9 @@ import {
   CONFIRMATION_REMOVE_ALERT,
   MATCHING,
   COMPLETE_THE_SENTENCES,
+  ANOTHER_WAY_TO_SAY,
 } from "../../../../../constants/shared";
-import {
-  getAllPostsValues,
-  setNewValues,
-} from "../../../../../redux/actions";
+import { getAllPostsValues, setNewValues } from "../../../../../redux/actions";
 import {
   Form,
   Header,
@@ -327,7 +325,8 @@ class PractiseContainer extends PureComponent {
                           {el.name === MATCHING && (
                             <MatchExercise currentExerciseValues={el} />
                           )}
-                          {el.name === COMPLETE_THE_SENTENCES && (
+                          {(el.name === COMPLETE_THE_SENTENCES ||
+                            el.name === ANOTHER_WAY_TO_SAY) && (
                             <CompleteSentencesExercise
                               currentExerciseValues={el}
                             />
@@ -354,7 +353,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetPostNewValues: (values) => dispatch (setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(PractiseContainer);
