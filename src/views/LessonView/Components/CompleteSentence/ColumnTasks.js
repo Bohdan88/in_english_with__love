@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { Droppable } from "react-beautiful-dnd";
+import { SUB_FIELD } from "../../../../constants/shared";
 
 class ColumnTasks extends Component {
   renderDroppableComponent = (key, value, dropId = undefined) => {
     const { values } = this.props;
-    // const currentColumn = values.columns[`answer-${key + 1}`];
-    // const currenValue = values.columns[`answer-${key + 1}`].taskIds[0];
-
     return (
       <div className="lesson-complete-key-word-taken-holder">
         <Droppable
@@ -45,7 +43,6 @@ class ColumnTasks extends Component {
               >
                 {value}
               </span>
-
               {provided.placeholder}
             </div>
           )}
@@ -55,7 +52,6 @@ class ColumnTasks extends Component {
   };
   render() {
     const { values } = this.props;
-
     const wordsInCurlyBraces = /\{.*?\}/g;
     return (
       <div>
@@ -69,157 +65,30 @@ class ColumnTasks extends Component {
           );
 
           clonedSentence = clonedSentence.split("**");
-          {
-            /* const currentColumn = values.columns[`answer-${key + 1}`]; */
-          }
-          {
-            /* console.log( currentColumn,'currentColumn') */
-          }
 
-          {
-            /* const currentColumn = values.columns[`answer-${key + 1}`];
-          console.log(currentColumn.taskIds, "currentColumn.taskIds[0]"); */
-          }
-          {
-            /* console.log(values.columns, "obj"); */
-          }
+          const column = values.columns[`answer-${key + 1}`];
           return (
-            !obj.notRender && (
-              <div
-                style={{ display: `${obj.notRender ? "none" : "block"}` }}
-                className={`lesson-complete-sentence ${
-                  !!clonedSentence[2] ? "lesson-complete-reverse" : ""
-                }`}
-                key={obj.id}
-              >
-                {`${key + 1}.  `} {clonedSentence[0]}
-                {/* {this.renderDroppableComponent(
+            <div
+              className={`lesson-complete-sentence ${
+                !!clonedSentence[2] ? "lesson-complete-reverse" : ""
+              }`}
+              key={obj.id}
+            >
+              {`${key + 1}.  `} {clonedSentence[0]}
+              {this.renderDroppableComponent(
+                key,
+                !clonedSentence[2]
+                  ? column.taskIds[0]
+                  : column.taskIds[0].split(" ")[0]
+              )}
+              {clonedSentence[1]}
+              {!!clonedSentence[2] &&
+                this.renderDroppableComponent(
                   key,
-                  !!clonedSentence[2] ? 0 : null)} */}
-                {/* <div className="lesson-complete-key-word-taken-holder">
-                  <Droppable
-                    isDropDisabled={
-                      values.columns[`answer-${key + 1}`].taskIds.length === 1
-                        ? true
-                        : false
-                    }
-                    droppableId={`answer-${key + 1}`}
-                  >
-                    {(provided, snaphot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                        className={`lesson-complete-sentences-content ${
-                          snaphot.isDraggingOver ? "dragging-over-complete" : ""
-                        } ${
-                          values.isChecked
-                            ? values.columns[`answer-${key + 1}`].isCorrect
-                              ? "correct-answer"
-                              : "wrong-answer"
-                            : ""
-                        }`}
-                      >
-                        <span
-                          className={`${
-                            !values.isChecked
-                              ? "lesson-complete-answer-span"
-                              : ""
-                          }`}
-                          onClick={() => {
-                            !values.isChecked &&
-                              this.props.removeWordFromColumn(
-                                values.columns[`answer-${key + 1}`].taskIds[0],
-                                `answer-${key + 1}`
-                              );
-                          }}
-                        >
-                          {!clonedSentence[2]
-                            ? values.columns[`answer-${key + 1}`].taskIds[0]
-                            : currentColumn.taskIds[0] &&
-                              currentColumn.taskIds[0].split(" ")[0]}
-                        </span>
-
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </div> */}
-                {this.renderDroppableComponent(
-                  key,
-                  !clonedSentence[2]
-                    ? values.columns[`answer-${key + 1}`].taskIds[0]
-                    : values.columns[`answer-${key + 1}`].taskIds[0] &&
-                        values.columns[`answer-${key + 1}`].taskIds[0].split(
-                          " "
-                        )[0]
+                  (column.taskIds[0] && column.taskIds[0].split(" ")[1]) || "",
+                  SUB_FIELD
                 )}
-                {clonedSentence[1]}
-                {
-                  !!clonedSentence[2] &&
-                    this.renderDroppableComponent(
-                      key,
-                      (values.columns[`answer-${key + 1}`].taskIds[0] &&
-                        values.columns[`answer-${key + 1}`].taskIds[0].split(
-                          " "
-                        )[1]) ||
-                        "",
-                      "second"
-                    )
-                  /* <div className="lesson-complete-key-word-taken-holder">
-                    <Droppable
-                      isDropDisabled={
-                        values.columns[`answer-${key + 1}`].taskIds.length === 1
-                          ? true
-                          : false
-                      }
-                      droppableId={`answer-${key + 1}second`}
-                    >
-                      {(provided, snaphot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                          className={`lesson-complete-sentences-content ${
-                            snaphot.isDraggingOver
-                              ? "dragging-over-complete"
-                              : ""
-                          } ${
-                            values.isChecked
-                              ? values.columns[`answer-${key + 1}`].isCorrect
-                                ? "correct-answer"
-                                : "wrong-answer"
-                              : ""
-                          }`}
-                        >
-                          <span
-                            className={`${
-                              !values.isChecked
-                                ? "lesson-complete-answer-span"
-                                : ""
-                            }`}
-                            onClick={() => {
-                              !values.isChecked &&
-                                this.props.removeWordFromColumn(
-                                  values.columns[`answer-${key + 1}`]
-                                    .taskIds[0],
-                                  `answer-${key + 1}`
-                                );
-                            }}
-                          >
-                            {(values.columns[`answer-${key + 1}`].taskIds[0] &&
-                              values.columns[
-                                `answer-${key + 1}`
-                              ].taskIds[0].split(" ")[1]) ||
-                              ""}
-                          </span>
-
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  </div> */
-                }
-              </div>
-            )
+            </div>
           );
         })}
       </div>

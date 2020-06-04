@@ -4,6 +4,8 @@ import ColumnAnswers from "./ColumnAnswers";
 import ColumnTasks from "./ColumnTasks";
 import { Popup, Icon, Button } from "semantic-ui-react";
 import { shuffleArray } from "../../../../utils";
+import { SUB_FIELD } from "../../../../constants/shared";
+
 // styles
 import "./style.scss";
 
@@ -251,8 +253,9 @@ class CompleteSentence extends Component {
       return;
     }
 
-    if (destination.droppableId.includes("second")) {
-      destination.droppableId = destination.droppableId.replace("second", "");
+    // replace if it's a subfield => 'set' smth 'out' and user tries to put value into 'out' field.
+    if (destination.droppableId.includes(SUB_FIELD)) {
+      destination.droppableId = destination.droppableId.replace(SUB_FIELD, "");
     }
 
     const start = this.state.columns[source.droppableId];
@@ -278,18 +281,7 @@ class CompleteSentence extends Component {
       };
 
       this.setState(newState);
-    } else if (destination.droppableId.includes("JUKA")) {
-      // console.log('ALO')
-
-      console.log(start, "start");
-      // const startTasksIds = Array.from(start.taskIds);
-
-      // console.log(startTasksIds,'startTasksIds')
     } else {
-      destination.droppableId = destination.droppableId.replace("second", "");
-      console.log(result, "result");
-      console.log(finish, "finish.taskIds");
-      // console.log( destination.droppableId,' destination.droppableId')
       // moving from one list to another
       const startTasksIds = Array.from(start.taskIds);
       startTasksIds.splice(source.index, 1);
@@ -410,7 +402,7 @@ class CompleteSentence extends Component {
 
     clonedState.columns["column-1"].taskIds = [];
 
-    console.log(clonedState,'clonedState')
+    console.log(clonedState, "clonedState");
     this.setState({
       ...this.state,
       columns: clonedState.columns,

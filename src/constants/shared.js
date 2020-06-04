@@ -418,3 +418,7 @@ export const CATEGORY_TOPICS = {
   listen: "allListenTopics",
   read: "allReadTopics",
 };
+
+// Complete Lesson
+
+export const SUB_FIELD = "second";
