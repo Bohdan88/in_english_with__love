@@ -1,0 +1,19 @@
+@import "../../../../style/variables.scss";
+
+.another-way-container {
+  padding-top: 20px;
+}
+
+.another-way-input {
+  margin: 0 10px;
+}
+
+.another-way-correct > input {
+  color: $white !important;
+  background-color: $green-success !important;
+}
+
+.another-way-incorrect > input {
+  color: $white !important;
+  background-color: lightcoral !important;
+}

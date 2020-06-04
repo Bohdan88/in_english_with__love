@@ -121,7 +121,7 @@ class CategoryTopics extends Component {
                   ...this.props.posts[CATEGORY_TOPICS[categoryType]],
                   names: uniqueTopics,
                 },
-                transitionDuration: 4000,
+                transitionDuration: 5000,
               });
             }
           },

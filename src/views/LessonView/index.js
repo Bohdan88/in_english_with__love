@@ -357,8 +357,7 @@ class LessonView extends Component {
                     </Label>
                     {/* {this.visualizeChapterContent(currentChapter)} */}
                     {/* <CompleteSentence /> */}
-                    <CompleteSentence />
-                    {/* <AnotherWay /> */}
+                    <AnotherWay />
                   </Segment>
                 </Container>
               </Grid.Column>
