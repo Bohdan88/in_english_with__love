@@ -76,6 +76,7 @@ export const CREATE_LESSON_STAGES = {
   practise: { key: "exercises", content: "Exercises", icon: "legal" }, //lab
   content: { key: "content", content: "Content", icon: "picture" },
   after: { key: "after", content: "After Watching", icon: "law" },
+  preview: { key: "preview", content: "Preview", icon: "zoom" },
 };
 
 export const CATEGORIES = [

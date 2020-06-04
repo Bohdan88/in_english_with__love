@@ -93,8 +93,8 @@ class CompleteSentencesExercise extends Component {
           );
         }
 
-        console.log(answerValues, "answerValues");
-        console.log(answer, "ACTUAL ANSWER");
+        // console.log(answerValues, "answerValues");
+        // console.log(answer, "ACTUAL ANSWER");
         return obj.id === objValues.id
           ? {
               ...obj,

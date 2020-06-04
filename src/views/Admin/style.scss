@@ -278,7 +278,8 @@
 }
 
 .answer-textarea {
-  max-width: 137px;
+  // max-width: 137px;
+  max-width: 90%;
   background: $white-smoke;
   border: none;
   cursor: not-allowed;
@@ -328,3 +329,21 @@
 }
 .match-builder {
 }
+
+.tab-lesson-stages > .secondary > .item:last-child {
+  position: absolute;
+  right: 10px;
+  margin-top: 3px !important;
+}
+
+@media only screen and (min-width: 1919px) {
+  .answer-textarea {
+    // max-width: 200px;
+  }
+}
+
+// @media only screen and (max-width: 1400px) {
+//   .answer-textarea {
+//     max-width: 131px;
+//   }
+// }

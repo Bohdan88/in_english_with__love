@@ -17,7 +17,7 @@ body {
   background-repeat: no-repeat !important;
 
   // background-size: 100vw !important;
-  background-size: cover!important;
+  background-size: cover !important;
   // background: #fbfafb !important;
 }
 
@@ -171,6 +171,18 @@ body {
 //     width: 50%;
 //   }
 // }
+
+// common components
+
+.error-message {
+  margin: auto !important;
+
+  .header,
+  .content {
+    text-align: center;
+  }
+}
+
 @media only screen and (max-width: 1919px) {
   .sign-form {
     width: 61% !important;

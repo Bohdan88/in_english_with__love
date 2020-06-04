@@ -21,8 +21,38 @@ import {
   TextArea,
   Container,
   Label,
+  Header,
+  List,
+  Popup,
 } from "semantic-ui-react";
 import { transformToOptions, fireAlert } from "../../../../../utils";
+
+const TutorialContent = () => {
+  return (
+    <div className="tutorial-popup-container">
+      <Header as="h4">
+        Please follow the below steps to complete the exercise.
+      </Header>
+      <List bulleted>
+        <List.Item>Fill all the fields.</List.Item>
+        <List.Item>
+          Wrap a key word or phrase into curly brackets in <b> Content</b>{" "}
+          field.
+          <br /> For example:
+          <span className="popup-example-sentence-span">
+            <q>
+              They monitored them
+              <b>
+                {" {"} in real time{" }  "}
+              </b>
+              .
+            </q>
+          </span>
+        </List.Item>
+      </List>
+    </div>
+  );
+};
 
 class MatchExercise extends PureComponent {
   state = {
@@ -208,6 +238,26 @@ class MatchExercise extends PureComponent {
               </Statistic.Value>
             </Statistic>
 
+            <Popup
+              content={<TutorialContent />}
+              wide={"very"}
+              on="click"
+              trigger={
+                <Button
+                  basic
+                  color="purple"
+                  icon
+                  labelPosition="right"
+                  className="button-remove-field"
+                  disabled={
+                    !!currentExerciseValues.content.length ? false : true
+                  }
+                >
+                  Quick tutorial
+                  <Icon name="info" />
+                </Button>
+              }
+            />
             <Button
               basic
               color="red"

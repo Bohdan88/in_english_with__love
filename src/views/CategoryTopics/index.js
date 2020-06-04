@@ -37,6 +37,7 @@ const arrTop = [
   { name: "Music", lessons: "" },
   { name: "Biology", lessons: "" },
   { name: "Opera", lessons: "" },
+  { name: "Science", lessons: "" },
 ];
 
 class CategoryTopics extends Component {
@@ -95,17 +96,19 @@ class CategoryTopics extends Component {
                 uid: key,
               }));
 
+              // console.log(categoryType, "categoryType");
               const uniqueTopics = [
                 ...new Set(
                   postsList.map(
                     (obj) =>
-                      obj.category &&
-                      obj.category.toLowerCase() === categoryType &&
+                      // obj.category &&
+                      // obj.category.toLowerCase() === categoryType &&
                       obj.subCategory
                   )
                 ),
               ];
 
+              // console.log(uniqueTopics, "uniqueTopics");
               // set unique topics
               this.props.onGetAllPostsValues({
                 allPosts: !posts.allPosts.length ? postsList : posts.allPosts,
@@ -197,6 +200,7 @@ class CategoryTopics extends Component {
     const { posts } = this.props;
     const { allPosts } = posts;
 
+    // console.log(this.state[categoryType], "categoryType");
     return categoryType ? (
       <div>
         {dbValuesLoading && !error ? (
@@ -207,7 +211,7 @@ class CategoryTopics extends Component {
           </Segment>
         ) : error && !dbValuesLoading ? (
           <Message
-            className="category-topics-error-message"
+            className="error-message"
             size="massive"
             negative
           >
@@ -244,6 +248,7 @@ class CategoryTopics extends Component {
                 </Segment>
               ) : this.state[categoryType].names[0] ? (
                 this.state[categoryType].names.map((topic) => {
+                  console.log(topic, "topic");
                   const imgSrc = posts[categoryType].images.filter((imgUrl) =>
                     imgUrl.includes(`${topic.toLowerCase()}.`)
                   );
@@ -273,9 +278,9 @@ class CategoryTopics extends Component {
                       >
                         <Link
                           className="card-topic-link"
-                          to={`${LESSON_TOPIC_LIST}?topic=${
-                            topic && topic.toLowerCase()
-                          }`}
+                          to={`${LESSON_TOPIC_LIST}?category=${this.props.location.pathname.slice(
+                            1
+                          )}&topic=${topic && topic.toLowerCase()}`}
                         >
                           <Card fluid className="card-topic-container">
                             <Icon
@@ -327,7 +332,7 @@ class CategoryTopics extends Component {
                 })
               ) : (
                 <Message
-                  className="category-topics-error-message"
+                  className="error-message"
                   size="massive"
                   negative
                 >
@@ -346,7 +351,7 @@ class CategoryTopics extends Component {
       </div>
     ) : (
       <Message
-        className="category-topics-error-message"
+        className="error-message"
         size="massive"
         negative
       >

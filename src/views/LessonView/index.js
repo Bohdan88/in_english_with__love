@@ -174,7 +174,8 @@ class LessonView extends Component {
     currentTopicValues: "",
     isLoading: false,
     currentStep: 1,
-    fullLeson: fullLeson,
+    // fullLeson: fullLeson,
+    fullLeson: [],
     isMenuOpen: false,
     currentChapter: "",
     isPreviousDisabled: true,
@@ -182,50 +183,62 @@ class LessonView extends Component {
   };
 
   componentDidMount() {
-    // const { currentTopic } = this.state;
+    const { currentTopic } = this.state;
     // console.log(currentTopic, "thisProps");
     // console.log(this.props.posts.allPosts);
-    // const { allPosts } = this.props.posts;
-    //   // this.setState({ isLoading: true });
-    //   if (!allPosts.length) {
-    //     this.props.firebase.posts().on("value", (snapshot) => {
-    //       const postsObject = snapshot && snapshot.val();
-    //       if (postsObject) {
-    //         const postsList = Object.keys(postsObject).map((key) => ({
-    //           ...postsObject[key],
-    //           uid: key,
-    //         }));
-    //         //   // set posts
-    //         //   this.props.onGetAllPostsValues({
-    //         //     // allPosts: postsList,
-    //         //   });
-    //         this.setState({
-    //           currentTopicValues: postsList.filter(
-    //             (post) => post.title === "SKY DANCING"
-    //             // post.title.toLowerCase().split(" ").join("-") ===
-    //             // this.state.currentTopic
-    //           ),
-    //         });
-    //       }
-    //     });
-    //   }
-    // }
-    let fullLeson = Object.assign({}, this.state.fullLeson);
-    Object.values(fullLeson.newPostExercisesValues).map((obj) => {
-      fullLeson.post[obj.type] = obj;
-    });
+    const { allPosts } = this.props.posts;
+    this.setState({ isLoading: true });
+    if (!allPosts.length) {
+      this.props.firebase.posts().on("value", (snapshot) => {
+        const postsObject = snapshot && snapshot.val();
+        if (postsObject) {
+          const postsList = Object.keys(postsObject).map((key) => ({
+            ...postsObject[key],
+            uid: key,
+          }));
+          // set posts
+          this.props.onGetAllPostsValues({
+            allPosts: postsList,
+          });
 
-    const filteredLessonItems = Object.keys(fullLeson.post).filter(
-      (item) => item !== "content" && item !== "After Watching"
-    );
-    // push conclusion in the end
-    filteredLessonItems.push("After Watching");
+          //   this.setState({
+          //   currentTopicValues: postsList.filter(
+          //       (post) => post.title === "SKY DANCING"
+          //      post.title.toLowerCase().split(" ").join("-") ===
+          //       this.state.currentTopic
+          //    ),
+          //  });
 
-    this.setState({
-      filteredLessonItems,
-      fullLeson,
-      currentChapter: Object.keys(fullLeson.post)[0],
-    });
+          console.log(postsList,'postsList')
+          const selectedLesson = postsList.filter(
+            (post) =>
+              post.title.toLowerCase().split(" ").join("-") === currentTopic
+          );
+
+          console.log(selectedLesson,'selectedLesson')
+        }
+      });
+    }
+    //  }
+    let fullLeson;
+    if (!!this.state.fullLeson.length) {
+      fullLeson = Object.assign({}, this.state.fullLeson);
+      Object.values(fullLeson.newPostExercisesValues).map((obj) => {
+        fullLeson.post[obj.type] = obj;
+      });
+
+      const filteredLessonItems = Object.keys(fullLeson.post).filter(
+        (item) => item !== "content" && item !== "After Watching"
+      );
+      // push conclusion in the end
+      filteredLessonItems.push("After Watching");
+
+      this.setState({
+        filteredLessonItems,
+        fullLeson,
+        currentChapter: Object.keys(fullLeson.post)[0],
+      });
+    }
   }
 
   setCurrentChapter = (chapter) => {
@@ -326,8 +339,9 @@ class LessonView extends Component {
     } = this.state;
 
     const menu = isMenuOpen ? "menu-open" : "";
-
+    // console.log(fullLeson,'fullLeson')
     return (
+      !!fullLeson.length &&
       currentChapter &&
       filteredLessonItems && (
         <div>

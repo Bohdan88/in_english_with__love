@@ -8,6 +8,12 @@
   border-bottom: 2px solid $chetwode-blue;
 }
 
+.topic-list-error-message {
+  position: relative;
+  top: 20px;
+  width: 90%;
+}
+
 .topics-column {
   margin-top: 0.7rem !important;
   margin-bottom: 2rem !important;
@@ -81,6 +87,7 @@
 }
 
 .card-topic-image {
+  border-radius: 10px;
   width: 60px !important;
   height: 60px !important;
 }
@@ -144,6 +151,21 @@
   bottom: 1px;
 }
 
+.topic-list-card-header {
+  text-align: right;
+}
+
+.topic-list-icon-circle {
+  font-size: 0.3rem !important;
+  position: relative;
+  bottom: -1px;
+  left: -1px;
+}
+
+.topic-list-icon-start {
+  position: relative;
+  bottom: -5px;
+}
 @media only screen and (max-width: 1919px) {
   .card-meta-time {
     padding-left: 2px;

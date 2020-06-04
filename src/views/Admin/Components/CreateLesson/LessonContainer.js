@@ -31,6 +31,7 @@ import {
 import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
 import { transformToOptions, fireAlert } from "../../../../utils";
 import AboutTheLesson from "./AboutTheLesson";
+import LessonView from "../../../LessonView";
 
 class CreateLesson extends Component {
   constructor(props) {
@@ -245,12 +246,15 @@ class CreateLesson extends Component {
           }
         }
         // convert editor to html because EditorState has undefined values which is why we can't push it into DB
-        post[arr[0]] = draftToHtml(convertToRaw(arr[1].getCurrentContent()));
+        post[arr[0]] = JSON.stringify(
+          draftToHtml(convertToRaw(arr[1].getCurrentContent()))
+        );
       }
     });
 
     // change props values
     return new Promise((resolve) => {
+      post.date = new Date().getTime();
       resolve(this.props.onSetPostNewValues({ post }));
     }).then(() => {
       // push to db afterwards
@@ -397,6 +401,14 @@ class CreateLesson extends Component {
         render: () => (
           <Tab.Pane>
             <LessonContent sectionKey={CREATE_LESSON_STAGES.content.key} />
+          </Tab.Pane>
+        ),
+      },
+      {
+        menuItem: CREATE_LESSON_STAGES.preview,
+        render: () => (
+          <Tab.Pane className="preview-tab">
+            <LessonView sectionKey={CREATE_LESSON_STAGES.preview.key} />
           </Tab.Pane>
         ),
       },
