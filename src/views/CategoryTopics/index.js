@@ -96,19 +96,16 @@ class CategoryTopics extends Component {
                 uid: key,
               }));
 
-              // console.log(categoryType, "categoryType");
               const uniqueTopics = [
                 ...new Set(
-                  postsList.map(
-                    (obj) =>
-                      // obj.category &&
-                      // obj.category.toLowerCase() === categoryType &&
-                      obj.subCategory
-                  )
+                  postsList
+                    .filter(
+                      (obj) => obj.category.toLowerCase() === categoryType
+                    )
+                    .map((obj) => obj.subCategory)
                 ),
               ];
 
-              // console.log(uniqueTopics, "uniqueTopics");
               // set unique topics
               this.props.onGetAllPostsValues({
                 allPosts: !posts.allPosts.length ? postsList : posts.allPosts,
@@ -200,7 +197,7 @@ class CategoryTopics extends Component {
     const { posts } = this.props;
     const { allPosts } = posts;
 
-    // console.log(this.state[categoryType], "categoryType");
+    // console.log(categoryType,'categoryType')
     return categoryType ? (
       <div>
         {dbValuesLoading && !error ? (
@@ -210,11 +207,7 @@ class CategoryTopics extends Component {
             </Dimmer>
           </Segment>
         ) : error && !dbValuesLoading ? (
-          <Message
-            className="error-message"
-            size="massive"
-            negative
-          >
+          <Message className="error-message" size="massive" negative>
             <Message.Header>Oops! something went wrong...</Message.Header>
             <p>{errorText}</p>
           </Message>
@@ -248,7 +241,9 @@ class CategoryTopics extends Component {
                 </Segment>
               ) : this.state[categoryType].names[0] ? (
                 this.state[categoryType].names.map((topic) => {
-                  console.log(topic, "topic");
+                  {
+                    /* console.log(topic, "topic"); */
+                  }
                   const imgSrc = posts[categoryType].images.filter((imgUrl) =>
                     imgUrl.includes(`${topic.toLowerCase()}.`)
                   );
@@ -331,11 +326,7 @@ class CategoryTopics extends Component {
                   );
                 })
               ) : (
-                <Message
-                  className="error-message"
-                  size="massive"
-                  negative
-                >
+                <Message className="error-message" size="massive" negative>
                   <Message.Header>Sorry! No data found!</Message.Header>
                   <p>
                     <span className="capitalize">
@@ -350,11 +341,7 @@ class CategoryTopics extends Component {
         )}
       </div>
     ) : (
-      <Message
-        className="error-message"
-        size="massive"
-        negative
-      >
+      <Message className="error-message" size="massive" negative>
         <Message.Header>Sorry! No data found!</Message.Header>
         <p>No location found. (Read or Listening) =( </p>
       </Message>

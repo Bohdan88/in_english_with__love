@@ -58,7 +58,6 @@ class TopicList extends Component {
   getAllPostsByTopicName = (postsList) => {
     const { currentTopic } = this.state;
     const { allIconImagesByTopic } = this.props.posts;
-
     this.setState({
       currentTopicPosts: this.filterPostsList(postsList),
       isLoadingLessons: false,
@@ -66,21 +65,24 @@ class TopicList extends Component {
 
     if (!allIconImagesByTopic[currentTopic] && !allIconImagesByTopic.length) {
       this.filterPostsList(postsList).forEach((topic) => {
-        this.props.firebase.storage
-          .ref()
-          .child(topic.iconPath)
-          .getDownloadURL()
-          .then((url) => {
-            this.props.onGetAllPostsValues({
-              allIconImagesByTopic: {
-                ...this.props.posts.allIconImagesByTopic,
-                [currentTopic]: {
-                  ...this.props.posts.allIconImagesByTopic[currentTopic],
-                  [topic.title]: url,
+        if (topic.iconPath) {
+          this.props.firebase.storage
+            .ref()
+            .child(topic.iconPath)
+            .getDownloadURL()
+            .then((url) => {
+              this.props.onGetAllPostsValues({
+                allIconImagesByTopic: {
+                  ...this.props.posts.allIconImagesByTopic,
+                  [currentTopic]: {
+                    ...this.props.posts.allIconImagesByTopic[currentTopic],
+                    [topic.title]: url,
+                  },
                 },
-              },
-            });
-          });
+              });
+            })
+            .catch((error) => console.log(error, "errorƒ"));
+        }
       });
     }
 
@@ -102,7 +104,8 @@ class TopicList extends Component {
               }
             })
           )
-        );
+        )
+        .catch((error) => console.log(error, "error"));
     }
   };
 
@@ -153,6 +156,7 @@ class TopicList extends Component {
           }
         },
         (errorObject) => {
+          console.log("ERROR");
           this.setState({
             error: true,
             errorText: errorObject.code,
@@ -237,7 +241,7 @@ class TopicList extends Component {
               currentTopicPosts.map((topic) => {
                 return (
                   <Grid.Column
-                    widescreen={5}
+                    widescreen={4}
                     largeScreen={7}
                     className="topics-column"
                     key={topic.title}
@@ -255,11 +259,7 @@ class TopicList extends Component {
                           .split(" ")
                           .join("-")}`}
                       >
-                        <Card
-                          centered
-                          fluid
-                          className="card-selected-topic-container"
-                        >
+                        <Card fluid className="card-selected-topic-container">
                           <Icon
                             className="card-topic-arrow"
                             name="arrow right"
@@ -269,9 +269,11 @@ class TopicList extends Component {
                               <Image
                                 className="card-topic-image"
                                 src={
-                                  allIconImagesByTopic[currentTopic][
-                                    topic.title
-                                  ] || allIconImagesByTopic[DEFAULT_TOPIC_IMAGE]
+                                  (allIconImagesByTopic[currentTopic] &&
+                                    allIconImagesByTopic[currentTopic][
+                                      topic.title
+                                    ]) ||
+                                  allIconImagesByTopic[DEFAULT_TOPIC_IMAGE]
                                 }
                                 alt={topic.title}
                                 floated="left"
@@ -335,7 +337,6 @@ class TopicList extends Component {
             )}
           </Grid.Row>
         </Grid>
-        )}
       </div>
     );
   }

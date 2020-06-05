@@ -71,12 +71,12 @@ export const ADMIN_TABS = {
 };
 
 export const CREATE_LESSON_STAGES = {
-  about: { key: "about", content: "About the Video", icon: "info" },
-  before: { key: "before", content: "Before Watching", icon: "eye" },
-  practise: { key: "exercises", content: "Exercises", icon: "legal" }, //lab
-  content: { key: "content", content: "Content", icon: "picture" },
-  after: { key: "after", content: "After Watching", icon: "law" },
-  preview: { key: "preview", content: "Preview", icon: "zoom" },
+  about: { key: "About the video", content: "About the Video", icon: "info" },
+  before: { key: "Before Watching", content: "Before Watching", icon: "eye" },
+  practise: { key: "Exercises", content: "Exercises", icon: "legal" }, //lab
+  content: { key: "Content", content: "Content", icon: "picture" },
+  after: { key: "After Watching", content: "After Watching", icon: "law" },
+  preview: { key: "Preview", content: "Preview", icon: "zoom" },
 };
 
 export const CATEGORIES = [

@@ -64,8 +64,10 @@
 }
 
 .card-content-topic {
-  display: flex;
-  justify-content: space-between;
+  display: block !important;
+  padding-right: 3rem!important;
+  // display: flex;
+  // justify-content: space-between;
   border-top: none !important;
 }
 

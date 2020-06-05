@@ -233,6 +233,10 @@
   justify-content: center;
 }
 
+.tasks-container-contentLetter:hover {
+  background-color: #deebff; //$white-grey;
+}
+
 .task-blocks {
   display: flex;
   margin-top: 5px;
