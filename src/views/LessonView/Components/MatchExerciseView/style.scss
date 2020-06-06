@@ -28,19 +28,19 @@
   min-height: 50px;
   padding: 5px;
   margin-bottom: 5px;
-  margin-left: 0px!important;
+  margin-left: 0px;
   margin-right: 10px;
   background-color: $white;
   border-radius: 5px;
-//   border: 1px solid black;
+  //   border: 1px solid black;
 }
 
 .tasks-container-contentId {
-    padding-left: 0px!important;
+  padding-left: 0px !important;
 
-    div {
-        margin-left: 0px!important;
-    }
+  div {
+    margin-left: 0px !important;
+  }
 }
 
 .lesson-match-view-check-answer {
@@ -97,6 +97,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.tasks-container-contentLetter {
+  margin-left: 10px !important;
 }
 
 .tasks-container-contentLetter:hover {

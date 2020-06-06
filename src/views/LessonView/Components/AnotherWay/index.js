@@ -1,66 +1,28 @@
 import React, { Component } from "react";
-import { List, Input, Button, Icon } from "semantic-ui-react";
+import { List, Input, Button, Icon, Message, Popup } from "semantic-ui-react";
 
 // styles
 import "./style.scss";
 
-const content = [
-  {
-    answer: "merge",
-    id: 0,
-    sentence:
-      "We can {merge} (marge) our two small businesses into a bigger one.",
-    userValue: "",
-    isCorrect: false,
-  },
-  {
-    answer: "overlook",
-    id: 1,
-    sentence:
-      "It’s easy to {overlook} (overlook) a small detail like this one.",
-    userValue: "",
-    isCorrect: false,
-  },
-
-  {
-    answer: "daredevil",
-    id: 3,
-    sentence:
-      "She’s a bit of a {daredevil} (daredevil). She loves climbing buildings and mountains.",
-    userValue: "",
-    isCorrect: false,
-  },
-  {
-    answer: "defy",
-    id: 4,
-    sentence:
-      "Importing food that we can grow here {defy} (defy) common sense.",
-    userValue: "",
-    isCorrect: false,
-  },
-  {
-    answer: "antsy",
-    id: 5,
-    sentence: "I feel {antsy} (antsy) today, I don’t know why.",
-    userValue: "",
-    isCorrect: false,
-  },
-  {
-    answer: "tenacity",
-    id: 6,
-    sentence:
-      "We’ve always admired him for his {tenacity} (tenacity) and dedication.",
-    userValue: "",
-    isCorrect: false,
-  },
-];
-
 class AnotherWay extends Component {
   state = {
-    content: content,
+    content: [],
     isChecked: false,
     isShowingSolution: false,
+    exerciseDescription: "",
   };
+
+  componentDidMount() {
+    const { lessonValues } = this.props;
+    this.setState({
+      content: lessonValues.content.map((obj) => ({
+        ...obj,
+        userValue: "",
+        isCorrect: false,
+      })),
+      exerciseDescription: lessonValues.description,
+    });
+  }
 
   onChangeUserValue = (value, id) => {
     const { content } = this.state;
@@ -77,7 +39,6 @@ class AnotherWay extends Component {
   checkTask = () => {
     const { content } = this.state;
 
-    // const clonedContent = this.state.content;
     this.setState({
       content: content.map((obj) =>
         obj.userValue.trim().toLowerCase() === obj.answer
@@ -91,7 +52,7 @@ class AnotherWay extends Component {
 
   retryTask = () => {
     this.setState({
-      content: content.map((obj) => ({ ...obj, userValue: "" })),
+      content: this.state.content.map((obj) => ({ ...obj, userValue: "" })),
       isChecked: false,
       isShowingSolution: false,
     });
@@ -99,7 +60,7 @@ class AnotherWay extends Component {
 
   showSolution = () => {
     this.setState({
-      content: content.map((obj) => ({
+      content: this.state.content.map((obj) => ({
         ...obj,
         userValue: obj.answer,
         isCorrect: true,
@@ -109,101 +70,124 @@ class AnotherWay extends Component {
     });
   };
   render() {
-    const { content, isChecked, isShowingSolution } = this.state;
+    const {
+      content,
+      isChecked,
+      isShowingSolution,
+      exerciseDescription,
+    } = this.state;
     const wordsInCurlyBraces = /\{.*?\}/g;
 
-    return (
-      content && (
-        <div>
-          AnotherWay
-          <div className="another-way-container">
-            <List>
-              {content.map((obj, key) => {
-                const answerValues = obj.sentence.match(wordsInCurlyBraces);
-                let clonedSentence = obj.sentence;
-                answerValues.forEach(
-                  (rx) => (clonedSentence = clonedSentence.replace(rx, "** "))
-                );
-                clonedSentence = clonedSentence.split("**");
-                return (
-                  <List.Item
-                    key={obj.answer}
-                    className="another-way-item-container"
-                    as="li"
-                  >
-                    {`${key + 1}. `}
-                    {clonedSentence[0]}
-                    <Input
-                      className={`another-way-input ${
-                        isChecked
-                          ? obj.isCorrect
-                            ? "another-way-correct"
-                            : "another-way-incorrect"
-                          : ""
-                      }`}
-                      value={obj.userValue}
-                      onChange={(e, data) =>
-                        this.onChangeUserValue(data.value, obj.id)
-                      }
-                    />
-                    {clonedSentence[1]}
-                  </List.Item>
-                );
-              })}
-            </List>
+    return !!content.length ? (
+      <div className="another-way-container">
+        <p className="lesson-view-exercise-explanation">
+          {exerciseDescription}
+          <Popup
+            inverted
+            basic
+            className="lesson-view-exercise-popup"
+            content="Please fill all the fields."
+            trigger={
+              <Icon
+                name="circle question"
+                className="lesson-view-match-icon"
+                size="small"
+              />
+            }
+          />
+        </p>
+        <List className="another-way-list">
+          {content.map((obj, key) => {
+            const answerValues = obj.sentence.match(wordsInCurlyBraces);
+            let clonedSentence = obj.sentence;
+            answerValues.forEach(
+              (rx) => (clonedSentence = clonedSentence.replace(rx, "** "))
+            );
+            clonedSentence = clonedSentence.split("**");
+            return (
+              <List.Item
+                key={obj.answer}
+                className="another-way-item-container"
+                as="li"
+              >
+                {`${key + 1}. `}
+                {clonedSentence[0]}
+                <Input
+                  className={`another-way-input ${
+                    isChecked
+                      ? obj.isCorrect
+                        ? "another-way-correct"
+                        : "another-way-incorrect"
+                      : ""
+                  }`}
+                  value={obj.userValue}
+                  onChange={(e, data) =>
+                    this.onChangeUserValue(data.value, obj.id)
+                  }
+                />
+                {clonedSentence[1]}
+              </List.Item>
+            );
+          })}
+        </List>
 
-            {isChecked ? (
-              <div className="lesson-view-exercise-check-container">
-                <Button
-                  primary
-                  className="lesson-view-button-exercise-check"
-                  onClick={this.retryTask}
-                >
-                  Retry
-                  <Icon
-                    fitted
-                    className="lesson-view-match-icon-check"
-                    name="repeat"
-                  />
-                </Button>
-                <Button
-                  color="teal"
-                  /* disabled={
+        {isChecked ? (
+          <div className="lesson-view-exercise-check-container">
+            <Button
+              primary
+              className="lesson-view-button-exercise-check"
+              onClick={this.retryTask}
+            >
+              Retry
+              <Icon
+                fitted
+                className="lesson-view-match-icon-check"
+                name="repeat"
+              />
+            </Button>
+            <Button
+              color="teal"
+              /* disabled={
                     meaningColumn.column.taskIds.length ===
                       correctAnswers.length || isShowingSolution
                       ? true
                       : false
                   } */
-                  className="lesson-view-button-exercise-check"
-                  onClick={this.showSolution}
-                >
-                  Solution
-                  <Icon
-                    fitted
-                    className="lesson-view-match-icon-check"
-                    name={isShowingSolution ? "lock open" : "lock"}
-                  />
-                </Button>
-              </div>
-            ) : (
-              <div className="lesson-view-exercise-check-container">
-                <Button
-                  primary
-                  className="lesson-view-button-exercise-check"
-                  onClick={this.checkTask}
-                >
-                  Check
-                  <Icon
-                    fitted
-                    className="lesson-view-match-icon-check"
-                    name="check"
-                  />
-                </Button>
-              </div>
-            )}
+              className="lesson-view-button-exercise-check"
+              onClick={this.showSolution}
+            >
+              Solution
+              <Icon
+                fitted
+                className="lesson-view-match-icon-check"
+                name={isShowingSolution ? "lock open" : "lock"}
+              />
+            </Button>
           </div>
-        </div>
-      )
+        ) : (
+          <div className="lesson-view-exercise-check-container">
+            <Button
+              primary
+              className="lesson-view-button-exercise-check"
+              onClick={this.checkTask}
+            >
+              Check
+              <Icon
+                fitted
+                className="lesson-view-match-icon-check"
+                name="check"
+              />
+            </Button>
+          </div>
+        )}
+      </div>
+    ) : (
+      <Message className="error-message" size="massive" negative>
+        <Message.Header>Oops! something went wrong...</Message.Header>
+        <Message.Content>
+          Unfortunately an exercise can't be loaded = (
+        </Message.Content>
+      </Message>
     );
   }
 }

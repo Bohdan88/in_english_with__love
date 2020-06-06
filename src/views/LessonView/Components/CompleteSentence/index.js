@@ -233,12 +233,17 @@ class CompleteSentence extends Component {
   };
 
   render() {
-    const { isChecked, isShowingSolution, exerciseData } = this.state;
+    const {
+      isChecked,
+      isShowingSolution,
+      exerciseData,
+      exerciseDescription,
+    } = this.state;
 
     return !!Object.keys(exerciseData).length ? (
       <div className="lesson-complete-container">
         <p className="lesson-view-exercise-explanation">
-          Complete the sentences with one of the words below.
+          {exerciseDescription}
           <Popup
             inverted
             basic

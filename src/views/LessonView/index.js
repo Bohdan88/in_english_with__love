@@ -131,9 +131,9 @@ class LessonView extends Component {
   visualizeChapterContent = (currentChapter) => {
     const { fullLeson } = this.state;
     // console.log(currentChapter,'currentChapter')
-    // const lessonChapter = fullLeson.post[currentChapter];
-    const lessonChapter = fullLeson.post["Vocabulary Practise"];
-    return <CompleteSentence lessonValues={lessonChapter} />;
+    const lessonChapter = fullLeson.post[currentChapter];
+    // const lessonChapter = fullLeson.post["Vocabulary Practise"];
+    // return <CompleteSentence lessonValues={lessonChapter} />;
     // console.log(lessonChapter,'lessonChapter')
     // check if it's json string
     if (typeof lessonChapter === "string") {
@@ -188,7 +188,7 @@ class LessonView extends Component {
 
   onPreviousChapter = () => {
     const { filteredLessonItems, currentChapter } = this.state;
-    // find index and set  current step
+    // find index and set current step
     const findCurrentChapterIndex = filteredLessonItems.findIndex(
       (chapter) => chapter === currentChapter
     );
