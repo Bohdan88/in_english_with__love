@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { connect } from "react-redux";
 
 import Column from "./Column";
 import {
@@ -11,115 +10,48 @@ import {
   Progress,
   Popup,
   Message,
+  Table,
 } from "semantic-ui-react";
 import { CHAR_SEQUENCE } from "../../../../constants/shared";
 
-const matchExercise = {
-  description: "Match the following sentences to their meanings below.",
-  id: 0,
-  name: "Matching",
-  type: "From the video",
-  content: [
-    {
-      contentId: "It is death-defying",
-      contentLetter: "It’s very dangerous.",
-      id: 0,
-      letter: "C",
-    },
-    {
-      contentId: "What we do is life-affirming",
-      contentLetter:
-        "What we do shows that we support and believe strongly in life.",
-      id: 1,
-      letter: "E",
-    },
-    {
-      contentId: "The dance activates those spaces",
-      contentLetter: "The dance makes those places alive and active.",
-      id: 2,
-      letter: "D",
-    },
-    {
-      contentId: "It made sense to me.",
-      contentLetter: "It felt right to me.",
-      id: 3,
-      letter: "A",
-    },
-    {
-      contentId: "My goal is to achieve the state of non-thinking",
-      contentLetter: "I want to feel completely present and in the moment.",
-      id: 4,
-      letter: "B",
-    },
-  ],
-};
-
-const initData = {
-  tasks: {
-    c: {
-      contentId: "It is death-defying",
-      contentLetter: "c) It’s very dangerous.",
-      id: "c",
-      answer: "0",
-    },
-    e: {
-      contentId: "What we do is life-affirming",
-      contentLetter:
-        "e) What we do shows that we support and believe strongly in life.",
-      id: "e",
-      answer: "1",
-    },
-    d: {
-      contentId: "The dance activates those spaces",
-      contentLetter: "d) The dance makes those places alive and active.",
-      id: "d",
-      answer: "2",
-    },
-    a: {
-      contentId: "It made sense to me.",
-      contentLetter: "a) It felt right to me.",
-      id: "a",
-      answer: "3",
-    },
-    b: {
-      contentId: "5. My goal is to achieve the state of non-thinking",
-      contentLetter: "b) I want to feel completely present and in the moment.",
-      id: "b",
-      answer: "4",
-    },
-  },
-  column: {
-    id: "column",
-    title: "Sentences",
-    taskIds: ["a", "b", "c", "d", "e"],
-  },
-};
+// styles
+import "./style.scss";
 
 class MatchExerciseView extends Component {
   state = {
-    // meaningColumn: initData,
     meaningColumn: {},
-    initData,
     checked: false,
     correctAnswers: [],
     isShowingSolution: false,
+    exerciseDescription: "",
   };
 
-  componentDidMount() {
+  setInitValues = () => {
     const { lessonValues } = this.props;
-    console.log(lessonValues, "lessonValues");
     let solutions = [];
-    Object.values(initData.tasks).map(
+    Object.values(this.transformLessonValues(lessonValues.content).tasks).map(
       (obj) => (solutions[obj.answer] = obj.id)
     );
     this.setState({
+      meaningColumn: this.transformLessonValues(lessonValues.content),
       correctSequence: solutions,
+      exerciseDescription: lessonValues.description,
+      checked: false,
     });
+  };
 
-    console.log(this.state.initData, "initData");
-    this.transformLessonValues(lessonValues.content);
+  componentDidMount() {
+    this.setInitValues();
   }
 
+  componentDidUpdate() {
+    const { exerciseDescription } = this.state;
+    const { lessonValues } = this.props;
+
+    if (lessonValues.description !== exerciseDescription) {
+      this.setInitValues();
+    }
+  }
   transformLessonValues = (content) => {
     let transformedObj = {
       tasks: {},
@@ -138,15 +70,7 @@ class MatchExerciseView extends Component {
       };
     });
 
-    let solutions = [];
-    Object.values(transformedObj.tasks).map(
-      (obj) => (solutions[obj.answer] = obj.id)
-    );
-
-    this.setState({
-      meaningColumn: transformedObj,
-      correctSequence: solutions,
-    });
+    return transformedObj;
   };
 
   checkTask = () => {
@@ -162,6 +86,7 @@ class MatchExerciseView extends Component {
 
   retryTask = () => {
     const { meaningColumn } = this.state;
+    const { lessonValues } = this.props;
     this.setState({
       checked: false,
       correctAnswers: [],
@@ -169,7 +94,8 @@ class MatchExerciseView extends Component {
         ...meaningColumn,
         column: {
           ...meaningColumn.column,
-          taskIds: initData.column.taskIds,
+          taskIds: this.transformLessonValues(lessonValues.content).column
+            .taskIds,
         },
       },
       isShowingSolution: false,
@@ -229,15 +155,16 @@ class MatchExerciseView extends Component {
       correctAnswers,
       isShowingSolution,
       correctSequence,
+      exerciseDescription,
     } = this.state;
     const { lessonValues } = this.props;
-    console.log(lessonValues,'lessonValues')
-    console.log(matchExercise, 'MATCH')
+    // console.log(lessonValues, "lessonValues");
+    // console.log(this.state, "MATCHSTATE");
     return !!Object.entries(meaningColumn).length &&
       !!meaningColumn.column.taskIds.length ? (
       <div className="lesson-view-match-container">
         <p className="lesson-view-exercise-explanation">
-          Match the following sentences to their meanings below.
+          {exerciseDescription}
           <Popup
             inverted
             className="lesson-view-exercise-popup"
@@ -252,29 +179,6 @@ class MatchExerciseView extends Component {
           />
         </p>
 
-        {checked && (
-          <Progress
-            size={"tiny"}
-            className="lesson-view-match-progress"
-            total={this.state.meaningColumn.column.taskIds.length}
-            value={this.state.correctAnswers.length}
-            success={
-              correctAnswers.length ===
-              this.state.meaningColumn.column.taskIds.length
-                ? true
-                : false
-            }
-            warning={
-              correctAnswers.length >= 1 &&
-              correctAnswers.length <
-                this.state.meaningColumn.column.taskIds.length
-                ? true
-                : false
-            }
-            error={correctAnswers.length === 0}
-          />
-        )}
-
         <Container className="lesson-view-match-content">
           <div className="columns-sentences-container">
             <Header
@@ -284,16 +188,34 @@ class MatchExerciseView extends Component {
             >
               Sentences
             </Header>
-            {lessonValues.content.map((taskId, key) => (
-              <div className="tasks-container-contentId" key={key}>
-                <div>
-                  {`${taskId.id + 1}. `}
-                  {taskId.contentId}
-                </div>
-              </div>
-            ))}
-          </div>
+            {lessonValues.content.map((taskId, key) => {
+              const wordsInCurlyBraces = /\{.*?\}/g;
 
+              const answerValues = taskId.contentId.match(wordsInCurlyBraces);
+              let clonedSentence = taskId.contentId;
+              if (answerValues) {
+                answerValues.forEach(
+                  (word) =>
+                    (clonedSentence = clonedSentence.replace(
+                      word,
+                      `<b> ${word.slice(1, -1)}</b>`
+                    ))
+                );
+              }
+              return (
+                <div className="tasks-container-contentId" key={key}>
+                  <div>
+                    {`${taskId.id + 1}. `}
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: clonedSentence,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
           <DragDropContext onDragEnd={this.onDragEnd}>
             <div className="columns-container">
               <Column
@@ -309,7 +231,9 @@ class MatchExerciseView extends Component {
             </div>
           </DragDropContext>
           <div className="lesson-match-view-container-answers">
-            {initData.column.taskIds.map((taskId, key) => (
+            {this.transformLessonValues(
+              lessonValues.content
+            ).column.taskIds.map((taskId, key) => (
               <div className="lesson-match-view-check-answer" key={key}>
                 <Icon
                   className="lesson-match-view-check-icon"
@@ -369,6 +293,26 @@ class MatchExerciseView extends Component {
                 }
               />
             </Button>
+            {/* <Progress
+              size={"medium"}
+              className="lesson-view-match-progress"
+              total={this.state.meaningColumn.column.taskIds.length}
+              value={this.state.correctAnswers.length}
+              success={
+                correctAnswers.length ===
+                this.state.meaningColumn.column.taskIds.length
+                  ? true
+                  : false
+              }
+              warning={
+                correctAnswers.length >= 1 &&
+                correctAnswers.length <
+                  this.state.meaningColumn.column.taskIds.length
+                  ? true
+                  : false
+              }
+              error={correctAnswers.length === 0}
+            /> */}
           </div>
         ) : (
           <div className="lesson-view-exercise-check-container">

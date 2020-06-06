@@ -2,246 +2,96 @@ import React, { Component } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import ColumnAnswers from "./ColumnAnswers";
 import ColumnTasks from "./ColumnTasks";
-import { Popup, Icon, Button } from "semantic-ui-react";
+import { Popup, Icon, Button, Sticky, Message } from "semantic-ui-react";
 import { shuffleArray } from "../../../../utils";
 import { SUB_FIELD } from "../../../../constants/shared";
 
 // styles
 import "./style.scss";
 
-const content = [
-  {
-    answer: "merge",
-    id: 0,
-    sentence: "We can {merge} our two small businesses into a bigger one.",
-  },
-  {
-    answer: "overlook",
-    id: 1,
-    sentence: "It’s easy to {overlook} a small detail like this one.",
-  },
-
-  {
-    answer: "daredevil",
-    id: 3,
-    sentence:
-      "She’s a bit of a {daredevil}. She loves climbing buildings and mountains.",
-  },
-  {
-    answer: "defy",
-    id: 4,
-    sentence: "Importing food that we can grow here {defy} common sense.",
-  },
-  {
-    answer: "antsy",
-    id: 5,
-    sentence: "I feel {antsy} today, I don’t know why.",
-  },
-  {
-    answer: "tenacity",
-    id: 6,
-    sentence: "We’ve always admired him for his {tenacity} and dedication.",
-  },
-];
-
-const initData = {
-  tasks: {
-    merge: {
-      answer: "merge",
-      id: 0,
-      sentence: "We can {merge} our two small businesses into a bigger one.",
-    },
-    overlook: {
-      answer: "overlook",
-      id: 1,
-      sentence: "It’s easy to {overlook} a small detail like this one.",
-    },
-
-    daredevil: {
-      answer: "daredevil",
-      id: 3,
-      sentence:
-        "She’s a bit of a {daredevil}. She loves climbing buildings and mountains.",
-    },
-    defy: {
-      answer: "defy",
-      id: 4,
-      sentence: "Importing food that we can grow here {defy} common sense.",
-    },
-    antsy: {
-      answer: "antsy",
-      id: 5,
-      sentence: "I feel {antsy} today, I don’t know why.",
-    },
-    tenacity: {
-      answer: "tenacity",
-      id: 6,
-      sentence: "We’ve always admired him for his {tenacity} and dedication.",
-    },
-
-    "set out": {
-      answer: "set out",
-      id: 7,
-      id2: "71",
-      sentence: "{Set} me {out}",
-    },
-
-    car: {
-      answer: "car",
-      id: 8,
-      sentence: "She loves the best {car} ever.",
-    },
-    // answer: " set   off "
-    // answer: " set  out "
-    // sentence: "we  {set} bomb {off}"
-  },
-  columns: {
-    "column-1": {
-      id: "column-1",
-      title: "Sentences",
-      taskIds: [
-        "merge",
-        "overlook",
-        "daredevil",
-        "defy",
-        "antsy",
-        "tenacity",
-        "set out",
-        //  "out",
-        "car",
-      ],
-    },
-
-    "answer-1": {
-      id: "answer-1",
-      taskIds: [],
-      isCorrect: false,
-    },
-    "answer-2": {
-      id: "answer-2",
-      taskIds: [],
-      isCorrect: false,
-    },
-    "answer-3": {
-      id: "answer-3",
-      taskIds: [],
-      isCorrect: false,
-    },
-    "answer-4": {
-      id: "answer-4",
-      taskIds: [],
-      isCorrect: false,
-    },
-    "answer-5": {
-      id: "answer-5",
-      taskIds: [],
-      isCorrect: false,
-    },
-    "answer-6": {
-      id: "answer-6",
-      taskIds: [],
-      isCorrect: false,
-    },
-    "answer-7": {
-      id: "answer-7",
-      taskIds: [],
-      isCorrect: false,
-    },
-    // "answer-71": {
-    //   id: "answer-71",
-    //   taskIds: [],
-    //   isCorrect: false,
-    // },
-    "answer-8": {
-      id: "answer-8",
-      taskIds: [],
-      isCorrect: false,
-    },
-  },
-  // columnOrder: ["column-1", "column-2"],
-};
-
-const initColumns = {
-  "answer-1": {
-    id: "answer-1",
-    taskIds: [],
-    isCorrect: false,
-  },
-  "answer-2": {
-    id: "answer-2",
-    taskIds: [],
-    isCorrect: false,
-  },
-  "answer-3": {
-    id: "answer-3",
-    taskIds: [],
-    isCorrect: false,
-  },
-  "answer-4": {
-    id: "answer-4",
-    taskIds: [],
-    isCorrect: false,
-  },
-  "answer-5": {
-    id: "answer-5",
-    taskIds: [],
-    isCorrect: false,
-  },
-  "answer-6": {
-    id: "answer-6",
-    taskIds: [],
-    isCorrect: false,
-  },
-  "answer-7": {
-    id: "answer-7",
-    taskIds: [],
-    isCorrect: false,
-  },
-  "answer-8": {
-    id: "answer-8",
-    taskIds: [],
-    isCorrect: false,
-  },
-};
-
-const correctValues = [
-  "merge",
-  "overlook",
-  "daredevil",
-  "defy",
-  "antsy",
-  "tenacity",
-  "set out",
-  "car",
-];
-
 class CompleteSentence extends Component {
-  state = initData;
+  state = {
+    exerciseData: {},
+    exerciseDescription: "",
+    isShowingSolution: false,
+    checked: false,
+    correctAnswers: [],
+  };
 
-  componentDidMount() {
+  setInitValues = () => {
+    const { lessonValues } = this.props;
+
+    const transformedValues = this.transformLessonValues(lessonValues.content);
     this.setState({
-      ...this.state,
-
-      columns: {
-        ...this.state.columns,
-        ["column-1"]: {
-          ...this.state.columns["column-1"],
-          taskIds: shuffleArray(this.state.columns["column-1"].taskIds),
+      exerciseData: {
+        ...transformedValues,
+        columns: {
+          ...transformedValues.columns,
+          ["column-1"]: {
+            ...transformedValues.columns["column-1"],
+            taskIds: shuffleArray(
+              transformedValues.columns["column-1"].taskIds
+            ),
+          },
         },
       },
+      correctAnswers: this.transformLessonValues(lessonValues.content).columns[
+        "column-1"
+      ].taskIds,
+      exerciseDescription: lessonValues.description,
+      checked: false,
+    });
+  };
+
+  componentDidMount() {
+    this.setInitValues();
+  }
+
+  componentDidUpdate() {
+    const { exerciseDescription } = this.state;
+    if (this.props.lessonValues.description !== exerciseDescription) {
+      this.setInitValues();
+    }
+  }
+
+  transformLessonValues = (content) => {
+    let transfomedObj = { columns: {}, tasks: {} };
+
+    content.forEach((obj) => {
+      // fill columns
+      transfomedObj.columns[`answer-${obj.id + 1}`] = {
+        id: `answer-${obj.id + 1}`,
+        isCorrect: false,
+        taskIds: [],
+      };
+      // fill tasks
+      transfomedObj.tasks[obj.answer] = {
+        ...obj,
+        id: obj.id + 1,
+      };
     });
 
-    // console.log(shuffleArray(["merge", "overlook", "daredevil", "defy", "antsy", "tenacity"]))
-  }
-  removeWordFromColumn = (word, column) => {
-    const state = Object.assign({}, this.state);
-    state.columns[column].taskIds = [];
-    state.columns["column-1"].taskIds.push(word);
-    this.setState({ state });
+    // add main column
+    transfomedObj.columns["column-1"] = {
+      id: "column-1",
+      taskIds: Object.keys(transfomedObj.tasks),
+      title: "Sentences",
+    };
+
+    return transfomedObj;
   };
+
+  removeWordFromColumn = (word, column) => {
+    const exerciseData = Object.assign({}, this.state.exerciseData);
+    exerciseData.columns[column].taskIds = [];
+    exerciseData.columns["column-1"].taskIds.push(word);
+    this.setState({ exerciseData });
+  };
+
   onDragEnd = (result) => {
+    const { exerciseData } = this.state;
     const { destination, source, draggableId } = result;
-    // console.log(result,'result')
+
     if (!destination) {
       return;
     }
@@ -258,8 +108,8 @@ class CompleteSentence extends Component {
       destination.droppableId = destination.droppableId.replace(SUB_FIELD, "");
     }
 
-    const start = this.state.columns[source.droppableId];
-    const finish = this.state.columns[destination.droppableId];
+    const start = exerciseData.columns[source.droppableId];
+    const finish = exerciseData.columns[destination.droppableId];
 
     if (start === finish) {
       // copy new array
@@ -273,9 +123,9 @@ class CompleteSentence extends Component {
       };
 
       const newState = {
-        ...this.state,
+        ...exerciseData,
         columns: {
-          ...this.state.columns,
+          ...exerciseData.columns,
           [newColumn.id]: newColumn,
         },
       };
@@ -298,32 +148,34 @@ class CompleteSentence extends Component {
       };
 
       const newState = {
-        ...this.state,
+        ...exerciseData,
         columns: {
-          ...this.state.columns,
+          ...exerciseData.columns,
           [newStart.id]: newStart,
           [newFinish.id]: newFinish,
         },
       };
 
-      this.setState(newState);
+      this.setState({ exerciseData: newState });
     }
   };
 
   checkTask = () => {
+    const { exerciseData, correctAnswers } = this.state;
     // if all words were dragged from a box of words by user
-    // if (!this.state.columns["column-1"].taskIds.length) {
+    // if (!exerciseData.columns["column-1"].taskIds.length) {
     // check if answer was correct
-    Object.values(this.state.columns)
+    Object.values(exerciseData.columns)
       .filter((obj) => obj.id !== "column-1")
       .forEach((obj, key) => {
-        if (correctValues[key] === obj.taskIds[0]) {
+        // check position of answers
+        if (correctAnswers[key] === obj.taskIds[0]) {
           obj.isCorrect = true;
 
           this.setState({
-            ...this.state,
+            ...exerciseData,
             columns: {
-              ...this.state.columns,
+              ...exerciseData,
               [obj.id]: obj,
             },
           });
@@ -333,88 +185,57 @@ class CompleteSentence extends Component {
     this.setState({
       isChecked: true,
     });
-    // }
   };
 
   retryTask = () => {
+    const { lessonValues } = this.props;
+
+    const transformedValues = this.transformLessonValues(lessonValues.content);
     this.setState({
-      ...this.state,
-      isShowingSolution: false,
-      isChecked: false,
-      columns: {
-        "answer-1": {
-          id: "answer-1",
-          taskIds: [],
-          isCorrect: false,
-        },
-        "answer-2": {
-          id: "answer-2",
-          taskIds: [],
-          isCorrect: false,
-        },
-        "answer-3": {
-          id: "answer-3",
-          taskIds: [],
-          isCorrect: false,
-        },
-        "answer-4": {
-          id: "answer-4",
-          taskIds: [],
-          isCorrect: false,
-        },
-        "answer-5": {
-          id: "answer-5",
-          taskIds: [],
-          isCorrect: false,
-        },
-        "answer-6": {
-          id: "answer-6",
-          taskIds: [],
-          isCorrect: false,
-        },
-        "answer-7": {
-          id: "answer-7",
-          taskIds: [],
-          isCorrect: false,
-        },
-        "answer-8": {
-          id: "answer-8",
-          taskIds: [],
-          isCorrect: false,
-        },
-        ["column-1"]: {
-          ...this.state.columns["column-1"],
-          taskIds: shuffleArray(initData.columns["column-1"].taskIds),
+      exerciseData: {
+        ...transformedValues,
+        columns: {
+          ...transformedValues.columns,
+          ["column-1"]: {
+            ...transformedValues.columns["column-1"],
+            taskIds: shuffleArray(
+              transformedValues.columns["column-1"].taskIds
+            ),
+          },
         },
       },
+      isChecked: false,
+      isShowingSolution: false,
     });
   };
 
   showSolution = () => {
-    const clonedState = Object.assign({}, this.state);
+    const clonedExerciseData = Object.assign({}, this.state.exerciseData);
 
-    Object.values(clonedState.columns)
+    Object.values(clonedExerciseData.columns)
       .filter((obj) => obj.id !== "column-1")
       .forEach((obj, key) => {
-        obj.taskIds[0] = correctValues[key];
+        // assign correct answers to each object
+        obj.taskIds[0] = this.state.correctAnswers[key];
         obj.isCorrect = true;
       });
 
-    clonedState.columns["column-1"].taskIds = [];
+    clonedExerciseData.columns["column-1"].taskIds = [];
 
-    console.log(clonedState, "clonedState");
     this.setState({
-      ...this.state,
-      columns: clonedState.columns,
+      exerciseData: {
+        ...this.state.exerciseData,
+        columns: clonedExerciseData.columns,
+      },
       isChecked: true,
       isShowingSolution: true,
     });
   };
+
   render() {
-    console.log(this.state, "THIS_STATE");
-    // console.log(initColumns, "initColumns");
-    const { isChecked, isShowingSolution } = this.state;
-    return (
+    const { isChecked, isShowingSolution, exerciseData } = this.state;
+
+    return !!Object.keys(exerciseData).length ? (
       <div className="lesson-complete-container">
         <p className="lesson-view-exercise-explanation">
           Complete the sentences with one of the words below.
@@ -432,21 +253,26 @@ class CompleteSentence extends Component {
             }
           />
         </p>
+
         <DragDropContext onDragEnd={this.onDragEnd}>
-          <div className="lesson-complete-column-answers-container">
-            <ColumnAnswers
-              tasks={this.state.columns["column-1"].taskIds.map(
-                (taskId) => this.state.tasks[taskId]
-              )}
-            />
-          </div>
+          <Sticky styleElement={{ top: "167px" }}>
+            <div className="lesson-complete-column-answers-container">
+              <ColumnAnswers
+                tasks={exerciseData.columns["column-1"].taskIds.map(
+                  (taskId) => exerciseData.tasks[taskId]
+                )}
+              />
+            </div>
+          </Sticky>
           <div className="lesson-complete-column-tasks-container">
             <ColumnTasks
               removeWordFromColumn={this.removeWordFromColumn}
-              values={this.state}
+              values={exerciseData}
+              isChecked={isChecked}
             />
           </div>
         </DragDropContext>
+
         {isChecked ? (
           <div className="lesson-view-exercise-check-container">
             <Button
@@ -480,15 +306,15 @@ class CompleteSentence extends Component {
             <Popup
               inverted
               on="hover"
-              disabled={!this.state.columns["column-1"].taskIds.length}
+              disabled={!exerciseData.columns["column-1"].taskIds.length}
               content={"Please fill all the empty fields to check your result."}
               trigger={
                 <Button
-                  /* disabled={!!this.state.columns["column-1"].taskIds.length} */
+                  /* disabled={!!exerciseData.columns["column-1"].taskIds.length} */
                   primary
                   onClick={this.checkTask}
                   /* className={` lesson-view-button-exercise-check ${
-                    !!this.state.columns["column-1"].taskIds.length
+                    !!exerciseData.columns["column-1"].taskIds.length
                       ? "button-disabled"
                       : ""
                   }  `} */
@@ -505,6 +331,13 @@ class CompleteSentence extends Component {
           </div>
         )}
       </div>
+    ) : (
+      <Message className="error-message" size="massive" negative>
+        <Message.Header>Oops! something went wrong...</Message.Header>
+        <Message.Content>
+          Unfortunately an exercise can't be loaded =(
+        </Message.Content>
+      </Message>
     );
   }
 }

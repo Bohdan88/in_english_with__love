@@ -1,20 +1,22 @@
 @import "../../../../style/variables.scss";
 
 .lesson-complete-container {
-  padding: 20px;
-  padding-left: 0px !important;
-  background-color: transparent !important;
+  // background-color: transparent !important;
 }
 
 .lesson-complete-column-answers-container {
   padding: 5px;
-  margin-bottom: 30px;
+  padding-left: 0px !important;
+  margin-bottom: 20px;
   border-radius: 16px;
   border: solid $white-grey;
   border-width: 2px 2px 4px;
+  background: $white;
+  // position: fixed;
 }
 
 .lesson-complete-column-tasks-container {
+  // margin-top: 90px;
   padding: 5px;
 }
 
@@ -100,8 +102,7 @@
   color: $white;
 }
 
-
 .button-disabled {
   opacity: 0.5;
-  cursor: not-allowed!important;
+  cursor: not-allowed !important;
 }

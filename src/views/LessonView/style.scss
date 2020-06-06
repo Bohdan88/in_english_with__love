@@ -56,16 +56,29 @@
     margin: 0 0 0.5em !important;
   }
 
-  ul {
+  ul,
+  ol {
     margin-top: 0px !important;
-    padding-left: 10px;
+    padding-left: 16px;
   }
 }
 
 .lesson-view-chapter-container {
   height: 70vh;
+
+  // div:nth-child(1) {
+  //   margin-left: 10px;
+  // }
+
+  div:nth-child(2) {
+    // margin-top: 10px;
+  }
 }
 
+.chapter-block {
+  margin-left: 0px;
+  margin-top:10px;
+}
 .chapter-content {
   div {
     iframe {
@@ -141,65 +154,6 @@
   display: flex;
 }
 
-// match exercise
-.lesson-view-match-content {
-  display: flex !important;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.lesson-view-segment {
-  display: flex;
-}
-
-.lesson-view-match-column {
-  display: flex;
-  flex-direction: column;
-
-  width: auto;
-}
-
-.tasks-container-contentId,
-.tasks-container-contentLetter,
-.lesson-match-view-check-icon {
-  display: flex;
-  justify-content: left !important;
-  font-size: 15px;
-  flex-grow: 1;
-  min-height: 50px;
-  padding: 5px;
-  margin-bottom: 5px;
-  margin-left: 10px;
-  margin-right: 10px;
-  background-color: $white;
-  border-radius: 5px;
-  // border: 1px solid black;
-}
-
-.lesson-match-view-check-answer {
-  width: 40px;
-}
-.incorrect-match {
-  background-color: $red;
-  color: $white !important;
-}
-
-.correct-match {
-  background-color: $green-success;
-  color: $white;
-}
-
-.tasks-container-contentId,
-.lesson-match-view-check-icon {
-  margin-top: 10px !important;
-}
-
-.lesson-view-match-container {
-  display: flex;
-  flex-direction: column;
-  margin-left: 5px !important;
-}
-
 .lesson-view-label {
   background-color: grey !important;
   color: $white !important;
@@ -213,28 +167,13 @@
 
 .lesson-view-exercise-explanation {
   font-size: 16px;
-  padding: 20px 0px;
+  padding: 0px 0px 10px 0px;
   color: grey;
 }
 
 .lesson-view-button-exercise-check {
-  margin: 10px !important;
+  margin:10px 10px 0px 0px !important;
   width: 150px;
-}
-
-.lesson-view-match-icon-check {
-  padding-left: 5px;
-}
-
-.tasks-container-contentId,
-.tasks-container-contentLetter {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tasks-container-contentLetter:hover {
-  background-color: #deebff; //$white-grey;
 }
 
 .task-blocks {
@@ -265,36 +204,6 @@
   margin-top: 20px;
 }
 
-.lesson-view-match-progress {
-  position: absolute !important;
-  right: 43px !important;
-  top: 72px !important;
-  width: 150px;
-  .bar {
-    min-width: 10px !important;
-  }
-}
-
-.lesson-view-match-icon {
-  cursor: pointer;
-  font-size: 1.1rem !important;
-  padding-left: 5px;
-}
-
 .lesson-view-exercise-check-container {
   margin-top: 20px;
-}
-
-@media only screen and (max-width: 1350px) {
-  .lesson-view-match-progress {
-    display: none !important;
-  }
-}
-
-@media only screen and (max-width: 1919px) {
-  .tasks-container-contentId,
-  .tasks-container-contentLetter,
-  .lesson-match-view-check-icon {
-    font-size: 14px;
-  }
 }

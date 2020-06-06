@@ -4,7 +4,7 @@ import { SUB_FIELD } from "../../../../constants/shared";
 
 class ColumnTasks extends Component {
   renderDroppableComponent = (key, value, dropId = undefined) => {
-    const { values } = this.props;
+    const { values, isChecked } = this.props;
     return (
       <div className="lesson-complete-key-word-taken-holder">
         <Droppable
@@ -22,7 +22,7 @@ class ColumnTasks extends Component {
               className={`lesson-complete-sentences-content ${
                 snaphot.isDraggingOver ? "dragging-over-complete" : ""
               } ${
-                values.isChecked
+                isChecked
                   ? values.columns[`answer-${key + 1}`].isCorrect
                     ? "correct-answer"
                     : "wrong-answer"
@@ -30,11 +30,9 @@ class ColumnTasks extends Component {
               }`}
             >
               <span
-                className={`${
-                  !values.isChecked ? "lesson-complete-answer-span" : ""
-                }`}
+                className={`${!isChecked ? "lesson-complete-answer-span" : ""}`}
                 onClick={() => {
-                  !values.isChecked &&
+                  !isChecked &&
                     this.props.removeWordFromColumn(
                       values.columns[`answer-${key + 1}`].taskIds[0],
                       `answer-${key + 1}`
@@ -57,15 +55,11 @@ class ColumnTasks extends Component {
       <div>
         {Object.values(values.tasks).map((obj, key) => {
           const answerValues = obj.sentence.match(wordsInCurlyBraces);
-
           let clonedSentence = obj.sentence;
-
           answerValues.forEach(
             (rx) => (clonedSentence = clonedSentence.replace(rx, "** "))
           );
-
           clonedSentence = clonedSentence.split("**");
-
           const column = values.columns[`answer-${key + 1}`];
           return (
             <div

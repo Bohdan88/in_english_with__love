@@ -4,7 +4,6 @@ import { Draggable } from "react-beautiful-dnd";
 class Task extends Component {
   render() {
     const { task, index, content, checked } = this.props;
-
     return (
       <div className="task-blocks">
         <Draggable
@@ -26,7 +25,7 @@ class Task extends Component {
                     : ""
                 } ${snaphot.isDragging ? "dragging" : ""}`}
               >
-                {this.props.task[content]}
+                {` ${task.letter})  ${this.props.task[content]}`}
               </div>
             </>
           )}

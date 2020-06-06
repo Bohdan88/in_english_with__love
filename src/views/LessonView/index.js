@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import { getAllPostsValues, setNewValues } from "../../redux/actions";
@@ -30,9 +30,11 @@ import {
   Message,
   Dimmer,
   Loader,
+  Ref,
 } from "semantic-ui-react";
 
 class LessonView extends Component {
+  contextRef = createRef();
   state = {
     currentTopic: window.location.href.slice(
       window.location.href.lastIndexOf("/") + 1
@@ -128,7 +130,11 @@ class LessonView extends Component {
 
   visualizeChapterContent = (currentChapter) => {
     const { fullLeson } = this.state;
-    const lessonChapter = fullLeson.post[currentChapter];
+    // console.log(currentChapter,'currentChapter')
+    // const lessonChapter = fullLeson.post[currentChapter];
+    const lessonChapter = fullLeson.post["Vocabulary Practise"];
+    return <CompleteSentence lessonValues={lessonChapter} />;
+    // console.log(lessonChapter,'lessonChapter')
     // check if it's json string
     if (typeof lessonChapter === "string") {
       return (
@@ -212,7 +218,7 @@ class LessonView extends Component {
       errorText,
     } = this.state;
 
-    console.log(this.state, "STATE");
+    // console.log(this.state, "STATE");
     const menu = isMenuOpen ? "menu-open" : "";
 
     return (
@@ -232,7 +238,7 @@ class LessonView extends Component {
           <Message className="error-message" size="massive" negative>
             <Message.Header>Oops! something went wrong...</Message.Header>
             <Message.Content>
-              Unfortunately {currentTopic} can't be uploaded
+              Unfortunately {currentTopic} can't be loaded =(
             </Message.Content>
           </Message>
         ) : (
@@ -253,6 +259,7 @@ class LessonView extends Component {
                       </Step.Content>
                     </Step>
                   </Step.Group>
+
                   <Segment
                     attached
                     className={`lesson-view-chapter-container lesson-view-${menu}`}
@@ -260,10 +267,9 @@ class LessonView extends Component {
                     <Label size="big" className="lesson-view-label capitalize">
                       {currentChapter}
                     </Label>
-                    {this.visualizeChapterContent(currentChapter)}
-                    {/* {this.visualizeChapterContent(currentChapter)} */}
-                    {/* <CompleteSentence /> */}
-                    {/* <AnotherWay /> */}
+                    <div className="chapter-block">
+                      {this.visualizeChapterContent(currentChapter)}
+                    </div>
                   </Segment>
                 </Container>
               </Grid.Column>

@@ -1,0 +1,118 @@
+@import "../../../../style/variables.scss";
+
+// match exercise
+.lesson-view-match-content {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.lesson-view-segment {
+  display: flex;
+}
+
+.lesson-view-match-column {
+  display: flex;
+  flex-direction: column;
+
+  width: auto;
+}
+
+.tasks-container-contentId,
+.tasks-container-contentLetter,
+.lesson-match-view-check-icon {
+  display: flex;
+  justify-content: left !important;
+  font-size: 15px;
+  flex-grow: 1;
+  min-height: 50px;
+  padding: 5px;
+  margin-bottom: 5px;
+  margin-left: 0px!important;
+  margin-right: 10px;
+  background-color: $white;
+  border-radius: 5px;
+//   border: 1px solid black;
+}
+
+.tasks-container-contentId {
+    padding-left: 0px!important;
+
+    div {
+        margin-left: 0px!important;
+    }
+}
+
+.lesson-match-view-check-answer {
+  width: 40px;
+}
+.incorrect-match,
+.incorrect-match:hover {
+  background-color: $red !important;
+  color: $white !important;
+}
+
+.correct-match,
+.correct-match:hover {
+  background-color: $green-success !important;
+  color: $white;
+}
+
+.tasks-container-contentId,
+.lesson-match-view-check-icon {
+  margin-top: 10px !important;
+}
+
+.lesson-view-match-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5px !important;
+}
+
+.lesson-view-match-progress {
+  position: absolute !important;
+  // right: 43px !important;
+  // top: 72px !important;
+  position: absolute !important;
+  right: 66px !important;
+  margin-top: -38px !important;
+  width: 150px;
+  .bar {
+    // min-width: 10px !important;
+  }
+}
+
+.lesson-view-match-icon {
+  cursor: pointer;
+  font-size: 1.1rem !important;
+  padding-left: 5px;
+}
+
+.lesson-view-match-icon-check {
+  padding-left: 5px;
+}
+
+.tasks-container-contentId,
+.tasks-container-contentLetter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tasks-container-contentLetter:hover {
+  background-color: #deebff; //$white-grey;
+}
+
+@media only screen and (max-width: 1350px) {
+  // .lesson-view-match-progress {
+  //   display: none !important;
+  // }
+}
+
+@media only screen and (max-width: 1919px) {
+  .tasks-container-contentId,
+  .tasks-container-contentLetter,
+  .lesson-match-view-check-icon {
+    font-size: 14px;
+  }
+}
