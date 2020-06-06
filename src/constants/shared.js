@@ -63,6 +63,7 @@ export const CONFIRMATION_REMOVE_ALERT = "CONFIRMATION_REMOVE_ALERT";
 export const MATCHING = "Matching";
 export const COMPLETE_THE_SENTENCES = "Complete the Sentences";
 export const ANOTHER_WAY_TO_SAY = "Another way to say";
+export const ANOTHER_WAY = "Another way";
 export const REPLACED_ANSWER = " ______________ ";
 export const ADMIN_TABS = {
   create_lesson: { key: "lesson ", content: "Create a lesson", icon: "add" },
@@ -107,9 +108,9 @@ export const EXERCISES_NAMES = [
     value: COMPLETE_THE_SENTENCES,
   },
   {
-    key: "another_way_to_say",
-    text: ANOTHER_WAY_TO_SAY,
-    value: ANOTHER_WAY_TO_SAY,
+    key: "another_way",
+    text: "Another way",
+    value: "Another way",
   },
 ];
 

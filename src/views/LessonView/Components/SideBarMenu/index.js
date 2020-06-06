@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-import { CHAPTERS_ICONS } from "../../../../constants/shared";
+import {
+  CHAPTERS_ICONS,
+  CREATE_LESSON_STAGES,
+} from "../../../../constants/shared";
 import { Label, Menu, Transition, Icon } from "semantic-ui-react";
 import "./style.scss";
 
@@ -28,9 +31,15 @@ class SideBarMenu extends Component {
 
   render() {
     const { isMenuOpen, filteredLessonItems } = this.state;
-    const { currentChapter } = this.props;
+    const { currentChapter, mode } = this.props;
     const hamburgerClass = isMenuOpen ? "open" : "";
-    const menuClass = isMenuOpen ? "open-menu" : "close-menu";
+    const menuClass = isMenuOpen
+      ? mode === CREATE_LESSON_STAGES.preview
+        ? "open-menu-admin"
+        : "open-menu"
+      : mode === CREATE_LESSON_STAGES.preview
+      ? "close-menu-admin"
+      : "close-menu";
 
     return (
       <div>

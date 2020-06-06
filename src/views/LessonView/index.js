@@ -3,6 +3,8 @@ import { compose } from "recompose";
 import { connect } from "react-redux";
 import { getAllPostsValues, setNewValues } from "../../redux/actions";
 import { withFirebase } from "../Firebase";
+import draftToHtml from "draftjs-to-html";
+import { convertToRaw } from "draft-js";
 import {
   MatchExerciseView,
   CompleteSentence,
@@ -15,6 +17,7 @@ import {
   COMPLETE_THE_SENTENCES,
   MATCHING,
   ANOTHER_WAY_TO_SAY,
+  CREATE_LESSON_STAGES,
 } from "../../constants/shared";
 
 import "./style.scss";
@@ -30,7 +33,6 @@ import {
   Message,
   Dimmer,
   Loader,
-  Ref,
 } from "semantic-ui-react";
 
 class LessonView extends Component {
@@ -52,10 +54,14 @@ class LessonView extends Component {
   };
 
   componentDidMount() {
+    const { currentTopic } = this.state;
+    const { mode } = this.props;
     const { allPosts } = this.props.posts;
     this.setState({ isLoadingLesson: true });
 
-    if (!allPosts.length) {
+    if (mode && mode === CREATE_LESSON_STAGES.preview) {
+      this.setSelectedLesson([this.props.newPostState]);
+    } else if (!allPosts.length) {
       this.props.firebase.posts().on(
         "value",
         (snapshot) => {
@@ -70,7 +76,12 @@ class LessonView extends Component {
               allPosts: postsList,
             });
 
-            this.identifySelectedLesson(postsList);
+            this.setSelectedLesson(
+              postsList.filter(
+                (post) =>
+                  post.title.toLowerCase().split(" ").join("-") === currentTopic
+              )
+            );
           }
         },
         (errorObject) => {
@@ -82,32 +93,38 @@ class LessonView extends Component {
         }
       );
     } else {
-      this.identifySelectedLesson(allPosts);
+      // find selected lesson
+      this.setSelectedLesson(
+        allPosts.filter(
+          (post) =>
+            post.title.toLowerCase().split(" ").join("-") === currentTopic
+        )
+      );
     }
   }
 
-  identifySelectedLesson = (postsList) => {
-    const { currentTopic } = this.state;
-    let selectedLesson = postsList.filter(
-      (post) => post.title.toLowerCase().split(" ").join("-") === currentTopic
-    );
-
+  setSelectedLesson = (selectedLesson) => {
     if (!!selectedLesson.length) {
       Object.values(selectedLesson[0].newPostExercisesValues).map((obj) => {
         selectedLesson[0].post[obj.type] = obj;
       });
 
       const filteredLessonItems = Object.keys(selectedLesson[0].post).filter(
-        (item) => item !== "content" && item !== "after"
+        (item) => item !== "content" && !item.toLowerCase().includes("after")
       );
 
       // push conclusion in the end
-      filteredLessonItems.push("after");
+      filteredLessonItems.push("After Watching");
 
       this.setState({
         filteredLessonItems,
         fullLeson: selectedLesson[0],
         currentChapter: Object.keys(selectedLesson[0].post)[0],
+        isLoadingLesson: false,
+      });
+    } else {
+      this.setState({
+        fullLeson: {},
         isLoadingLesson: false,
       });
     }
@@ -130,27 +147,35 @@ class LessonView extends Component {
 
   visualizeChapterContent = (currentChapter) => {
     const { fullLeson } = this.state;
-    // console.log(currentChapter,'currentChapter')
+    const { mode } = this.props;
+
     const lessonChapter = fullLeson.post[currentChapter];
     // const lessonChapter = fullLeson.post["Vocabulary Practise"];
     // return <CompleteSentence lessonValues={lessonChapter} />;
     // console.log(lessonChapter,'lessonChapter')
-    // check if it's json string
-    if (typeof lessonChapter === "string") {
+
+    // check if it's json string  or editor state
+    if (typeof lessonChapter === "string" || lessonChapter._immutable) {
+      // check if mode is preview, if so do not parse it because we don't stringify it yet
       return (
         <div
           dangerouslySetInnerHTML={{
-            __html: JSON.parse(lessonChapter),
+            __html:
+              mode === CREATE_LESSON_STAGES.preview
+                ? lessonChapter === ""
+                  ? ""
+                  : draftToHtml(convertToRaw(lessonChapter.getCurrentContent()))
+                : JSON.parse(lessonChapter),
           }}
         />
       );
     }
 
-    if (lessonChapter.name) {
+    if (lessonChapter && lessonChapter.name) {
+      if (lessonChapter.name.includes(ANOTHER_WAY_TO_SAY)) {
+        return <AnotherWay lessonValues={lessonChapter} />;
+      }
       if (lessonChapter.name.includes(COMPLETE_THE_SENTENCES)) {
-        if (lessonChapter.type.includes(ANOTHER_WAY_TO_SAY)) {
-          return <AnotherWay lessonValues={lessonChapter} />;
-        }
         return <CompleteSentence lessonValues={lessonChapter} />;
       }
 
@@ -217,10 +242,11 @@ class LessonView extends Component {
       error,
       errorText,
     } = this.state;
+    const { mode } = this.props;
 
-    // console.log(this.state, "STATE");
     const menu = isMenuOpen ? "menu-open" : "";
 
+    console.log(this.state, "THIIIS STATE");
     return (
       <div>
         {isLoadingLesson && !error ? (
@@ -238,7 +264,10 @@ class LessonView extends Component {
           <Message className="error-message" size="massive" negative>
             <Message.Header>Oops! something went wrong...</Message.Header>
             <Message.Content>
-              Unfortunately {currentTopic} can't be loaded =(
+              {currentTopic === "admin"
+                ? "You have nothing to preview."
+                : `Unfortunately  ${currentTopic} can't be
+              loaded =(`}
             </Message.Content>
           </Message>
         ) : (
@@ -268,7 +297,23 @@ class LessonView extends Component {
                       {currentChapter}
                     </Label>
                     <div className="chapter-block">
-                      {this.visualizeChapterContent(currentChapter)}
+                      {this.visualizeChapterContent(currentChapter) || (
+                        <Message
+                          className="error-message"
+                          size="massive"
+                          negative
+                        >
+                          <Message.Header>
+                            Oops! something went wrong...
+                          </Message.Header>
+                          <Message.Content>
+                            {currentTopic === "admin"
+                              ? "You have nothing to preview."
+                              : `Unfortunately  ${currentTopic} can't be
+              loaded =(`}
+                          </Message.Content>
+                        </Message>
+                      )}
                     </div>
                   </Segment>
                 </Container>
@@ -296,9 +341,22 @@ class LessonView extends Component {
                     attached
                     className="lesson-view-chapter-container chapter-content"
                   >
+                    {/* check if mode is preview. because in preview we do not stringify values yet */}
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: JSON.parse(fullLeson.post.content),
+                        __html:
+                          mode === CREATE_LESSON_STAGES.preview
+                            ? fullLeson.post[
+                                CREATE_LESSON_STAGES.content.key
+                              ] &&
+                              draftToHtml(
+                                convertToRaw(
+                                  fullLeson.post[
+                                    CREATE_LESSON_STAGES.content.key
+                                  ].getCurrentContent()
+                                )
+                              )
+                            : JSON.parse(fullLeson.post.content),
                       }}
                     />
                   </Segment>
@@ -309,6 +367,7 @@ class LessonView extends Component {
               <Grid.Column>
                 <Segment className="lesson-view-footer-menu">
                   <SideBarMenu
+                    mode={mode}
                     filteredLessonItems={filteredLessonItems}
                     currentChapter={currentChapter}
                     checkMenu={this.checkMenu}
@@ -358,8 +417,8 @@ class LessonView extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { posts } = state;
-  return { posts };
+  const { posts, newPostState } = state;
+  return { posts, newPostState };
 };
 
 const mapDispatchToProps = (dispatch) => {

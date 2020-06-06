@@ -408,7 +408,10 @@ class CreateLesson extends Component {
         menuItem: CREATE_LESSON_STAGES.preview,
         render: () => (
           <Tab.Pane className="preview-tab">
-            <LessonView sectionKey={CREATE_LESSON_STAGES.preview.key} />
+            <LessonView
+              mode={CREATE_LESSON_STAGES.preview}
+              sectionKey={CREATE_LESSON_STAGES.preview.key}
+            />
           </Tab.Pane>
         ),
       },

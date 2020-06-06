@@ -158,14 +158,14 @@ class MatchExerciseView extends Component {
       exerciseDescription,
     } = this.state;
     const { lessonValues } = this.props;
-    // console.log(lessonValues, "lessonValues");
-    // console.log(this.state, "MATCHSTATE");
+
     return !!Object.entries(meaningColumn).length &&
       !!meaningColumn.column.taskIds.length ? (
       <div className="lesson-view-match-container">
         <p className="lesson-view-exercise-explanation">
           {exerciseDescription}
           <Popup
+            basic
             inverted
             className="lesson-view-exercise-popup"
             content="Please use your mouse or touchpad to move sentences with letters in the front in an appropriate field."

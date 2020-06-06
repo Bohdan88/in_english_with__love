@@ -10,7 +10,7 @@ import {
   CONFIRMATION_REMOVE_ALERT,
   MATCHING,
   COMPLETE_THE_SENTENCES,
-  ANOTHER_WAY_TO_SAY,
+  ANOTHER_WAY,
 } from "../../../../../constants/shared";
 import { getAllPostsValues, setNewValues } from "../../../../../redux/actions";
 import {
@@ -43,6 +43,15 @@ class PractiseContainer extends PureComponent {
             }
           : obj
       ),
+    });
+  };
+
+  addItemToDescription = (data) => {
+    this.props.onGetAllPostsValues({
+      allExercisesDescriptions: [
+        { key: data.value, text: data.value, value: data.value },
+        ...this.props.posts.allExercisesDescriptions,
+      ],
     });
   };
 
@@ -220,6 +229,13 @@ class PractiseContainer extends PureComponent {
                           />
                           <Popup
                             inverted
+                            position="top center"
+                            className="popup-init-exercises"
+                            content="Please note that you're able to add a new value in a Description field."
+                            trigger={<Button icon="circle question" />}
+                          />
+                          <Popup
+                            inverted
                             className="popup-init-exercises"
                             position="top center"
                             content="Remove this exercise."
@@ -294,6 +310,7 @@ class PractiseContainer extends PureComponent {
                               </Form.Field>
                               <Form.Field>
                                 <Form.Dropdown
+                                  allowAdditions
                                   label={
                                     PRACTISE_DROPDOWN_TITLES.description.label
                                   }
@@ -318,6 +335,9 @@ class PractiseContainer extends PureComponent {
                                       el.id
                                     )
                                   }
+                                  onAddItem={(e, data) =>
+                                    this.addItemToDescription(data)
+                                  }
                                 />
                               </Form.Field>
                             </Form.Group>
@@ -326,7 +346,7 @@ class PractiseContainer extends PureComponent {
                             <MatchExercise currentExerciseValues={el} />
                           )}
                           {(el.name === COMPLETE_THE_SENTENCES ||
-                            el.name === ANOTHER_WAY_TO_SAY) && (
+                            el.name === ANOTHER_WAY) && (
                             <CompleteSentencesExercise
                               currentExerciseValues={el}
                             />
