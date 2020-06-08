@@ -107,13 +107,28 @@ class CreateLesson extends Component {
 
         INIT_NEW_POST_VALUES.focus = setFocuses[0] && setFocuses[0].text;
 
+        // play with persist
+
+        // let local = JSON.parse(localStorage.getItem("persist:root"));
+        // let newpost = JSON.parse(local.newPostState);
+        // console.log(newpost.title, "newpost");
+
+        // INIT_NEW_POST_VALUES.title = newpost.title;
         // set init
         this.props.onSetPostNewValues(INIT_NEW_POST_VALUES);
       }
     });
   };
   componentDidMount() {
+    // let local = JSON.parse(localStorage.getItem("persist:root"));
+    // let newpost = JSON.parse(local.newPostState);
+    // console.log(newpost.title, "newpost");
+
     this.fetchPostsFromDb();
+
+    // this.props.onSetPostNewValues({
+    //   title: newpost.title,
+    // });
   }
 
   onDropDownChange = (data, dropDownType) => {
@@ -360,17 +375,17 @@ class CreateLesson extends Component {
     const { categories, focuses, subCategories } = this.props.posts;
 
     const panes = [
-      {
-        menuItem: CREATE_LESSON_STAGES.practise,
-        render: () => (
-          <Tab.Pane>
-            <Practise
-              exercises={exercises}
-              sectionKey={CREATE_LESSON_STAGES.practise.key}
-            />
-          </Tab.Pane>
-        ),
-      },
+      // {
+      //   menuItem: CREATE_LESSON_STAGES.practise,
+      //   render: () => (
+      //     <Tab.Pane>
+      //       <Practise
+      //         exercises={exercises}
+      //         sectionKey={CREATE_LESSON_STAGES.practise.key}
+      //       />
+      //     </Tab.Pane>
+      //   ),
+      // },
       {
         menuItem: CREATE_LESSON_STAGES.about,
         render: () => (

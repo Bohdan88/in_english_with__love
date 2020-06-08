@@ -6,8 +6,8 @@
 
 .container-compact-picker {
   position: absolute;
-  // right: 5px !important;
-  top: 46%;
+  margin-right: 115px !important;
+  top: 15%;
   z-index: 2;
 }
 
@@ -81,4 +81,19 @@
 .video-cancel-button,
 .video-add-button {
   min-height: 33px;
+}
+
+.rdw-image-modal {
+  left: -100px !important;
+}
+
+.rdw-emoji-wrapper,
+.rdw-remove-wrapper {
+  display: none !important;
+}
+
+@media only screen and(max-width: 1199px) {
+  .container-compact-picker {
+    top: 23%;
+  }
 }

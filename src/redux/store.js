@@ -1,22 +1,34 @@
-import { createStore, applyMiddleware, compose } from "redux";
+import { createStore, compose } from "redux";
 import rootReducer from "./reducers/root";
-import apiMiddleware from "./middleware/api";
-import thunk from "redux-thunk";
-import logger from "redux-logger";
+// persist
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 // let middleware = [apiMiddleware, thunk];
 
-const store = createStore(
-  rootReducer,
+const persistConfig = {
+  key: "root",
+  storage: storage,
+  stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
+};
+
+const pReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = createStore(
+  // rootReducer,
+  pReducer,
   composeEnhancers()
   // composeEnhancers(applyMiddleware(...middleware))
 );
 
-window.store = store; // makes the sore available globally
+export const persistor = persistStore(store);
 
-const onStoreChange = () => {};
+window.store = store; // makes the store available globally
 
-store.subscribe(onStoreChange);
+// const onStoreChange = () => {};
 
-export default store;
+// store.subscribe(onStoreChange);
+
+// export default store;

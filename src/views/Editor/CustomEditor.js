@@ -131,10 +131,18 @@ class CustomEditor extends Component {
 
       post: {
         ...this.props.newPostState.post,
-        [this.props.sectionKey]: editorState,
+        // [this.props.sectionKey]: editorState,
+        "About the video": {
+          ...this.props.newPostState.post["About the video"],
+          ...JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+        },
+        // JSON.stringify(
+        //   convertToRaw(editorState.getCurrentContent())
+        // ),
       },
     });
 
+    console.log(this.props.newPostState.post[this.props.sectionKey], "SEC");
     this.setState({
       try: convertToRaw(editorState.getCurrentContent()),
     });
@@ -142,39 +150,12 @@ class CustomEditor extends Component {
     // this.props.onEditorTextChange(checkIfcontainsJustSpaces);
   };
 
-  // onSubmit = () => {
-  //   const { editorState } = this.state;
-  //   // const post =
-  //   //   editorState &&
-  //   //   editorState.getCurrentContent() &&
-  //   //   draftToHtml(convertToRaw(editorState.getCurrentContent()));
-
-  //   if (post) {
-  //     // this.props.firebase.posts().push().set({
-  //     //   post: post,
-  //     //   type: "history",
-  //     // });
-
-  //     this.setState({
-  //       editorState: "",
-  //     });
-  //     fireAlert(true);
-  //   } else {
-  //     fireAlert(false);
-  //   }
-  // };
-
   onPreview = () => {
     this.setState({
       preview: !this.state.preview,
     });
   };
 
-  componentDidMount() {
-    // const fontFamilies = document.querySelectorAll(
-    //   ".rdw-dropdown-optionwrapper"
-    // );
-  }
   _uploadImageCallBack = (file) => {
     const { iconPath } = this.props.newPostState;
     const { firebase } = this.props;
@@ -238,7 +219,7 @@ class CustomEditor extends Component {
     const { editorState } = this.state;
     const { post } = this.props.newPostState;
     const { sectionKey } = this.props;
-    
+
     // we check on blocks in case it's not editor state
     const currentEditor =
       post[sectionKey] === "" ||
@@ -247,51 +228,42 @@ class CustomEditor extends Component {
         ? EditorState.createEmpty()
         : post[sectionKey];
 
-    // console.log(post[sectionKey].blocks, "sectionKeysectionKey");
-    // console.log(
-    //   draftToHtml(convertToRaw(currentEditor.getCurrentContent()), "OOOK")
-    // );
-    // EditorState.createWithContent(convertFromRaw(post[sectionKey]));
+    // console.log(sectionKey,'SEEEc')
+    // console.log(this.props[post[sectionKey]])
+    // console.log(JSON.parse(post[sectionKey]),'LOL')
+    // const contentState =
+    //   post[sectionKey] === "" ? "" : convertFromRaw(post[sectionKey]);
+    // this.setState({
+    //   editorState: EditorState.createWithContent(contentState),
+    // });
 
-    // console.log(
-    //   convertFromRaw(convertToRaw(currentEditor.getCurrentContent())),
-    //   "post[sectionKey]"
-    // );
-
-    // console.log(this.props);
-    // console.log(convertToRaw(currentEdit or.getCurrentContent()), "OOOK");
-    // console.log(currentEditor, "currentEditor");
-    // console.log(currentEditor.getCurrentContent(), "get");
-    // console.log(currentEditor, "CURRENTEDITOR");
-    // console.log(
-    //   this.state.try &&
-    //     EditorState.createWithContent(convertFromRaw(this.state.try)),
-    //   "TRY_EDITOR"
-    // );
-
-    // let ed = !this.state.try
+    // console.log(post[sectionKey] === "" ? "it's string" :(EditorState.createWithContent(convertFromRaw(JSON.parse(post[sectionKey])))));
+    // console.log(EditorState.createWithContent(contentState), "contentState");
+    // console.log(JSON.stringify(post[sectionKey]), "SECTION_KEY");
+    // console.log(currentEditor._immutable, "currentEditor");
+    // {
+    //    post[sectionKey] === ""
     //   ? EditorState.createEmpty()
-    //   : EditorState.set(this.state.try);
-
-    // // console.log(currentEditor, "cURREN");
-    // ed.getSelection().getIsBackward(true)
-    // ed.moveFocusToEnd()
-    // console.log(ed.getSelection().getIsBackward())
-    // let som = EditorState.acceptSelection(
-    //   ed,
-    //   new SelectionState({
-    //     isBackward: true,
-    //   })
-    // );
-
+    //   : EditorState.createWithContent(
+    //       convertFromRaw(JSON.parse(post[sectionKey]))
+    //     )
+    // }
+    console.log(this.props.newPostState, "NEWPS");
     return (
       <div className="editor-component">
         <div className="container-editor">
           <Editor
-            ref={this.editorRef}
+            ref={this.editorRef} //currentEditor  EditorState.createEmpty()
             /* editorState={editorState} */
             /* editorState={post} */
-            editorState={currentEditor}
+
+            editorState={
+              post[sectionKey] === ""
+                ? EditorState.createEmpty()
+                : EditorState.createWithContent(
+                    convertFromRaw(JSON.parse(post[sectionKey]))
+                  )
+            }
             onEditorStateChange={this.onEditorStateChange}
             toolbarClassName="toolbar-class"
             editorClassName="editor-area"
