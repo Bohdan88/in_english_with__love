@@ -131,24 +131,52 @@ class CustomEditor extends Component {
 
       post: {
         ...this.props.newPostState.post,
-        // [this.props.sectionKey]: editorState,
-        "About the video": {
-          ...this.props.newPostState.post["About the video"],
-          ...JSON.stringify(convertToRaw(editorState.getCurrentContent())),
-        },
-        // JSON.stringify(
-        //   convertToRaw(editorState.getCurrentContent())
-        // ),
+        [this.props.sectionKey]: editorState,
+      },
+      postLocalStorage: {
+        ...this.props.newPostState.postLocalStorage,
+        [this.props.sectionKey]: JSON.stringify(
+          convertToRaw(editorState.getCurrentContent())
+        ),
       },
     });
 
-    console.log(this.props.newPostState.post[this.props.sectionKey], "SEC");
+    console.log(this.props.newPostState, "SEC");
     this.setState({
       try: convertToRaw(editorState.getCurrentContent()),
     });
 
     // this.props.onEditorTextChange(checkIfcontainsJustSpaces);
   };
+
+  componentDidMount() {
+    // console.log(this.editorRef.current,'THIS')
+    // this.fetchFromLocalStorage();
+    // console.log(document.querySelector(".rdw-fontfamily-dropdown"));
+  }
+
+  fetchFromLocalStorage = () => {
+    const { newPostState, sectionKey } = this.props;
+    if (
+      newPostState.postLocalStorage[sectionKey] !== "" &&
+      newPostState.post[sectionKey] === ""
+    ) {
+      this.props.onSetPostNewValues({
+        post: {
+          ...this.props.newPostState.post,
+          [this.props.sectionKey]: EditorState.createWithContent(
+            convertFromRaw(
+              JSON.parse(newPostState.postLocalStorage[sectionKey])
+            )
+          ),
+        },
+      });
+    }
+  };
+
+  componentDidUpdate() {
+    this.fetchFromLocalStorage();
+  }
 
   onPreview = () => {
     this.setState({
@@ -217,38 +245,27 @@ class CustomEditor extends Component {
   };
   render() {
     const { editorState } = this.state;
+    const { newPostState, sectionKey } = this.props;
     const { post } = this.props.newPostState;
-    const { sectionKey } = this.props;
-
+    // console.log(this.props.newPostState, " this.props.newPostState");
+    // console.log(post[sectionKey], "RENDER_RENDER");
     // we check on blocks in case it's not editor state
+    // const currentEditor =
+    //   newPostState.postLocalStorage[sectionKey] === "" &&
+    //   (post[sectionKey] === "" ||
+    //     post[sectionKey].blocks ||
+    //     post[sectionKey][0] === "<")
+    //     ? EditorState.createEmpty()
+    //     : post[sectionKey];
     const currentEditor =
-      post[sectionKey] === "" ||
-      post[sectionKey].blocks ||
-      post[sectionKey][0] === "<"
-        ? EditorState.createEmpty()
-        : post[sectionKey];
+      post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
 
-    // console.log(sectionKey,'SEEEc')
-    // console.log(this.props[post[sectionKey]])
-    // console.log(JSON.parse(post[sectionKey]),'LOL')
-    // const contentState =
-    //   post[sectionKey] === "" ? "" : convertFromRaw(post[sectionKey]);
-    // this.setState({
-    //   editorState: EditorState.createWithContent(contentState),
-    // });
-
-    // console.log(post[sectionKey] === "" ? "it's string" :(EditorState.createWithContent(convertFromRaw(JSON.parse(post[sectionKey])))));
-    // console.log(EditorState.createWithContent(contentState), "contentState");
-    // console.log(JSON.stringify(post[sectionKey]), "SECTION_KEY");
-    // console.log(currentEditor._immutable, "currentEditor");
-    // {
-    //    post[sectionKey] === ""
-    //   ? EditorState.createEmpty()
-    //   : EditorState.createWithContent(
-    //       convertFromRaw(JSON.parse(post[sectionKey]))
-    //     )
+    // if (fontFamilyOptionWrapper) {
+    //   Object.values(fontFamilyOptionWrapper.children).forEach((tag) => {
+    //     tag.style.fontFamily = tag.innerHTML;
+    //   });
     // }
-    console.log(this.props.newPostState, "NEWPS");
+    // console.log(fontFamilyOptionWrapper && fontFamilyOptionWrapper.children);
     return (
       <div className="editor-component">
         <div className="container-editor">
@@ -257,13 +274,7 @@ class CustomEditor extends Component {
             /* editorState={editorState} */
             /* editorState={post} */
 
-            editorState={
-              post[sectionKey] === ""
-                ? EditorState.createEmpty()
-                : EditorState.createWithContent(
-                    convertFromRaw(JSON.parse(post[sectionKey]))
-                  )
-            }
+            editorState={currentEditor}
             onEditorStateChange={this.onEditorStateChange}
             toolbarClassName="toolbar-class"
             editorClassName="editor-area"
@@ -289,70 +300,6 @@ class CustomEditor extends Component {
             }}
             toolbarCustomButtons={[<VideoPlayer />]}
           />
-
-          {/* <Button
-            disabled={isEditorEmpty ? true : false}
-            onClick={this.onPreview}
-          >
-            {preview ? "Close Preview" : "Open Preview"}
-          </Button> */}
-          {/* <div className="container-preview">
-            <div
-              dangerouslySetInnerHTML={{
-                __html:
-                  (draftToHtml(convertToRaw(editorState.getCurrentContent())),
-                  "isEditorEmpty"),
-              }}
-            />
-          </div> */}
-          {/* <textarea
-            style={{ height: "300px", width: "300px" }}
-            disabled
-            value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-          />
-          
-        {/* </div> */}
-          {/* <button onClick={this.onSubmit}> Submit to DB</button> */}
-
-          {/* <div className="answers-container">
-          <AnswerTemplate
-            quantity={this.state.quantity}
-            onUpdateQuantity={this.updateQuantity}
-          />
-        </div>
-        <Button
-          disabled={isEditorEmpty ? true : false}
-          onClick={this.onPreview}
-        >
-          {preview ? "Close Preview" : "Open Preview"}
-        </Button>
-        <i className="fas fa-eye-dropper"></i>
-
-        <Button
-          disabled={isEditorEmpty ? true : false}
-          onClick={this.onSubmit}
-        >
-          Create
-        </Button>
-        <Button
-          disabled={isEditorEmpty ? true : false}
-          onClick={this.onEdit}
-        >
-          Edit
-        </Button>
-
-        {preview && editorState && (
-          <div className="container-preview">
-            <div
-              dangerouslySetInnerHTML={{
-                __html: sanitizeHtml(
-                  draftToHtml(convertToRaw(editorState.getCurrentContent())),
-                  "isEditorEmpty"
-                ),
-              }}
-            />
-          </div> */}
-          {/* )} */}
         </div>
       </div>
     );

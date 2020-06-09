@@ -32,6 +32,7 @@ import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
 import { transformToOptions, fireAlert } from "../../../../utils";
 import AboutTheLesson from "./AboutTheLesson";
 import LessonView from "../../../LessonView";
+import LessonPreview from "./LessonPreview";
 
 class CreateLesson extends Component {
   constructor(props) {
@@ -44,17 +45,11 @@ class CreateLesson extends Component {
       iconFile: null,
       iconSrc: "",
       iconVisibility: false,
-      onPreview: false,
       editorState: EditorState.createEmpty(),
       editorTextContent: true,
       isEditorEmpty: true,
       exercises: [],
-      errorFields: [
-        // category: false,
-        // focus: false,
-        // subCategory: false,
-        // title: false,
-      ],
+      errorFields: [],
     };
     this.onChange = (editorState) => this.setState({ editorState });
   }
@@ -111,7 +106,6 @@ class CreateLesson extends Component {
 
         // let local = JSON.parse(localStorage.getItem("persist:root"));
         // let newpost = JSON.parse(local.newPostState);
-        // console.log(newpost.title, "newpost");
 
         // INIT_NEW_POST_VALUES.title = newpost.title;
         // set init
@@ -119,10 +113,10 @@ class CreateLesson extends Component {
       }
     });
   };
+
   componentDidMount() {
     // let local = JSON.parse(localStorage.getItem("persist:root"));
     // let newpost = JSON.parse(local.newPostState);
-    // console.log(newpost.title, "newpost");
 
     this.fetchPostsFromDb();
 
@@ -153,38 +147,49 @@ class CreateLesson extends Component {
   };
 
   handleSaveImage = () => {
-    const { iconFile } = this.state;
+    const { iconFile, iconSrc } = this.state;
     const { iconPath } = this.props.newPostState;
     const { firebase } = this.props;
 
     if (!iconPath.length && iconFile && iconFile[0]) {
-      const storageRef = firebase.storage.ref(
-        `${POSTS_BUCKET_NAME}/${iconFile[0].lastModified}-${iconFile[0].name}`
-      );
+      const referencedValue = `${POSTS_BUCKET_NAME}/${iconFile[0].lastModified}-${iconFile[0].name}`;
+
+      const storageRef = firebase.storage.ref(referencedValue);
       storageRef
         .put(iconFile[0])
         .then(() => {
-          fireAlert(true, ICON_POST_ADD_STATUS);
-          this.props.onSetPostNewValues({
-            iconPath: storageRef.fullPath,
-          });
+          this.props.firebase.storage
+            .ref()
+            .child(referencedValue)
+            .getDownloadURL()
+            .then((url) => {
+              this.setState({ iconSrc: referencedValue });
+              this.props.onSetPostNewValues({
+                iconPath: url,
+              });
+            })
+            .then(() => fireAlert(true, ICON_POST_ADD_STATUS))
+            .catch((error) => {
+              fireAlert(false, ICON_POST_ADD_STATUS, error.message);
+            });
         })
         .catch((error) => {
-          fireAlert(false, ICON_POST_ADD_STATUS, error);
+          fireAlert(false, ICON_POST_ADD_STATUS, error.message);
         });
     }
-    if (!!iconPath.length) {
+    if (iconPath !== "") {
       firebase.storage
         .ref()
-        .child(iconPath)
+        .child(iconSrc)
         .delete()
         .then(() => {
           fireAlert(true, ICON_POST_REMOVE_STATUS);
           this.props.onSetPostNewValues({ iconPath: "" });
-          this.setState({ iconFile: null });
+          this.setState({ iconFile: null, iconSrc: "" });
         })
+        // .then(() => this.setState({ iconPath: null }))
         .catch((error) => {
-          fireAlert(false, ICON_POST_REMOVE_STATUS, error);
+          fireAlert(false, ICON_POST_REMOVE_STATUS, error.message);
         });
     }
   };
@@ -192,30 +197,8 @@ class CreateLesson extends Component {
   toggleIconVisibility = () =>
     this.setState({ iconVisibility: !this.state.iconVisibility });
 
-  showImage = () => {
-    console.log("HANDLE SHOW IMAGE");
-    console.log(this.props.newPostState.iconPath, "ICONPATH");
-    console.log(`${POSTS_BUCKET_NAME}/${this.state.iconFile}`, " drufg");
-    // if (this.state.iconSrc === "") {
-    this.props.firebase.storage
-      .ref()
-      .child(`${POSTS_BUCKET_NAME}/${this.state.iconFile}`)
-      .getDownloadURL()
-      .then((url) => {
-        this.setState({
-          iconSrc: url,
-        });
-      });
-    // }
-  };
-
-  onPreview = () => {
-    this.setState({
-      preview: !this.state.preview,
-    });
-  };
-
   isEmptyField = (value) => !value || value.trim === "";
+
   checkEachRequiredField = () => {
     const { category, subCategory, focus, title } = this.props.newPostState;
     //  clone state to avoid immutability
@@ -350,8 +333,6 @@ class CreateLesson extends Component {
     }
   };
 
-  onEditorTextChange = (value) => this.setState({ isEditorEmpty: value });
-
   render() {
     const {
       isLoading,
@@ -373,19 +354,20 @@ class CreateLesson extends Component {
       iconPath,
     } = this.props.newPostState;
     const { categories, focuses, subCategories } = this.props.posts;
-
+    console.log(this.props.newPostState.iconPath, "PATHELA");
+    console.log(iconSrc, "iconSrc");
     const panes = [
-      // {
-      //   menuItem: CREATE_LESSON_STAGES.practise,
-      //   render: () => (
-      //     <Tab.Pane>
-      //       <Practise
-      //         exercises={exercises}
-      //         sectionKey={CREATE_LESSON_STAGES.practise.key}
-      //       />
-      //     </Tab.Pane>
-      //   ),
-      // },
+      {
+        menuItem: CREATE_LESSON_STAGES.practise,
+        render: () => (
+          <Tab.Pane>
+            <Practise
+              exercises={exercises}
+              sectionKey={CREATE_LESSON_STAGES.practise.key}
+            />
+          </Tab.Pane>
+        ),
+      },
       {
         menuItem: CREATE_LESSON_STAGES.about,
         render: () => (
@@ -423,8 +405,10 @@ class CreateLesson extends Component {
         menuItem: CREATE_LESSON_STAGES.preview,
         render: () => (
           <Tab.Pane className="preview-tab">
-            <LessonView
-              mode={CREATE_LESSON_STAGES.preview}
+            <LessonPreview
+              focus={focus}
+              title={title}
+              iconSrc={this.props.newPostState.iconPath}
               sectionKey={CREATE_LESSON_STAGES.preview.key}
             />
           </Tab.Pane>
@@ -555,12 +539,12 @@ class CreateLesson extends Component {
                   onClick={() => this.fileInputRef.current.click()}
                 />
                 <Button
-                  color={!iconPath.length ? "facebook" : "red"}
+                  color={!iconPath || !iconPath.length ? "facebook" : "red"}
                   className="upload-button"
                   disabled={iconFile ? false : true}
                   type="submit"
                 >
-                  {!iconPath.length ? "Upload" : "Remove"}
+                  {!iconPath || !iconPath.length ? "Upload" : "Remove"}
                 </Button>
                 {/* <Button
                   disabled={iconFile ? false : true}
@@ -591,26 +575,6 @@ class CreateLesson extends Component {
           menu={{ secondary: true, pointing: true }}
           panes={panes}
         />
-        {/* <CustomEditor
-          onEditorTextChange={this.onEditorTextChange}
-          firebase={this.props.firebase}
-        /> */}
-
-        {/*  */}
-
-        <div className="answers-container">
-          {/* <AnswerTemplate
-            quantity={this.state.quantity}
-            onUpdateQuantity={this.updateQuantity}
-          /> */}
-        </div>
-        <Button
-          /* disabled={isEditorEmpty ? true : false} */
-          onClick={this.onPreview}
-        >
-          {preview ? "Close Preview" : "Open Preview"}
-        </Button>
-        <i className="fas fa-eye-dropper"></i>
 
         <Button
           disabled={isEditorEmpty ? false : false} // true: false

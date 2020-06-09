@@ -130,7 +130,7 @@
   background: #f6f5fa !important;
   overflow-x: hidden;
   border-radius: 0px !important;
-  border-top: none !important;
+  // border-top: none !important;
   border-bottom: none !important;
 }
 
@@ -144,8 +144,10 @@
 .open-menu-admin {
   position: absolute;
   left: -1px;
-  top: -681px;
-  height: 679px;
+  top: -70.2vh;
+  border-top: 1px solid $grey!important;
+  // height: 679px;
+  height: 70vh;
 }
 
 //

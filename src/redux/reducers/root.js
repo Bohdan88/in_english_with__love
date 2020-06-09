@@ -1,16 +1,29 @@
 import { combineReducers } from "redux";
+import { persistReducer } from "redux-persist";
 import { posts } from "./posts";
 import { newPostReducer } from "./newpost";
 import sessionReducer from "./session";
 import userReducer from "./users";
 import userActivityReducer from "./userActivity";
-// import { newPost } from "./newpost";
+import storage from "redux-persist/lib/storage";
+
+const confi = {
+  key: "root",
+  storage: storage,
+  blacklist: ["post"],
+};
+
+const rootPersistConfig = {
+  key: "root",
+  storage: storage,
+  blacklist: ["userReducer", "sessionReducer"],
+};
 
 const rootReducer = combineReducers({
   posts,
   sessionState: sessionReducer,
   userState: userReducer,
-  newPostState: newPostReducer,
+  newPostState: persistReducer(confi, newPostReducer),
   userActivity: userActivityReducer,
 });
 // root reducer

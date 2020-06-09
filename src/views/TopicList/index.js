@@ -233,7 +233,7 @@ class TopicList extends Component {
                 <Message.Header>Sorry! No data found!</Message.Header>
                 <Message.Content>
                   <span className="capitalize">{`${currentTopic}  `}</span>
-                  doen't have {` ${value || "lessons"} `}
+                  doesn't have {` ${value || "lessons"} `}
                 </Message.Content>
               </Message>
             ) : (

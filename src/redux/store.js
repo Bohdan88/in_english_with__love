@@ -8,17 +8,20 @@ import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 // let middleware = [apiMiddleware, thunk];
 
-const persistConfig = {
-  key: "root",
-  storage: storage,
-  stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
-};
+// const persistConfig = {
+//   key: "root",
+//   storage: storage,
+//   blackList: ["posts"],
+//   stateReconciler: autoMergeLevel2, // see "Merge Process" section for details.
+// };
 
-const pReducer = persistReducer(persistConfig, rootReducer);
+// console.log(persistConfig, "persistConfig");
+
+// const pReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = createStore(
-  // rootReducer,
-  pReducer,
+  rootReducer,
+  // pReducer,
   composeEnhancers()
   // composeEnhancers(applyMiddleware(...middleware))
 );

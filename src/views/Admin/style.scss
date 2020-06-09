@@ -336,6 +336,14 @@
   margin-top: 3px !important;
 }
 
+.card-preview-container {
+  width: 50% !important;
+  padding: 25px !important;
+  margin: auto!important;
+  border: 1px solid $white !important; // $light-sea
+  padding-right: 0px !important;
+}
+
 @media only screen and (min-width: 1919px) {
   .answer-textarea {
     // max-width: 200px;

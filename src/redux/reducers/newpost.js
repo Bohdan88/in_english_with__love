@@ -18,6 +18,12 @@ const initState = {
     [CREATE_LESSON_STAGES.content.key]: "",
     // [CREATE_LESSON_STAGES.practise.key]: "",
   },
+  postLocalStorage: {
+    [CREATE_LESSON_STAGES.about.key]: "",
+    [CREATE_LESSON_STAGES.before.key]: "",
+    [CREATE_LESSON_STAGES.after.key]: "",
+    [CREATE_LESSON_STAGES.content.key]: "",
+  },
   title: "",
   iconPath: "",
   assets: {
