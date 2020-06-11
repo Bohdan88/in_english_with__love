@@ -31,7 +31,6 @@ import {
 import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
 import { transformToOptions, fireAlert } from "../../../../utils";
 import AboutTheLesson from "./AboutTheLesson";
-import LessonView from "../../../LessonView";
 import LessonPreview from "./LessonPreview";
 
 class CreateLesson extends Component {
@@ -266,7 +265,7 @@ class CreateLesson extends Component {
 
     Object.values(assets).map((arrayOfObj) => {
       if (arrayOfObj && !!arrayOfObj.length) {
-        arrayOfObj.map((obj) => {
+        return arrayOfObj.map((obj) => {
           const imgSection = Object.values(obj)[0].section;
           const imgUrl = Object.keys(obj)[0];
           // build a path like this => posts/title/about/imageUrl
@@ -287,10 +286,6 @@ class CreateLesson extends Component {
                   (img) => Object.keys(img)[0] === imgUrl
                 );
 
-                console.log(
-                  assets[imgSection][index][imgUrl],
-                  "assets[imgSection][index][imgUrl]"
-                );
                 assets[imgSection][index][imgUrl] = url;
                 this.props.onSetPostNewValues({ assets });
               })
@@ -354,8 +349,7 @@ class CreateLesson extends Component {
       iconPath,
     } = this.props.newPostState;
     const { categories, focuses, subCategories } = this.props.posts;
-    console.log(this.props.newPostState.iconPath, "PATHELA");
-    console.log(iconSrc, "iconSrc");
+
     const panes = [
       {
         menuItem: CREATE_LESSON_STAGES.practise,

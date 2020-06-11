@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import AnswerWord from "./AnswerWord";
-import { Sticky } from "semantic-ui-react";
 
 class ColumnAnswers extends Component {
   render() {

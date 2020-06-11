@@ -12,8 +12,6 @@ import {
   AnotherWay,
 } from "./Components";
 import {
-  CHAPTERS_ICONS,
-  CHAPTERS_SEQUENCE,
   COMPLETE_THE_SENTENCES,
   MATCHING,
   ANOTHER_WAY_TO_SAY,
@@ -106,7 +104,7 @@ class LessonView extends Component {
   setSelectedLesson = (selectedLesson) => {
     if (!!selectedLesson.length) {
       Object.values(selectedLesson[0].newPostExercisesValues).map((obj) => {
-        selectedLesson[0].post[obj.type] = obj;
+        return (selectedLesson[0].post[obj.type] = obj);
       });
 
       const filteredLessonItems = Object.keys(selectedLesson[0].post).filter(

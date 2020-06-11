@@ -11,10 +11,4 @@ const SignOutButton = ({ firebase }) => (
   </Link>
 );
 
-{
-  /* <button type="button" onClick={firebase.doSignOut}>
-  
-  </button> */
-}
-
 export default withFirebase(SignOutButton);

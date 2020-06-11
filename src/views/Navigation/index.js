@@ -1,18 +1,11 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import SignOutButton from "../SignOut";
 import { AuthUserContext } from "../Session";
 import * as ROLES from "../../constants/roles";
-import {
-  Menu,
-  Container,
-  Image,
-  Sticky,
-  Item,
-  MenuItem,
-} from "semantic-ui-react";
+import { Menu, Container, Image, Sticky } from "semantic-ui-react";
 import { LOGO_LINK } from "../../constants/shared";
 import MobileMenu from "./MobileMenu";
 import "./style.scss";

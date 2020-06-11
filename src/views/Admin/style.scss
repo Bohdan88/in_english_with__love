@@ -304,8 +304,7 @@
 .match-segment-id,
 .complete-segment-id,
 .match-dropwdown-letter > div,
-.button-replace-field > .button,
-.button-remove-field > .button {
+.button-replace-field > .button {
   height: 42px !important;
 }
 
@@ -337,9 +336,11 @@
 }
 
 .card-preview-container {
-  width: 50% !important;
+  // width: 50% !important;
+  max-width: 650px !important;
+  min-width: 500px;
   padding: 25px !important;
-  margin: auto!important;
+  margin: auto !important;
   border: 1px solid $white !important; // $light-sea
   padding-right: 0px !important;
 }

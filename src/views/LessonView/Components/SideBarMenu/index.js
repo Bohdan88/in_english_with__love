@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import {
-  CHAPTERS_ICONS,
-  CREATE_LESSON_STAGES,
-} from "../../../../constants/shared";
-import { Label, Menu, Transition, Icon } from "semantic-ui-react";
+import { CREATE_LESSON_STAGES } from "../../../../constants/shared";
+import { Label, Menu, Transition } from "semantic-ui-react";
 import "./style.scss";
 
 class SideBarMenu extends Component {

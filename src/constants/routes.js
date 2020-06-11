@@ -15,4 +15,4 @@ export const LESSON_TOPIC_LIST = "/topic-list";
 export const LESSON_TOPIC = "/topic";
 export const PASSWORD_FORGET = "/pw-forget";
 export const ADMIN_DETAILS = "/admin/:id";
-export const SHARED_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT, CONTACT];
+export const SHARED_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT, CONTACT, ACCOUNT];

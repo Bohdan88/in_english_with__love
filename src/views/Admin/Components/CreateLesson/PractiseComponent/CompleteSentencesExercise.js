@@ -17,9 +17,7 @@ import {
 import {
   EXERCISES_LABELS_COLORS,
   INIT_FIELDS_CONTENT,
-  COMPLETE_FIELDS,
-  COMPLETE_KEYS,
-  REPLACED_ANSWER,
+  COMPLETE_FIELDS
 } from "../../../../../constants/shared";
 
 const TutorialContent = () => {

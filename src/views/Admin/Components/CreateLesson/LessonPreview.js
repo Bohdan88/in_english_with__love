@@ -77,7 +77,7 @@ const LessonPreview = ({ sectionKey, iconSrc, title, focus }) => {
         viewState={cardView}
         toggleView={toggleCardView}
         component={
-          <Card fluid className="card-preview-container">
+          <Card  className="card-preview-container">
             <Icon className="card-topic-arrow" name="arrow right" />
             <Card.Content className="card-content-topic">
               <Card.Content className="card-content-image">

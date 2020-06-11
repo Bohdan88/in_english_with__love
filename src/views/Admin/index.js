@@ -21,6 +21,7 @@ import { Dimmer, Segment, Loader, Tab, Grid } from "semantic-ui-react";
 import { getAllPostsValues } from "../../redux/actions";
 
 import "./style.scss";
+import LessonsList from "./Components/LessonsList";
 // Admin
 
 const transformToOptions = (arr) => {
@@ -135,6 +136,14 @@ class AdminPage extends Component {
     // console.log(this.props.users,'usersusersusers')
     const panes = [
       {
+        menuItem: ADMIN_TABS.all_lessons,
+        render: () => (
+          <Tab.Pane>
+            <LessonsList />
+          </Tab.Pane>
+        ),
+      },
+      {
         menuItem: ADMIN_TABS.create_lesson,
         render: () => (
           <Tab.Pane>
@@ -142,10 +151,7 @@ class AdminPage extends Component {
           </Tab.Pane>
         ),
       },
-      {
-        menuItem: ADMIN_TABS.all_lessons,
-        render: () => <Tab.Pane>All LEsonst</Tab.Pane>,
-      },
+
       {
         menuItem: ADMIN_TABS.users,
         render: () => <Tab.Pane>Tab 2 Content</Tab.Pane>,

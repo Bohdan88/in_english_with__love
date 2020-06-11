@@ -7,10 +7,8 @@ import {
   Header,
   Button,
   Icon,
-  Progress,
   Popup,
   Message,
-  Table,
 } from "semantic-ui-react";
 import { CHAR_SEQUENCE } from "../../../../constants/shared";
 

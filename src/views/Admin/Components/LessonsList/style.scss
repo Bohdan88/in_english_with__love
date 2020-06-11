@@ -1,0 +1,14 @@
+@import "../../../../style/variables.scss";
+
+.lesson-list-edit,
+.lesson-list-remove {
+  background: none !important;
+}
+
+.lesson-list-remove {
+  color: $red !important;
+}
+
+.lesson-list-header-row {
+  border-bottom: 2px solid $chetwode-blue;
+}

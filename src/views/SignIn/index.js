@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import { SignUpLink } from "../SignUp";
 import { PasswordForgetLink } from "../PasswordForget";
-import { LOGO_LEFT_SIDE, LOGO_LINK, SIGN_IN } from "../../constants/shared";
+import { SIGN_IN } from "../../constants/shared";
 import { Grid, Image, Form, Button, Header, Label } from "semantic-ui-react";
 import * as ROUTES from "../../constants/routes";
 // import logot from "./file.svg";

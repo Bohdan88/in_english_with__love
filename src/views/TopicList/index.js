@@ -17,9 +17,9 @@ import {
   Transition,
   Message,
 } from "semantic-ui-react";
-import { DEFAULT_TOPIC_IMAGE, POSTS_BUCKET_NAME } from "../../constants/shared";
 import { LESSON_TOPIC } from "../../constants/routes";
 import { convertMillisecondsToDate } from "../../utils";
+import defaultImage from "../../assets/images/default.png";
 import { Link } from "react-router-dom";
 // style
 import "./style.scss";
@@ -81,32 +81,32 @@ class TopicList extends Component {
                 },
               });
             })
-            .catch((error) => console.log(error, "errorƒ"));
+            .catch((error) => console.log(error.text, "error"));
         }
       });
     }
 
-    if (!allIconImagesByTopic[DEFAULT_TOPIC_IMAGE]) {
-      this.props.firebase.storage
-        .ref()
-        .child(`${POSTS_BUCKET_NAME}/`)
-        .listAll()
-        .then((res) =>
-          res.items.forEach((item) =>
-            item.getDownloadURL().then((url) => {
-              if (url.includes(DEFAULT_TOPIC_IMAGE)) {
-                this.props.onGetAllPostsValues({
-                  allIconImagesByTopic: {
-                    ...this.props.posts.allIconImagesByTopic,
-                    default: url,
-                  },
-                });
-              }
-            })
-          )
-        )
-        .catch((error) => console.log(error, "error"));
-    }
+    // if (!allIconImagesByTopic[DEFAULT_TOPIC_IMAGE]) {
+    //   this.props.firebase.storage
+    //     .ref()
+    //     .child(`${POSTS_BUCKET_NAME}/`)
+    //     .listAll()
+    //     .then((res) =>
+    //       res.items.forEach((item) =>
+    //         item.getDownloadURL().then((url) => {
+    //           if (url.includes(DEFAULT_TOPIC_IMAGE)) {
+    //             this.props.onGetAllPostsValues({
+    //               allIconImagesByTopic: {
+    //                 ...this.props.posts.allIconImagesByTopic,
+    //                 default: url,
+    //               },
+    //             });
+    //           }
+    //         })
+    //       )
+    //     )
+    //     .catch((error) => console.log(error, "error"));
+    // }
   };
 
   handleSearchChange = (e, { value }) => {
@@ -235,14 +235,14 @@ class TopicList extends Component {
                   <span className="capitalize">{`${currentTopic}  `}</span>
                   doesn't have {` ${value || "lessons"} `}
                 </Message.Content>
+                {/* !!allIconImagesByTopic[DEFAULT_TOPIC_IMAGE] && */}
               </Message>
             ) : (
-              !!allIconImagesByTopic[DEFAULT_TOPIC_IMAGE] &&
               currentTopicPosts.map((topic) => {
                 return (
                   <Grid.Column
                     widescreen={4}
-                    largeScreen={7}
+                    tablet={7}
                     className="topics-column"
                     key={topic.title}
                   >
@@ -273,7 +273,7 @@ class TopicList extends Component {
                                     allIconImagesByTopic[currentTopic][
                                       topic.title
                                     ]) ||
-                                  allIconImagesByTopic[DEFAULT_TOPIC_IMAGE]
+                                  defaultImage
                                 }
                                 alt={topic.title}
                                 floated="left"

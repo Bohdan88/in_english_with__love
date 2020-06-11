@@ -17,35 +17,20 @@ import {
   Transition,
   Message,
 } from "semantic-ui-react";
-import {
-  TOPICS_BUCKET_NAME,
-  DEFAULT_TOPIC_IMAGE,
-  CATEGORY_TOPICS,
-} from "../../constants/shared";
+import { TOPICS_BUCKET_NAME, CATEGORY_TOPICS } from "../../constants/shared";
 import { LESSON_TOPIC_LIST } from "../../constants/routes";
 import { Link } from "react-router-dom";
+import defaultImage from "../../assets/images/default.png";
+
 // style
 import "./style.scss";
-
-const arrTop = [
-  { name: "Culture", lessons: "" },
-  { name: "History", lessons: [""] },
-  { name: "Sport", lessons: "" },
-  { name: "Math", lessons: "" },
-  { name: "Psychology", lessons: "" },
-  { name: "Philosophy", lessons: "" },
-  { name: "Music", lessons: "" },
-  { name: "Biology", lessons: "" },
-  { name: "Opera", lessons: "" },
-  { name: "Science", lessons: "" },
-];
 
 class CategoryTopics extends Component {
   state = {
     searchedTopic: "",
     dbValuesLoading: false,
     searchTopicLoading: false,
-    stateTopics: arrTop,
+    // stateTopics: arrTop,
   };
 
   handleSearchChange = (e, { value }) => {
@@ -247,12 +232,14 @@ class CategoryTopics extends Component {
                   const imgSrc = posts[categoryType].images.filter((imgUrl) =>
                     imgUrl.includes(`${topic.toLowerCase()}.`)
                   );
-
+                  {
+                    /* 
                   const defaultImage = posts[
                     categoryType
                   ].images.filter((imgUrl) =>
                     imgUrl.includes(DEFAULT_TOPIC_IMAGE)
-                  );
+                  ); */
+                  }
 
                   const filteredLessons = allPosts.filter(
                     (obj) => obj.subCategory === topic
@@ -268,7 +255,8 @@ class CategoryTopics extends Component {
                     >
                       <Grid.Column
                         widescreen={3}
-                        largeScreen={4}
+                        largeScreen={5}
+                        tablet={5}
                         className="topics-column"
                       >
                         <Link
@@ -277,12 +265,12 @@ class CategoryTopics extends Component {
                             1
                           )}&topic=${topic && topic.toLowerCase()}`}
                         >
-                          <Card fluid className="card-topic-container">
+                          <Card className="card-topic-container">
                             <Icon
                               className="card-topic-arrow"
                               name="arrow right"
                             />
-                            <Card.Content className="card-content-topic">
+                            <Card.Content className="card-content-category">
                               <Card.Content className="card-content-image">
                                 <Image
                                   className="card-topic-image"
