@@ -153,32 +153,36 @@ class LessonView extends Component {
     // console.log(lessonChapter,'lessonChapter')
 
     // check if it's json string  or editor state
-    if (typeof lessonChapter === "string" || lessonChapter._immutable) {
-      // check if mode is preview, if so do not parse it because we don't stringify it yet
-      return (
-        <div
-          dangerouslySetInnerHTML={{
-            __html:
-              mode === CREATE_LESSON_STAGES.preview
-                ? lessonChapter === ""
-                  ? ""
-                  : draftToHtml(convertToRaw(lessonChapter.getCurrentContent()))
-                : JSON.parse(lessonChapter),
-          }}
-        />
-      );
-    }
-
-    if (lessonChapter && lessonChapter.name) {
-      if (lessonChapter.name.includes(ANOTHER_WAY_TO_SAY)) {
-        return <AnotherWay lessonValues={lessonChapter} />;
-      }
-      if (lessonChapter.name.includes(COMPLETE_THE_SENTENCES)) {
-        return <CompleteSentence lessonValues={lessonChapter} />;
+    if (lessonChapter) {
+      if (typeof lessonChapter === "string" || lessonChapter._immutable) {
+        // check if mode is preview, if so do not parse it because we don't stringify it yet
+        return (
+          <div
+            dangerouslySetInnerHTML={{
+              __html:
+                mode === CREATE_LESSON_STAGES.preview
+                  ? lessonChapter === ""
+                    ? ""
+                    : draftToHtml(
+                        convertToRaw(lessonChapter.getCurrentContent())
+                      )
+                  : JSON.parse(lessonChapter),
+            }}
+          />
+        );
       }
 
-      if (lessonChapter.name.includes(MATCHING)) {
-        return <MatchExerciseView lessonValues={lessonChapter} />;
+      if (lessonChapter && lessonChapter.name) {
+        if (lessonChapter.name.includes(ANOTHER_WAY_TO_SAY)) {
+          return <AnotherWay lessonValues={lessonChapter} />;
+        }
+        if (lessonChapter.name.includes(COMPLETE_THE_SENTENCES)) {
+          return <CompleteSentence lessonValues={lessonChapter} />;
+        }
+
+        if (lessonChapter.name.includes(MATCHING)) {
+          return <MatchExerciseView lessonValues={lessonChapter} />;
+        }
       }
     }
     return null;
@@ -307,7 +311,7 @@ class LessonView extends Component {
                           <Message.Content>
                             {currentTopic === "admin"
                               ? "You have nothing to preview."
-                              : `Unfortunately  ${currentTopic} can't be
+                              : `Unfortunately  "${currentChapter}" can't be
               loaded =(`}
                           </Message.Content>
                         </Message>

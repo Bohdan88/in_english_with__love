@@ -12,3 +12,11 @@
 .lesson-list-header-row {
   border-bottom: 2px solid $chetwode-blue;
 }
+
+.topics-lesson-link {
+  color: $dark-grey !important;
+}
+
+.topics-lesson-link:hover {
+  color: $black !important;
+}
