@@ -360,7 +360,13 @@ export const TOPICS_BUCKET_NAME = "topics";
 export const DEFAULT_TOPIC_IMAGE = "default";
 
 // editor page
+export const EDIT_CREATE_POST_TAB_INDEX = 1;
 export const SLICED_UPLOADED_IMAGE_KEY = 27;
+export const POST_MODE = {
+  EDIT: "edit",
+  CREATE: "create",
+};
+
 export const LESSON_STATUS = {
   icon: {
     success: "success",

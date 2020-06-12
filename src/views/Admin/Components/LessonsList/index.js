@@ -16,14 +16,15 @@ import {
   Header,
   Input,
 } from "semantic-ui-react";
-import {
-  getAllPostsValues,
-  // , setNewValues
-} from "../../../../redux/actions";
+import { getAllPostsValues, setNewValues } from "../../../../redux/actions";
 import { withFirebase } from "../../../Firebase";
 
 // styles
 import "./style.scss";
+import {
+  EDIT_CREATE_POST_TAB_INDEX,
+  POST_MODE,
+} from "../../../../constants/shared";
 
 class LessonsList extends PureComponent {
   state = {
@@ -109,9 +110,14 @@ class LessonsList extends PureComponent {
   };
 
   componentDidMount() {
-    if (!this.props.posts.allPosts.length) {
+    const { allPosts } = this.props.posts;
+    if (!allPosts.length) {
       this.setState({ isLoading: true });
       this.fetchPostsFromDb();
+    } else {
+      this.setState({
+        postsList: allPosts,
+      });
     }
   }
 
@@ -119,8 +125,7 @@ class LessonsList extends PureComponent {
     this.props.firebase.posts().off();
   }
 
-
-    editPostFromDb = (post, firebase) => {
+  editPostFromDb = (post, firebase) => {
     // firebase.db.ref(`posts/${post.uid}`).remove()
     // console.log(firebase.db.ref(`posts/${post.uid}`))
     // firebase.db.ref(`posts/${post.uid}`).update({
@@ -202,6 +207,7 @@ class LessonsList extends PureComponent {
                 </Table.Header>
                 <Table.Body>
                   {postsList.map((lesson, key) => {
+                    console.log(lesson, "lesson");
                     return (
                       <Table.Row key={lesson.title}>
                         <Table.Cell width="6">
@@ -222,7 +228,13 @@ class LessonsList extends PureComponent {
                         <Table.Cell width="1" textAlign="center">
                           <Button
                             className="lesson-list-edit"
-                            onClick={() => console.log("EDIT PAZANA")}
+                            onClick={() => {
+                              this.props.setEditPostTabIndex();
+                              this.props.onSetPostNewValues({
+                                postMode: POST_MODE.EDIT,
+                                ...lesson,
+                              });
+                            }}
                           >
                             <Icon name="edit" color="yellow" />
                           </Button>
@@ -260,7 +272,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    // onSetPostNewValues: (values) => dispatch(setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
   };
 };
 export default compose(

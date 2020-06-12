@@ -15,6 +15,8 @@ import {
   CATEGORIES,
   ADMIN_DROPDOWN_TITLES,
   POSTS_BUCKET_NAME,
+  EDIT_CREATE_POST_TAB_INDEX,
+  POST_MODE,
 } from "../../constants/shared";
 import { Dimmer, Segment, Loader, Tab, Grid } from "semantic-ui-react";
 
@@ -43,64 +45,22 @@ class AdminPage extends Component {
       loading: false,
       users: [],
       posts: [],
+      activeTabIndex: 0,
     };
 
-    this.state = {
-      editorState: EditorState.createEmpty(),
-      categories: CATEGORIES,
-      subCategories: [],
-      focus: [],
-      files: null,
-      iconSrc: "",
-      iconVisibility: false,
-    };
-    this.onChange = (editorState) => this.setState({ editorState });
+    // this.state = {
+    //   editorState: EditorState.createEmpty(),
+    //   categories: CATEGORIES,
+    //   subCategories: [],
+    //   focus: [],
+    //   files: null,
+    //   iconSrc: "",
+    //   iconVisibility: false,
+    // };
   }
 
   // handleAllPostsValues = () => this.props.onGetAllPostsValues("THIS");
   componentDidMount() {
-    // this.setState({ loading: true });
-    // this.props.onGetAllPostsValues("THIS");
-    // this.listener = this.props.firebase.users().on("value", (snapshot) => {
-    //   const usersObject = snapshot.val();
-
-    //   const usersList = Object.keys(usersObject).map((key) => ({
-    //     ...usersObject[key],
-    //     uid: key,
-    //   }));
-
-    //   this.setState({
-    //     users: usersList,
-    //     // loading: false,
-    //   });
-    // });
-
-    // //------
-    // // this.handleAllPostsValues();
-    // this.listener2 = this.props.firebase.posts().on("value", (snapshot) => {
-    //   const postsObject = snapshot.val();
-
-    //   const postsList = Object.keys(postsObject).map((key) => ({
-    //     ...postsObject[key],
-    //     uid: key,
-    //   }));
-
-    //   this.setState({
-    //     posts: postsList,
-    //     loading: false,
-    //   });
-
-    //   // set posts
-    //   this.setState({
-    //     subCategories: transformToOptions([
-    //       ...new Set(postsList.map((obj, key) => obj.type)),
-    //     ]),
-    //     focus: transformToOptions([
-    //       ...new Set(postsList.map((obj, key) => obj.focus)),
-    //     ]),
-    //   });
-    // });
-
     // redux stuff
 
     if (!this.props.users.length) {
@@ -130,8 +90,20 @@ class AdminPage extends Component {
   //   this.listener2();
   // }
 
+  onTabChange = (data) => {
+    this.setState({
+      activeTabIndex: data.activeIndex,
+    });
+  };
+
+  setEditPostTabIndex = () =>
+    this.setState({
+      activeTabIndex: EDIT_CREATE_POST_TAB_INDEX,
+      postMode: POST_MODE.EDIT,
+    });
+
   render() {
-    const { loading } = this.state;
+    const { loading, activeTabIndex, postMode } = this.state;
     // console.log(this.props,'this.state')
     // console.log(this.props.users,'usersusersusers')
     const panes = [
@@ -139,7 +111,7 @@ class AdminPage extends Component {
         menuItem: ADMIN_TABS.all_lessons,
         render: () => (
           <Tab.Pane>
-            <LessonsList />
+            <LessonsList setEditPostTabIndex={this.setEditPostTabIndex} />
           </Tab.Pane>
         ),
       },
@@ -147,7 +119,7 @@ class AdminPage extends Component {
         menuItem: ADMIN_TABS.create_lesson,
         render: () => (
           <Tab.Pane>
-            <CreateLesson />
+            <CreateLesson postMode={postMode} />
           </Tab.Pane>
         ),
       },
@@ -158,6 +130,7 @@ class AdminPage extends Component {
       },
     ];
 
+    // console.log(this.state, "STAATE");
     return (
       <div>
         {loading ? (
@@ -171,7 +144,12 @@ class AdminPage extends Component {
             <Grid.Row>
               <Grid.Column className="column-admin">
                 {/* <Container> */}
-                <Tab panes={panes} />
+                <Tab
+                  activeIndex={activeTabIndex}
+                  onTabChange={(e, data) => this.onTabChange(data)}
+                  panes={panes}
+                />
+
                 {/* </Container> */}
               </Grid.Column>
             </Grid.Row>

@@ -5,9 +5,12 @@ import {
   EXERCISES_NAMES,
   EXERCISES_TYPES,
   EXERCISES_DESCRIPTIONS,
+  POST_MODE,
 } from "../../constants/shared";
 
 const initState = {
+  uid: "",
+  postMode: POST_MODE.CREATE,
   category: CATEGORIES[0].text,
   subCategory: "",
   focus: "",

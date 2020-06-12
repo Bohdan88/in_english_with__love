@@ -10,6 +10,7 @@ import {
   POSTS_BUCKET_NAME,
   INIT_NEW_POST_VALUES,
   CREATE_LESSON_STAGES,
+  POST_MODE,
 } from "../../../../constants/shared";
 import { EditorState, convertToRaw } from "draft-js";
 import {
@@ -108,20 +109,28 @@ class CreateLesson extends Component {
 
         // INIT_NEW_POST_VALUES.title = newpost.title;
         // set init
-        this.props.onSetPostNewValues(INIT_NEW_POST_VALUES);
+        // this.props.onSetPostNewValues(INIT_NEW_POST_VALUES);
       }
     });
   };
 
   componentDidMount() {
+    const { postMode } = this.props.newPostState;
     // let local = JSON.parse(localStorage.getItem("persist:root"));
     // let newpost = JSON.parse(local.newPostState);
 
     this.fetchPostsFromDb();
 
+    if (postMode === POST_MODE.CREATE) {
+      // this.props.onSetPostNewValues(INIT_NEW_POST_VALUES);
+    } else if (postMode === POST_MODE.EDIT) {
+    }
     // this.props.onSetPostNewValues({
     //   title: newpost.title,
     // });
+    // console.log(this.props.newPostState.postMode, "postMode");
+
+    console.log(this.props.newPostState,'NEWW')
   }
 
   onDropDownChange = (data, dropDownType) => {
@@ -332,7 +341,6 @@ class CreateLesson extends Component {
     const {
       isLoading,
       iconFile,
-      iconSrc,
       iconVisibility,
       preview,
       editorTextContent,
