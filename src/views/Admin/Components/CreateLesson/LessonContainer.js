@@ -130,7 +130,7 @@ class CreateLesson extends Component {
     // });
     // console.log(this.props.newPostState.postMode, "postMode");
 
-    console.log(this.props.newPostState,'NEWW')
+    console.log(this.props.newPostState, "NEWW");
   }
 
   onDropDownChange = (data, dropDownType) => {
@@ -176,13 +176,19 @@ class CreateLesson extends Component {
                 iconPath: url,
               });
             })
-            .then(() => fireAlert(true, ICON_POST_ADD_STATUS))
+            .then(() =>
+              fireAlert({ state: true, values: ICON_POST_ADD_STATUS })
+            )
             .catch((error) => {
               fireAlert(false, ICON_POST_ADD_STATUS, error.message);
             });
         })
         .catch((error) => {
-          fireAlert(false, ICON_POST_ADD_STATUS, error.message);
+          fireAlert({
+            state: false,
+            values: ICON_POST_ADD_STATUS,
+            error: error.message,
+          });
         });
     }
     if (iconPath !== "") {
@@ -191,13 +197,17 @@ class CreateLesson extends Component {
         .child(iconSrc)
         .delete()
         .then(() => {
-          fireAlert(true, ICON_POST_REMOVE_STATUS);
+          fireAlert({ state: true, values: ICON_POST_REMOVE_STATUS });
           this.props.onSetPostNewValues({ iconPath: "" });
           this.setState({ iconFile: null, iconSrc: "" });
         })
         // .then(() => this.setState({ iconPath: null }))
         .catch((error) => {
-          fireAlert(false, ICON_POST_REMOVE_STATUS, error.message);
+          fireAlert({
+            state: false,
+            values: ICON_POST_REMOVE_STATUS,
+            error: error.message,
+          });
         });
     }
   };
@@ -315,7 +325,9 @@ class CreateLesson extends Component {
       .then(() => {
         this.setState({ isLoading: false });
         // call success modal and refresh props
-        fireAlert(true, LESSON_STATUS).then(() => this.fetchPostsFromDb());
+        fireAlert({ state: true, values: LESSON_STATUS }).then(() =>
+          this.fetchPostsFromDb()
+        );
       })
       .catch((error) => fireAlert(false, LESSON_STATUS, error));
   };

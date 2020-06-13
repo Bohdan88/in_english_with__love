@@ -1,26 +1,14 @@
 import React, { Component } from "react";
 import {
   EditorState,
-  Modifier,
   convertToRaw,
-  ContentState,
-  AtomicBlockUtils,
   convertFromRaw,
-  SelectionState,
+  AtomicBlockUtils,
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
-import PropTypes from "prop-types";
 import { EDITOR_OPTIONS } from "../../constants/shared";
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
-import Swal from "sweetalert2";
-import { Button, Input } from "semantic-ui-react";
-import {
-  LESSON_STATUS,
-  SLICED_UPLOADED_IMAGE_KEY,
-} from "../../constants/shared";
+import { SLICED_UPLOADED_IMAGE_KEY } from "../../constants/shared";
 import { CustomColorPicker, VideoPlayer } from "./CustomComponents";
 import sanitizeHtml from "sanitize-html-react";
 import { setNewValues } from "../../redux/actions";
@@ -28,86 +16,35 @@ import { connect } from "react-redux";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 import { POSTS_BUCKET_NAME } from "../../constants/shared";
-
-// import * as PluginEditor from "draft-js-plugins-editor";
-// style
-
+import _ from "lodash";
 import "./style.scss";
-
-class CustomOption extends Component {
-  static propTypes = {
-    onChange: PropTypes.func,
-    editorState: PropTypes.object,
-    preview: false,
-    modalWindow: false,
-  };
-
-  addStar = () => {
-    const { editorState, onChange } = this.props;
-    const contentState = Modifier.replaceText(
-      editorState.getCurrentContent(),
-      editorState.getSelection(),
-      "⭐",
-      editorState.getCurrentInlineStyle()
-    );
-    onChange(EditorState.push(editorState, contentState, "insert-characters"));
-  };
-
-  render() {
-    return <div onClick={this.addStar}>⭐</div>;
-  }
-}
-
-const fireAlert = (state) => {
-  Swal.fire({
-    icon: state ? LESSON_STATUS.icon.success : LESSON_STATUS.icon.error,
-    heightAuto: false,
-    title: state ? LESSON_STATUS.title.success : LESSON_STATUS.title.error,
-    text: state ? LESSON_STATUS.text.success : LESSON_STATUS.text.error,
-    customClass: {
-      confirmButton: "ui green basic button",
-      container: "alert-container-class",
-    },
-    popup: "swal2-show",
-  });
-
-  setTimeout(() => Swal.close(), 4000);
-};
 
 class CustomEditor extends Component {
   constructor(props) {
     super(props);
     this.editorRef = React.createRef();
-    // const contentState = convertFromRaw(content);
-    // const html = "<p>Hey this <strong>editor</strong> rocks 😀</p>";
-    // const contentBlock = htmlToDraft(html);
 
-    // if (contentBlock) {
-    //   const contentState = ContentState.createFromBlockArray(
-    //     contentBlock.contentBlocks
-    //   );
-    //   const editorState = EditorState.createWithContent(contentState);
-    //   this.state = {
-    //     editorState,
-    //   };
-    // }
-
+    // EditorState.createEmpty()
     this.state = {
       editorState: EditorState.createEmpty(),
-      isEditorEmpty: true,
-      quantity: 1,
       uploadedImages: [],
-      answers: [],
     };
   }
 
   onEditorStateChange = (editorState) => {
+    this.setState({
+      editorState: editorState,
+    });
+    this.onChangeReduxState(editorState);
+  };
+
+  onChangeReduxState = _.debounce((editorState) => {
     const { sectionKey } = this.props;
     // get all entities we uplaoded, for examples media, link, custom elements
     const entitityValues = Object.values(
       convertToRaw(editorState.getCurrentContent()).entityMap
     );
-    // // get all images uploaded from local device
+    //  get all images uploaded from local device
     const allUploadedImagesLinks =
       !!entitityValues.length &&
       entitityValues.map((obj) =>
@@ -141,41 +78,55 @@ class CustomEditor extends Component {
       },
     });
 
-    console.log(this.props.newPostState, "SEC");
-    this.setState({
-      try: convertToRaw(editorState.getCurrentContent()),
-    });
-
     // this.props.onEditorTextChange(checkIfcontainsJustSpaces);
-  };
-
-  componentDidMount() {
-    // console.log(this.editorRef.current,'THIS')
-    // this.fetchFromLocalStorage();
-    // console.log(document.querySelector(".rdw-fontfamily-dropdown"));
-  }
+  }, 300);
 
   fetchFromLocalStorage = () => {
     const { newPostState, sectionKey } = this.props;
-    if (
+
+    const transformToEditorState = EditorState.createWithContent(
+      convertFromRaw(JSON.parse(newPostState.postLocalStorage[sectionKey]))
+    );
+
+    this.props.onSetPostNewValues({
+      post: {
+        ...this.props.newPostState.post,
+        [this.props.sectionKey]: transformToEditorState,
+      },
+    });
+
+    this.setState({
+      editorState: transformToEditorState,
+    });
+  };
+
+  componentDidMount() {
+    const { newPostState, sectionKey } = this.props;
+
+    if (newPostState.post[sectionKey] !== "") {
+      this.setState({
+        editorState: EditorState.createWithContent(
+          newPostState.post[sectionKey].getCurrentContent()
+        ),
+      });
+    } else if (
       newPostState.postLocalStorage[sectionKey] !== "" &&
       newPostState.post[sectionKey] === ""
     ) {
-      this.props.onSetPostNewValues({
-        post: {
-          ...this.props.newPostState.post,
-          [this.props.sectionKey]: EditorState.createWithContent(
-            convertFromRaw(
-              JSON.parse(newPostState.postLocalStorage[sectionKey])
-            )
-          ),
-        },
-      });
+      this.fetchFromLocalStorage();
     }
-  };
+  }
 
   componentDidUpdate() {
-    this.fetchFromLocalStorage();
+    const { newPostState, sectionKey } = this.props;
+    // console.log("UPDATE");
+    // check if local storage has some values
+    // if (
+    //   newPostState.postLocalStorage[sectionKey] !== "" &&
+    //   newPostState.post[sectionKey] === ""
+    // ) {
+    //   this.fetchFromLocalStorage();
+    // }
   }
 
   onPreview = () => {
@@ -260,11 +211,9 @@ class CustomEditor extends Component {
     const currentEditor =
       post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
 
-    // if (fontFamilyOptionWrapper) {
-    //   Object.values(fontFamilyOptionWrapper.children).forEach((tag) => {
-    //     tag.style.fontFamily = tag.innerHTML;
-    //   });
-    // }
+    // console.log(post[sectionKey], "post[sectionKey]");
+    // console.log(post, "post");
+    // console.log(sectionKey, "sectionKey");
     // console.log(fontFamilyOptionWrapper && fontFamilyOptionWrapper.children);
     return (
       <div className="editor-component">
@@ -273,8 +222,8 @@ class CustomEditor extends Component {
             ref={this.editorRef} //currentEditor  EditorState.createEmpty()
             /* editorState={editorState} */
             /* editorState={post} */
-
-            editorState={currentEditor}
+            editorState={editorState}
+            /* editorState={currentEditor} */
             onEditorStateChange={this.onEditorStateChange}
             toolbarClassName="toolbar-class"
             editorClassName="editor-area"

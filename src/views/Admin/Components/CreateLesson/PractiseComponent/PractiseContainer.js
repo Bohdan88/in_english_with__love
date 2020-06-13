@@ -57,28 +57,30 @@ class PractiseContainer extends PureComponent {
 
   removeExerciseById = (exerciseId, stateExerciseView) => {
     const { newPostExercisesValues } = this.props.newPostState;
-    fireAlert(true, REMOVE_EXERCISE, null, CONFIRMATION_REMOVE_ALERT).then(
-      (res) => {
-        if (res.value) {
-          this.props.onSetPostNewValues({
-            newPostExercisesValues: newPostExercisesValues.filter((obj) => {
-              const filterObjects = obj.id !== exerciseId;
-              //  decrement values which are higher than removed obj.id
-              obj.id = obj.id > exerciseId ? obj.id - 1 : obj.id;
-              return filterObjects;
-            }),
-          });
+    fireAlert({
+      state: true,
+      type: CONFIRMATION_REMOVE_ALERT,
+      values: REMOVE_EXERCISE,
+    }).then((res) => {
+      if (res.value) {
+        this.props.onSetPostNewValues({
+          newPostExercisesValues: newPostExercisesValues.filter((obj) => {
+            const filterObjects = obj.id !== exerciseId;
+            //  decrement values which are higher than removed obj.id
+            obj.id = obj.id > exerciseId ? obj.id - 1 : obj.id;
+            return filterObjects;
+          }),
+        });
 
-          // set view to undefined because we removed an object from an array
-          this.setState({
-            exercisesViewState: {
-              ...this.state.exercisesViewState,
-              [stateExerciseView]: undefined,
-            },
-          });
-        }
+        // set view to undefined because we removed an object from an array
+        this.setState({
+          exercisesViewState: {
+            ...this.state.exercisesViewState,
+            [stateExerciseView]: undefined,
+          },
+        });
       }
-    );
+    });
   };
 
   addExercise = () => {

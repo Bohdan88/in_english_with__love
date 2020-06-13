@@ -8,6 +8,8 @@ import {
   MATH_KEYS,
   ICON_POST_REMOVE_STATUS,
   EXERCISES_LABELS_COLORS,
+  POST_MODE,
+  MATCHING,
 } from "../../../../../constants/shared";
 import { getAllPostsValues, setNewValues } from "../../../../../redux/actions";
 import {
@@ -25,6 +27,7 @@ import {
   List,
   Popup,
 } from "semantic-ui-react";
+import _ from "lodash";
 import { transformToOptions, fireAlert } from "../../../../../utils";
 
 const TutorialContent = () => {
@@ -57,6 +60,7 @@ const TutorialContent = () => {
 class MatchExercise extends PureComponent {
   state = {
     charValues: {},
+    content: [],
   };
 
   addField = (objValues) => {
@@ -85,6 +89,7 @@ class MatchExercise extends PureComponent {
       });
 
       this.setState({
+        content: this.state.content.concat({ id: incrementedNumber }),
         charValues: !charValues[objValues.name]
           ? { [objValues.name]: INIT_CHAR_VALUES }
           : {
@@ -95,11 +100,12 @@ class MatchExercise extends PureComponent {
             },
       });
     } else {
-      fireAlert(
-        false,
-        ICON_POST_REMOVE_STATUS,
-        "You can't create more fields than a number of letters in the alphabet which is 26."
-      );
+      fireAlert({
+        state: false,
+        values: ICON_POST_REMOVE_STATUS,
+        eror:
+          "You can't create more fields than a number of letters in the alphabet which is 26.",
+      });
     }
   };
 
@@ -113,6 +119,9 @@ class MatchExercise extends PureComponent {
     );
     const charValues = Object.assign({}, this.state.charValues);
 
+    //
+    const content = this.state.content;
+
     if (newPostExercisesValues.content.length === 1) {
       delete charValues[objValues.name];
     } else {
@@ -120,39 +129,97 @@ class MatchExercise extends PureComponent {
     }
 
     newPostExercisesValues.content.pop();
-    this.setState({ charValues });
+    content.pop();
+
+    this.setState({ charValues, content });
     this.props.onSetPostNewValues(newPostExercisesValues);
   };
 
   onChangePostExerciseValues = (data, objValues, fieldId, keyName) => {
+    // console.log(data, objValues, fieldId, keyName, "ALO");
+    // console.log(keyName, "KENAME HERE VASA");
+    const { content } = this.state;
     const { newPostExercisesValues } = this.props.newPostState;
-    this.props.onSetPostNewValues({
-      newPostExercisesValues: newPostExercisesValues.map((obj) =>
-        obj.id === objValues.id
-          ? {
-              ...obj,
-              content: obj.content.map((nestedObj) =>
-                nestedObj.id === fieldId
-                  ? { ...nestedObj, [keyName]: data.value }
-                  : nestedObj
-              ),
-            }
-          : obj
-      ),
+
+    // this.props.onSetPostNewValues({
+    //   newPostExercisesValues: newPostExercisesValues.map((obj) =>
+    //     obj.id === objValues.id
+    //       ? {
+    //           ...obj,
+    //           content: obj.content.map((nestedObj) =>
+    //             nestedObj.id === fieldId
+    //               ? {
+    //                   ...nestedObj,
+    //                   [keyName]: data.value,
+    //                 }
+    //               : nestedObj
+    //           ),
+    //         }
+    //       : obj
+    //   ),
+    // });
+
+    const contentIndex = content.findIndex((obj) => obj.id === fieldId);
+    this.setState({
+      content:
+        contentIndex === -1
+          ? [...content, { id: fieldId, [keyName]: data.value }]
+          : content.map((obj) =>
+              obj.id === fieldId
+                ? {
+                    ...obj,
+                    [keyName]: data.value,
+                  }
+                : obj
+            ),
     });
+
+    // store data.value in redux via debounce func to make it faster
+    this.onPersistPostExerciseValues(data.value, objValues, fieldId, keyName);
   };
 
+  onPersistPostExerciseValues = _.debounce(
+    (dataValue, objValues, fieldId, keyName) => {
+      const { newPostExercisesValues } = this.props.newPostState;
+      this.props.onSetPostNewValues({
+        newPostExercisesValues: newPostExercisesValues.map((obj) =>
+          obj.id === objValues.id
+            ? {
+                ...obj,
+                content: obj.content.map((nestedObj) =>
+                  nestedObj.id === fieldId
+                    ? {
+                        ...nestedObj,
+                        [keyName]: dataValue,
+                      }
+                    : nestedObj
+                ),
+              }
+            : obj
+        ),
+      });
+    },
+    // we don't need to wait if we change or add a letter from dropDown
+    300
+  );
+
   componentDidMount() {
-    const { newPostExercisesValues } = this.props.newPostState;
+    const { newPostExercisesValues, postMode } = this.props.newPostState;
     const { currentExerciseValues } = this.props;
     const { charValues } = this.state;
-    // console.log(currentExerciseValues, "currentExerciseValues");
+
     const postId = newPostExercisesValues[currentExerciseValues.id];
     const postName =
       newPostExercisesValues[currentExerciseValues.id] &&
       newPostExercisesValues[currentExerciseValues.id].name;
+
     // check if post has values
-    if (postId && postId.content && !!postId.content.length) {
+    if (
+      postId &&
+      postId.content &&
+      !!postId.content.length &&
+      postMode !== POST_MODE.EDIT
+    ) {
       this.setState({
         charValues: !charValues[postName]
           ? {
@@ -164,6 +231,16 @@ class MatchExercise extends PureComponent {
                 transformToOptions([CHAR_SEQUENCE[postId.content.length]])[0]
               ),
             },
+        content: postId.content,
+      });
+    } else if (postMode === POST_MODE.EDIT) {
+      this.setState({
+        charValues: {
+          [postName]: transformToOptions(
+            CHAR_SEQUENCE.slice(0, currentExerciseValues.content.length)
+          ),
+        },
+        content: currentExerciseValues.content,
       });
     }
   }
@@ -175,6 +252,8 @@ class MatchExercise extends PureComponent {
       {},
       newPostState.newPostExercisesValues
     );
+
+    const content = this.state.content;
 
     const charValues = Object.assign({}, this.state.charValues);
     let currentExercise = newPostExercisesValues[exerciseId];
@@ -197,16 +276,18 @@ class MatchExercise extends PureComponent {
       charValues[currentExercise.name].pop();
     }
 
-    this.setState({ charValues });
+    this.setState({ charValues, content: currentExercise.content });
 
     this.props.onSetPostNewValues(newPostExercisesValues);
   };
 
   render() {
-    const { charValues } = this.state;
+    const { charValues, content } = this.state;
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
 
+    console.log(newPostExercisesValues[0].content, "newPostExercisesValues");
+    console.log(this.state, "THIS>STATE");
     return (
       <Segment className="exercises-container">
         <div className="exercises-handler">
@@ -289,6 +370,10 @@ class MatchExercise extends PureComponent {
                 newPostExercisesValues[currentExerciseValues.id] &&
                 newPostExercisesValues[currentExerciseValues.id].content.map(
                   (obj) => {
+                    const currentObj =
+                      newPostExercisesValues[currentExerciseValues.id];
+                    console.log(content[obj.id], "CONTENT");
+                    console.log(obj.id, "obj.id");
                     return (
                       obj && (
                         <Grid.Row key={obj.id} className="math-field-row">
@@ -303,6 +388,15 @@ class MatchExercise extends PureComponent {
                                     search
                                     selection
                                     className="match-dropwdown-letter"
+                                    /* value={
+                                      currentObj.content[obj.id] &&
+                                      currntObj.content[obj.id].letter
+                                    } */
+                                    value={
+                                      content[obj.id]
+                                        ? content[obj.id].letter
+                                        : ""
+                                    }
                                     options={
                                       charValues[currentExerciseValues.name] ||
                                       []
@@ -337,17 +431,14 @@ class MatchExercise extends PureComponent {
                                     {MATH_FIELDS.text.label}
                                   </label>
                                   <TextArea
+                                    /* value={
+                                      currentObj.content[obj.id] &&
+                                      currentObj.content[obj.id].contentId
+                                    } */
                                     value={
-                                      newPostExercisesValues &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ] &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ].content[obj.id] &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ].content[obj.id].contentId
+                                      content[obj.id]
+                                        ? content[obj.id].contentId
+                                        : ""
                                     }
                                     placeholder={MATH_FIELDS.text.placeholder}
                                     className="match-textarea"
@@ -377,8 +468,10 @@ class MatchExercise extends PureComponent {
                                       size="mini"
                                     >
                                       <Statistic.Value>
-                                        {/* {console.log(obj.letter,'OBJ_LETTER')} */}
-                                        {obj.letter}
+                                        {/* {obj.letter} */}
+
+                                        {content[obj.id] &&
+                                          content[obj.id].letter}
                                       </Statistic.Value>
                                     </Statistic>
                                   </Segment>
@@ -388,17 +481,14 @@ class MatchExercise extends PureComponent {
                                     {MATH_FIELDS.text.label}
                                   </label>
                                   <TextArea
+                                    /* value={
+                                      currentObj.content[obj.id] &&
+                                      currentObj.content[obj.id].contentLetter
+                                    } */
                                     value={
-                                      newPostExercisesValues &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ] &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ].content[obj.id] &&
-                                      newPostExercisesValues[
-                                        currentExerciseValues.id
-                                      ].content[obj.id].contentLetter
+                                      content[obj.id]
+                                        ? content[obj.id].contentLetter
+                                        : ""
                                     }
                                     placeholder={MATH_FIELDS.text.placeholder}
                                     className="match-textarea"

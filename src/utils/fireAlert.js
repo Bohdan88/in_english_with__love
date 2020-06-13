@@ -3,7 +3,7 @@
 import Swal from "sweetalert2";
 import { CONFIRMATION_REMOVE_ALERT } from "../constants/shared";
 
-const fireAlert = (state, values, error = null, type) => {
+const fireAlert = ({ state, type, values, error = null }) => {
   switch (type) {
     case CONFIRMATION_REMOVE_ALERT:
       return Swal.fire({

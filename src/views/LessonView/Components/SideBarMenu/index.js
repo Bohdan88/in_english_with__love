@@ -6,6 +6,7 @@ import "./style.scss";
 class SideBarMenu extends Component {
   state = {
     isMenuOpen: false,
+    stepsVisited: {},
     filteredLessonItems: [],
   };
 
@@ -18,6 +19,14 @@ class SideBarMenu extends Component {
     this.props.setCurrentChapter(data.name);
   };
 
+  addVisitedStep = (step) => {
+    // this.setState({
+    //   stepsVisited: { ...this.state.stepsVisited, [step]: true },
+    // });
+    // this.props.addVisitedStep({ ...this.state.stepsVisited, [step]: true });
+    this.props.addVisitedStep({ [step]: true });
+  };
+
   componentDidMount() {
     const { filteredLessonItems } = this.props;
 
@@ -28,7 +37,7 @@ class SideBarMenu extends Component {
 
   render() {
     const { isMenuOpen, filteredLessonItems } = this.state;
-    const { currentChapter, mode } = this.props;
+    const { currentChapter, mode, currentStep, stepsVisited } = this.props;
     const hamburgerClass = isMenuOpen ? "open" : "";
     const menuClass = isMenuOpen
       ? mode === CREATE_LESSON_STAGES.preview
@@ -64,15 +73,27 @@ class SideBarMenu extends Component {
               {filteredLessonItems.map((item, key) => {
                 return (
                   <Menu.Item
+                    disabled={currentStep < key && !stepsVisited[key + 1]}
                     key={item}
                     name={item}
                     className="lesson-view-menu-item"
                     active={currentChapter === item}
                     header
                     link
-                    onClick={(e, data) => this.onMenuItemClick(data)}
+                    onClick={(e, data) => {
+                      this.onMenuItemClick(data);
+                      this.addVisitedStep(currentStep);
+                    }}
                   >
-                    <Label className="lesson-view-label-name" color="teal">
+                    <Label
+                      className="lesson-view-label-name"
+                      color={
+                        !Object.entries(stepsVisited).length ||
+                        !stepsVisited[key + 1]
+                          ? "yellow"
+                          : "teal"
+                      }
+                    >
                       {key + 1}
                     </Label>
                     {/* <Icon name={CHAPTERS_ICONS[item]} /> */}

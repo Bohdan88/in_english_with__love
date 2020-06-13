@@ -17,8 +17,9 @@ import {
 import {
   EXERCISES_LABELS_COLORS,
   INIT_FIELDS_CONTENT,
-  COMPLETE_FIELDS
+  COMPLETE_FIELDS,
 } from "../../../../../constants/shared";
+import _ from "lodash";
 
 const TutorialContent = () => {
   return (
@@ -50,7 +51,9 @@ const TutorialContent = () => {
 };
 
 class CompleteSentencesExercise extends Component {
-  state = {};
+  state = {
+    content: [],
+  };
 
   addField = (objValues) => {
     const { newPostExercisesValues } = this.props.newPostState;
@@ -74,9 +77,35 @@ class CompleteSentencesExercise extends Component {
           : obj
       ),
     });
+
+    this.setState({
+      content: this.state.content.concat({ id: incrementedNumber }),
+    });
   };
 
   onChangePostExerciseValues = (data, objValues, fieldId) => {
+    const { content } = this.state;
+
+    const contentIndex = content.findIndex((obj) => obj.id === fieldId);
+
+    this.setState({
+      content:
+        contentIndex === -1
+          ? [...content, { id: fieldId, sentence: data.value }]
+          : content.map((obj) =>
+              obj.id === fieldId
+                ? {
+                    ...obj,
+                    sentence: data.value,
+                  }
+                : obj
+            ),
+    });
+
+    this.onPersistPostExerciseValues(data, objValues, fieldId);
+  };
+
+  onPersistPostExerciseValues = _.debounce((data, objValues, fieldId) => {
     const { newPostExercisesValues } = this.props.newPostState;
     this.props.onSetPostNewValues({
       newPostExercisesValues: newPostExercisesValues.map((obj) => {
@@ -91,8 +120,6 @@ class CompleteSentencesExercise extends Component {
           );
         }
 
-        // console.log(answerValues, "answerValues");
-        // console.log(answer, "ACTUAL ANSWER");
         return obj.id === objValues.id
           ? {
               ...obj,
@@ -109,99 +136,38 @@ class CompleteSentencesExercise extends Component {
           : obj;
       }),
     });
-  };
-
-  // identifyAnswerInSentence = (objValues, fieldId) => {
-  //   const { newPostExercisesValues } = this.props.newPostState;
-  //   this.props.onSetPostNewValues({
-  //     newPostExercisesValues: newPostExercisesValues.map((obj) =>
-  //       obj.id === objValues.id
-  //         ? {
-  //             ...obj,
-  //             content: obj.content.map((nestedObj) => {
-  //               const { sentence, answer } = nestedObj;
-  //               // remove empty space and enters
-  //               const editedAnswer = answer.trim().replace("\u21b5", "");
-  //               return nestedObj.id === fieldId
-  //                 ? {
-  //                     ...nestedObj,
-  //                     // sentence: sentence.replace(editedAnswer, REPLACED_ANSWER),
-  //                     sentence:
-  //                       /\s/.test(editedAnswer) || answer.trim() === ""
-  //                         ? sentence
-  //                         : sentence.replace(
-  //                             `**${editedAnswer}**`,
-  //                             `**${REPLACED_ANSWER}**`
-  //                           ),
-  //                   }
-  //                 : nestedObj;
-  //             }),
-  //           }
-  //         : obj
-  //     ),
-  //   });
-  // };
-
-  // identifyAllAnswersInSentences = () => {
-  //   const { newPostExercisesValues } = this.props.newPostState;
-  //   this.props.onSetPostNewValues({
-  //     newPostExercisesValues: newPostExercisesValues.map((obj) => {
-  //       return {
-  //         ...obj,
-  //         content: obj.content.map((nestedObj) => {
-  //           const { sentence, answer } = nestedObj;
-  //           console.log(answer, "answer");
-  //           if (answer) {
-  //             // create an object of answers  { value: '___'}  => useful for more than one answer
-  //             const editedAnswer = answer
-  //               .trim()
-  //               .replace("\u21b5", "")
-  //               .split(" ");
-
-  //             let objValues = {};
-  //             editedAnswer.forEach(
-  //               (word) => (objValues[`{${word}}`] = REPLACED_ANSWER)
-  //             );
-
-  //             const convertedSentence = sentence.replace(
-  //               new RegExp(Object.keys(objValues).join("|"), "gi"),
-  //               (matched) => objValues[matched.toLowerCase()]
-  //             );
-
-  //             return {
-  //               ...nestedObj,
-  //               sentence: convertedSentence,
-  //             };
-  //           } else {
-  //             return {
-  //               ...nestedObj,
-  //             };
-  //           }
-  //         }),
-  //       };
-  //     }),
-  //   });
-  // };
+  }, 300);
 
   removeField = (objValues) => {
     const { newPostState } = this.props;
 
-    // clone objects to keep props immutable
+    // clone object && array to keep props immutable
     const newPostExercisesValues = Object.assign(
       {},
       newPostState.newPostExercisesValues[objValues.id]
     );
 
+    const content = this.state.content;
+
     // remove last field
     newPostExercisesValues.content.pop();
+    content.pop();
 
     this.props.onSetPostNewValues(newPostExercisesValues);
+    this.setState({ content });
   };
 
+  componentDidMount() {
+    this.setState({
+      content: this.props.currentExerciseValues.content,
+    });
+  }
+
   render() {
+    const { content } = this.state;
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
-    console.log(newPostExercisesValues, "newPostExercisesValues");
+
     return (
       <div>
         <Segment className="exercises-container">
@@ -255,20 +221,6 @@ class CompleteSentencesExercise extends Component {
                   </Button>
                 }
               />
-              {/* <Button */}
-              {/* basic
-                color="blue"
-                icon
-                labelPosition="right"
-                className="button-remove-field"
-                disabled={
-                  currentExerciseValues.content.length > 0 ? false : true
-                }
-                onClick={() => this.identifyAllAnswersInSentences()}
-              >
-                Replace sentences
-                <Icon name="clone" />
-              </Button> */}
               <Button
                 basic
                 color="red"
@@ -334,10 +286,15 @@ class CompleteSentencesExercise extends Component {
                                   {COMPLETE_FIELDS.sentence.label}
                                 </label>
                                 <TextArea
-                                  value={
+                                  /* value={
                                     newPostExercisesValues[
                                       currentExerciseValues.id
                                     ].content[obj.id].sentence
+                                  } */
+                                  value={
+                                    content[obj.id]
+                                      ? content[obj.id].sentence
+                                      : ""
                                   }
                                   placeholder={
                                     COMPLETE_FIELDS.sentence.placeholder

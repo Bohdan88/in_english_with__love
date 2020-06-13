@@ -5,6 +5,7 @@ import { getAllPostsValues, setNewValues } from "../../redux/actions";
 import { withFirebase } from "../Firebase";
 import draftToHtml from "draftjs-to-html";
 import { convertToRaw } from "draft-js";
+import Swal from "sweetalert2";
 import {
   MatchExerciseView,
   CompleteSentence,
@@ -49,7 +50,11 @@ class LessonView extends Component {
     isPreviousDisabled: true,
     isNextDisabled: false,
     error: false,
+    stepsVisited: {},
   };
+
+  addVisitedStep = (payload) =>
+    this.setState({ stepsVisited: { ...this.state.stepsVisited, ...payload } });
 
   componentDidMount() {
     const { currentTopic } = this.state;
@@ -194,7 +199,7 @@ class LessonView extends Component {
   checkMenu = (menu) => this.setState({ isMenuOpen: menu });
 
   onNextChapter = () => {
-    const { filteredLessonItems, currentChapter } = this.state;
+    const { filteredLessonItems, currentChapter, stepsVisited } = this.state;
     // find index and set  current step
     const findCurrentChapterIndex = filteredLessonItems.findIndex(
       (chapter) => chapter === currentChapter
@@ -208,6 +213,7 @@ class LessonView extends Component {
     this.setState({
       currentStep: nextChapterIndex + 1,
       isPreviousDisabled: nextChapterIndex === 0,
+      stepsVisited: { ...stepsVisited, [nextChapterIndex]: true },
       isNextDisabled: nextChapterIndex === filteredLessonItems.length - 1,
       currentChapter: filteredLessonItems[nextChapterIndex],
     });
@@ -230,6 +236,19 @@ class LessonView extends Component {
       currentChapter: filteredLessonItems[previousChapterIndex],
     });
   };
+
+  sendCompletedLessonToDb = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      position: "top-end",
+    });
+  };
   render() {
     const {
       currentStep,
@@ -243,12 +262,12 @@ class LessonView extends Component {
       isLoadingLesson,
       error,
       errorText,
+      stepsVisited,
     } = this.state;
     const { mode } = this.props;
 
     const menu = isMenuOpen ? "menu-open" : "";
 
-    console.log(this.state, "THIIIS STATE");
     return (
       <div>
         {isLoadingLesson && !error ? (
@@ -369,6 +388,8 @@ class LessonView extends Component {
               <Grid.Column>
                 <Segment className="lesson-view-footer-menu">
                   <SideBarMenu
+                    stepsVisited={stepsVisited}
+                    currentStep={currentStep}
                     mode={mode}
                     filteredLessonItems={filteredLessonItems}
                     currentChapter={currentChapter}
@@ -401,10 +422,13 @@ class LessonView extends Component {
                       color="teal"
                       icon
                       labelPosition="right"
-                      disabled={isNextDisabled}
-                      onClick={() => this.onNextChapter()}
+                      onClick={() =>
+                        !isNextDisabled
+                          ? this.onNextChapter()
+                          : this.sendCompletedLessonToDb()
+                      }
                     >
-                      Next
+                      {isNextDisabled ? "Up Next" : "Next"}
                       <Icon name="right arrow" />
                     </Button>
                   </div>
@@ -419,14 +443,15 @@ class LessonView extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { posts, newPostState } = state;
-  return { posts, newPostState };
+  const { posts, newPostState, sessionState } = state;
+  return { posts, newPostState, sessionState };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
     onSetNewUserValues: (values) => dispatch(setNewValues(values)),
+    onSetLessonComplete: (values) => dispatch(setNewValues(values)),
   };
 };
 export default compose(
