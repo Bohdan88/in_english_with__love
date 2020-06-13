@@ -329,7 +329,11 @@ class CreateLesson extends Component {
           this.fetchPostsFromDb()
         );
       })
-      .catch((error) => fireAlert(false, LESSON_STATUS, error));
+      .catch((error) => {
+        let valuesText = LESSON_STATUS;
+        valuesText.text.error = error.text || LESSON_STATUS.error.text;
+        fireAlert({ state: false, values: LESSON_STATUS, error: true });
+      });
   };
 
   onSubmitPost = () => {

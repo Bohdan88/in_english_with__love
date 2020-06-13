@@ -344,6 +344,21 @@ export const ICON_POST_ADD_STATUS = {
   },
 };
 
+export const LESSON_COMPLETE_CONFIRMATION = {
+  icon: {
+    success: "success",
+    error: "error",
+  },
+  text: {
+    success: "You successfully completed the lesson!",
+    error: "Something went wrong!",
+  },
+  title: {
+    success: "Good job!",
+    error: "Oops...",
+  },
+};
+
 export const REMOVE_EXERCISE = {
   icon: {
     success: "question",
@@ -356,7 +371,7 @@ export const REMOVE_EXERCISE = {
 // db values
 export const POSTS_BUCKET_NAME = "posts";
 export const TOPICS_BUCKET_NAME = "topics";
-
+export const USERS_BUCKET_NAME = "users";
 export const DEFAULT_TOPIC_IMAGE = "default";
 
 // editor page

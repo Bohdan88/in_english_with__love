@@ -130,8 +130,7 @@ class ListenTopics extends Component {
   render() {
     const { loading, stateTopics } = this.state;
     const { allListenTopics, allTopicsImages } = this.props.posts;
-    // console.log(this.state,'state')
-    // console.log(this.props,'props')
+
     return (
       <div>
         {!allTopicsImages.length || !allListenTopics.length ? (

@@ -17,9 +17,9 @@ import {
   MATCHING,
   ANOTHER_WAY_TO_SAY,
   CREATE_LESSON_STAGES,
+  LESSON_COMPLETE_CONFIRMATION,
+  USERS_BUCKET_NAME,
 } from "../../constants/shared";
-
-import "./style.scss";
 import {
   Grid,
   Step,
@@ -33,6 +33,11 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
+import fireAlert from "../../utils/fireAlert";
+
+// style
+import "./style.scss";
+import { HOME } from "../../constants/routes";
 
 class LessonView extends Component {
   contextRef = createRef();
@@ -120,6 +125,7 @@ class LessonView extends Component {
       filteredLessonItems.push("After Watching");
 
       this.setState({
+        // lessonId: selectedLesson[0]
         filteredLessonItems,
         fullLeson: selectedLesson[0],
         currentChapter: Object.keys(selectedLesson[0].post)[0],
@@ -238,17 +244,40 @@ class LessonView extends Component {
   };
 
   sendCompletedLessonToDb = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-      position: "top-end",
-    });
+    const { fullLeson } = this.state;
+    const { sessionState } = this.props;
+
+    this.props.firebase.db
+      .ref(`${USERS_BUCKET_NAME}/${sessionState.authUser.uid}`)
+      .update({
+        ...sessionState,
+        lessonsCompleted: {
+          ...sessionState.lessonsCompleted,
+          [fullLeson.uid]: true,
+        },
+      })
+      .then(() => {
+        this.props.onSetLessonComplete({
+          lessonsCompleted: {
+            ...sessionState.lessonsCompleted,
+            [fullLeson.uid]: true,
+          },
+        });
+        fireAlert({
+          state: true,
+          values: LESSON_COMPLETE_CONFIRMATION,
+        }).then(() => {
+          // once a lesson completed, a user will be taken to home page
+          window.location.pathname = HOME;
+        });
+      })
+      .catch((error) => {
+        let values = LESSON_COMPLETE_CONFIRMATION;
+        values.text.error = error.text;
+        fireAlert({ state: false, values });
+      });
   };
+
   render() {
     const {
       currentStep,
@@ -267,7 +296,9 @@ class LessonView extends Component {
     const { mode } = this.props;
 
     const menu = isMenuOpen ? "menu-open" : "";
-
+    // console.log(this.props);
+    console.log(window.location, " window.location");
+    console.log(this.state, "STATIS");
     return (
       <div>
         {isLoadingLesson && !error ? (
@@ -428,7 +459,7 @@ class LessonView extends Component {
                           : this.sendCompletedLessonToDb()
                       }
                     >
-                      {isNextDisabled ? "Up Next" : "Next"}
+                      {isNextDisabled ? "Finish Up" : "Next"}
                       <Icon name="right arrow" />
                     </Button>
                   </div>

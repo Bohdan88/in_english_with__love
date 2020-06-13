@@ -65,7 +65,7 @@
 
 .card-content-topic {
   display: block !important;
-  padding-right: 3rem!important;
+  padding-right: 3rem !important;
   // display: flex;
   // justify-content: space-between;
   border-top: none !important;
@@ -114,15 +114,32 @@
 .topics-header {
   color: $coral-pearl !important;
 }
+
 .card-topic-arrow {
   top: 8px;
   right: 5px;
   position: absolute;
-  color: transparent;
 }
 
-.card-selected-topic-container:hover .card-topic-arrow {
+.card-topic-completed {
+  position: absolute;
+  margin-top: 30px;
+  right: 45px;
+  // right: 34px;
+}
+.card-topic-arrow {
+  color: transparent !important;
+}
+
+// .card-selected-topic-container:hover .card-topic-completed
+
+.card-selected-topic-container:hover .card-topic-arrow,
+.card-topic-completed {
   color: $light-sea !important;
+}
+
+.card-topic-completed-span {
+  padding-right: 0px;
 }
 
 .card-selected-topic-description {
@@ -160,8 +177,8 @@
 .topic-list-icon-circle {
   font-size: 0.3rem !important;
   position: relative;
-  bottom: -1px;
-  left: -1px;
+  // bottom: -1px;
+  left: -1em;
 }
 
 .topic-list-icon-start {
@@ -171,5 +188,9 @@
 @media only screen and (max-width: 1919px) {
   .card-meta-time {
     padding-left: 2px;
+  }
+
+  .topic-list-icon-circle {
+    left: -1px;
   }
 }

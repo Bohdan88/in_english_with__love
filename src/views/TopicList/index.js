@@ -183,8 +183,8 @@ class TopicList extends Component {
       transitionDuration,
     } = this.state;
     const { allIconImagesByTopic, allPosts } = this.props.posts;
-    console.log(this.props.posts, "this.props.posts");
-    console.log(this.state, "this.state");
+    console.log(window.location, "this.props");
+    // console.log(this.state, "this.state");
     return (
       <div>
         <Grid className="topics-container">
@@ -264,6 +264,7 @@ class TopicList extends Component {
                             className="card-topic-arrow"
                             name="arrow right"
                           />
+
                           <Card.Content className="card-content-topic">
                             <Card.Content className="card-content-image">
                               <Image
@@ -325,6 +326,16 @@ class TopicList extends Component {
                                     fitted
                                   />
                                 </div>
+                                {currentTopicPosts.findIndex(
+                                  (obj) => obj.uid === topic.uid
+                                ) != -1 && (
+                                  <span className="card-topic-completed">
+                                    <span className="card-topic-completed-span">
+                                      Completed
+                                    </span>
+                                    <Icon name="check" />
+                                  </span>
+                                )}
                               </Card.Meta>
                             </Card.Content>
                           </Card.Content>
@@ -343,8 +354,8 @@ class TopicList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const { posts } = state;
-  return { posts };
+  const { posts, sessionState } = state;
+  return { posts, sessionState };
 };
 
 const mapDispatchToProps = (dispatch) => {
