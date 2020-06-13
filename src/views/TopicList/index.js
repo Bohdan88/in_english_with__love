@@ -182,8 +182,9 @@ class TopicList extends Component {
       value,
       transitionDuration,
     } = this.state;
+    const { authUser } = this.props.sessionState;
     const { allIconImagesByTopic, allPosts } = this.props.posts;
-    console.log(window.location, "this.props");
+    // console.log(authUser.lessonsCompleted, "authUser");
     // console.log(this.state, "this.state");
     return (
       <div>
@@ -326,16 +327,18 @@ class TopicList extends Component {
                                     fitted
                                   />
                                 </div>
-                                {currentTopicPosts.findIndex(
-                                  (obj) => obj.uid === topic.uid
-                                ) != -1 && (
-                                  <span className="card-topic-completed">
-                                    <span className="card-topic-completed-span">
-                                      Completed
+                                {authUser.lessonsCompleted &&
+                                  Object.keys(
+                                    authUser.lessonsCompleted
+                                  ).findIndex((keyId) => keyId === topic.uid) !=
+                                    -1 && (
+                                    <span className="card-topic-completed">
+                                      <span className="card-topic-completed-span">
+                                        Completed
+                                      </span>
+                                      <Icon name="check" />
                                     </span>
-                                    <Icon name="check" />
-                                  </span>
-                                )}
+                                  )}
                               </Card.Meta>
                             </Card.Content>
                           </Card.Content>

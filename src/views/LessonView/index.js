@@ -250,17 +250,25 @@ class LessonView extends Component {
     this.props.firebase.db
       .ref(`${USERS_BUCKET_NAME}/${sessionState.authUser.uid}`)
       .update({
-        ...sessionState,
+        ...sessionState.authUser,
+        // email: sessionState.authUser.email
+        // uid: sessionState.authUser.uid,
+        // username: sessionState.authUser.username,
+        // roles: sessionState.authUser.roles,
         lessonsCompleted: {
-          ...sessionState.lessonsCompleted,
-          [fullLeson.uid]: true,
+          ...sessionState.authUser.lessonsCompleted,
+          [fullLeson.uid]: new Date().getTime(),
         },
       })
       .then(() => {
         this.props.onSetLessonComplete({
-          lessonsCompleted: {
-            ...sessionState.lessonsCompleted,
-            [fullLeson.uid]: true,
+          authUser: {
+            ...sessionState.authUser,
+            lessonsCompleted: {
+              ...sessionState.lessonsCompleted,
+
+              [fullLeson.uid]: new Date().getTime(),
+            },
           },
         });
         fireAlert({
@@ -296,9 +304,7 @@ class LessonView extends Component {
     const { mode } = this.props;
 
     const menu = isMenuOpen ? "menu-open" : "";
-    // console.log(this.props);
-    console.log(window.location, " window.location");
-    console.log(this.state, "STATIS");
+
     return (
       <div>
         {isLoadingLesson && !error ? (
