@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Grid, Menu, Segment, Dropdown } from "semantic-ui-react";
+import { EditAccount, HomePage, Help } from "./Components";
 import { AuthUserContext, withAuthorization } from "../Session";
 
 import { PasswordForgetForm } from "../PasswordForget";
@@ -7,29 +9,76 @@ import PasswordChangeForm from "../PasswordChange";
 import { SIGN_IN_METHODS } from "../../constants/shared";
 import { withFirebase } from "../Firebase";
 import { connect } from "react-redux";
-import { compose } from 'recompose';
+import { compose } from "recompose";
 
-// const AccountPage = () => (
-//   <AuthUserContext.Consumer>
-//     {(authUser) => (
-//       <div>
-//         <h1>Account: {authUser.email}</h1>
-//         <PasswordForgetForm />
-//         <PasswordChangeForm />
-//         <LoginManagement authUser={authUser} />
-//       </div>
-//     )}
-//   </AuthUserContext.Consumer>
-// );
+// style
+import "./style.scss";
 
-const AccountPage = ({ authUser }) => (
-  <div>
-    <h1>Account: {authUser.email}</h1>
-    <PasswordForgetForm />
-    <PasswordChangeForm />
-    <LoginManagement authUser={authUser} />
-  </div>
-);
+// const ACCOUNT_MENU_ITEMS = [
+//   { name: "Home", component: <HomePage /> },
+//   { name: "Edit", component: EditAccount },
+//   // { name: "Change Password", component: Form },
+//   // { name: "Linked Accounts" },
+//   { name: "Help", component: Help },
+// ];
+
+class AccountPage extends Component {
+  state = {
+    activeItem: "Home",
+    menuItems: [
+      { name: "Home", component: HomePage },
+      { name: "Edit", component: EditAccount },
+      // { name: "Change Password", component: Form },
+      // { name: "Linked Accounts" },
+      { name: "Help", component: Help },
+    ],
+  };
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
+
+  render() {
+    const { authUser } = this.props;
+    const { activeItem, menuItems } = this.state;
+
+    const activeComponent = menuItems.findIndex(
+      (obj) => obj.name === activeItem
+    );
+
+    const ComponentName = menuItems[activeComponent].component;
+    return (
+      <div>
+        {/* <h1>Account: {authUser.email}</h1> */}
+        {/* <EditAccount /> */}
+        <Grid>
+          <Grid.Row className="account-row">
+            <Grid.Column width={4}>
+              <Menu fluid pointing vertical>
+                {menuItems.map((item) => {
+                  return (
+                    <Menu.Item
+                      key={item.name}
+                      name={item.name}
+                      active={activeItem === item.name}
+                      onClick={this.handleItemClick}
+                    />
+                  );
+                })}
+              </Menu>
+            </Grid.Column>
+            <Grid.Column width={12}>
+              <Segment>
+                <ComponentName {...this.props} />
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        {/* <PasswordForgetForm /> */}
+        {/* <PasswordChangeForm /> */}
+        {/* <LoginManagement authUser={authUser} /> */}
+      </div>
+    );
+  }
+}
 
 class LoginManagementBase extends Component {
   constructor(props) {

@@ -4,7 +4,6 @@ import { posts } from "./posts";
 import { newPostReducer } from "./newpost";
 import sessionReducer from "./session";
 import userReducer from "./users";
-import userActivityReducer from "./userActivity";
 import storage from "redux-persist/lib/storage";
 
 const newPostStateConfig = {
@@ -18,7 +17,6 @@ const rootReducer = combineReducers({
   sessionState: sessionReducer,
   userState: userReducer,
   newPostState: persistReducer(newPostStateConfig, newPostReducer),
-  userActivity: userActivityReducer,
 });
 
 export default rootReducer;

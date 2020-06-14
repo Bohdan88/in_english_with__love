@@ -63,12 +63,16 @@ class LessonView extends Component {
 
   componentDidMount() {
     const { currentTopic } = this.state;
-    const { mode } = this.props;
+    const { mode, newPostState } = this.props;
     const { allPosts } = this.props.posts;
     this.setState({ isLoadingLesson: true });
 
     if (mode && mode === CREATE_LESSON_STAGES.preview) {
-      this.setSelectedLesson([this.props.newPostState]);
+      console.log(this.props.newPostState, "PREVIEW");
+      const clonedNewPostState = Object.assign({}, newPostState, {
+        post: Object.assign({}, newPostState.post),
+      });
+      this.setSelectedLesson([clonedNewPostState]);
     } else if (!allPosts.length) {
       this.props.firebase.posts().on(
         "value",
@@ -112,17 +116,19 @@ class LessonView extends Component {
   }
 
   setSelectedLesson = (selectedLesson) => {
-    if (!!selectedLesson.length) {
+    if (selectedLesson[0].newPostExercisesValues) {
       Object.values(selectedLesson[0].newPostExercisesValues).map((obj) => {
         return (selectedLesson[0].post[obj.type] = obj);
       });
 
       const filteredLessonItems = Object.keys(selectedLesson[0].post).filter(
-        (item) => item !== "content" && !item.toLowerCase().includes("after")
+        (item) =>
+          item !== CREATE_LESSON_STAGES.content.key &&
+          item !== CREATE_LESSON_STAGES.after.key
       );
 
       // push conclusion in the end
-      filteredLessonItems.push("After Watching");
+      filteredLessonItems.push(CREATE_LESSON_STAGES.after.key);
 
       this.setState({
         // lessonId: selectedLesson[0]
@@ -192,6 +198,7 @@ class LessonView extends Component {
         }
 
         if (lessonChapter.name.includes(MATCHING)) {
+          // console.log('MATCH HERE')
           return <MatchExerciseView lessonValues={lessonChapter} />;
         }
       }
@@ -305,6 +312,7 @@ class LessonView extends Component {
 
     const menu = isMenuOpen ? "menu-open" : "";
 
+    console.log(this.state, "this.state");
     return (
       <div>
         {isLoadingLesson && !error ? (
@@ -314,12 +322,20 @@ class LessonView extends Component {
             </Dimmer>
           </Segment>
         ) : error && !isLoadingLesson ? (
-          <Message className="error-message" size="massive" negative>
+          <Message
+            className="lesson-view-error-message"
+            size="massive"
+            negative
+          >
             <Message.Header>Oops! something went wrong...</Message.Header>
             <Message.Content>{errorText}</Message.Content>
           </Message>
         ) : !Object.entries(fullLeson).length ? (
-          <Message className="error-message" size="massive" negative>
+          <Message
+            className="lesson-view-error-message"
+            size="massive"
+            negative
+          >
             <Message.Header>Oops! something went wrong...</Message.Header>
             <Message.Content>
               {currentTopic === "admin"
@@ -357,7 +373,7 @@ class LessonView extends Component {
                     <div className="chapter-block">
                       {this.visualizeChapterContent(currentChapter) || (
                         <Message
-                          className="error-message"
+                          className="lesson-view-error-message"
                           size="massive"
                           negative
                         >
@@ -402,8 +418,8 @@ class LessonView extends Component {
                     {/* check if mode is preview. because in preview we do not stringify values yet */}
                     <div
                       dangerouslySetInnerHTML={{
-                        __html:
-                          mode === CREATE_LESSON_STAGES.preview
+                        __html: fullLeson.post[CREATE_LESSON_STAGES.content.key]
+                          ? mode === CREATE_LESSON_STAGES.preview
                             ? fullLeson.post[
                                 CREATE_LESSON_STAGES.content.key
                               ] &&
@@ -414,9 +430,30 @@ class LessonView extends Component {
                                   ].getCurrentContent()
                                 )
                               )
-                            : JSON.parse(fullLeson.post.content),
+                            : JSON.parse(
+                                fullLeson.post[CREATE_LESSON_STAGES.content.key]
+                              )
+                          : "",
                       }}
                     />
+
+                    {!fullLeson.post[CREATE_LESSON_STAGES.content.key] && (
+                      <Message
+                        className="lesson-view-error-message"
+                        size="massive"
+                        negative
+                      >
+                        <Message.Header>
+                          Oops! something went wrong...
+                        </Message.Header>
+                        <Message.Content>
+                          {currentTopic === "admin"
+                            ? "You have nothing to preview."
+                            : `Unfortunately  "Content" can't be
+              loaded =(`}
+                        </Message.Content>
+                      </Message>
+                    )}
                   </Segment>
                 </Container>
               </Grid.Column>
@@ -462,7 +499,11 @@ class LessonView extends Component {
                       onClick={() =>
                         !isNextDisabled
                           ? this.onNextChapter()
-                          : this.sendCompletedLessonToDb()
+                          : mode !== CREATE_LESSON_STAGES.preview &&
+                            this.sendCompletedLessonToDb()
+                      }
+                      disabled={
+                        mode === CREATE_LESSON_STAGES.preview && isNextDisabled
                       }
                     >
                       {isNextDisabled ? "Finish Up" : "Next"}
@@ -487,7 +528,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetNewUserValues: (values) => dispatch(setNewValues(values)),
+    // onSetNewUserValues: (values) => dispatch(setNewValues(values)),
     onSetLessonComplete: (values) => dispatch(setNewValues(values)),
   };
 };

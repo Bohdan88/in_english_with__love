@@ -286,8 +286,8 @@ class MatchExercise extends PureComponent {
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
 
-    console.log(newPostExercisesValues[0].content, "newPostExercisesValues");
-    console.log(this.state, "THIS>STATE");
+    // console.log(newPostExercisesValues[0].content, "newPostExercisesValues");
+    // console.log(this.state, "THIS>STATE");
     return (
       <Segment className="exercises-container">
         <div className="exercises-handler">
@@ -372,8 +372,8 @@ class MatchExercise extends PureComponent {
                   (obj) => {
                     const currentObj =
                       newPostExercisesValues[currentExerciseValues.id];
-                    console.log(content[obj.id], "CONTENT");
-                    console.log(obj.id, "obj.id");
+                    {/* console.log(content[obj.id], "CONTENT");
+                    console.log(obj.id, "obj.id"); */}
                     return (
                       obj && (
                         <Grid.Row key={obj.id} className="math-field-row">

@@ -240,10 +240,11 @@ class CreateLesson extends Component {
     // clone an opbject to avoid immutability
     const post = Object.assign({}, this.props.newPostState.post);
     const assets = this.props.newPostState.assets;
-
+    console.log(this.props.newPostState, "newPostState");
     Object.entries(post).forEach((arr) => {
       // if string is not empty
       if (!!arr[1]) {
+        console.log(arr,'ARRRRRRRRR LOOL')
         // entityMap => uploaded images
         const editorRow = Object.values(
           convertToRaw(arr[1].getCurrentContent()).entityMap
@@ -261,13 +262,14 @@ class CreateLesson extends Component {
             );
           }
         }
+
         // convert editor to html because EditorState has undefined values which is why we can't push it into DB
         post[arr[0]] = JSON.stringify(
           draftToHtml(convertToRaw(arr[1].getCurrentContent()))
         );
       }
     });
-
+    // console.log()
     // change props values
     return new Promise((resolve) => {
       post.date = new Date().getTime();
@@ -373,7 +375,7 @@ class CreateLesson extends Component {
       iconPath,
     } = this.props.newPostState;
     const { categories, focuses, subCategories } = this.props.posts;
-
+    console.log(this.props.newPostState,'NEEEW')
     const panes = [
       {
         menuItem: CREATE_LESSON_STAGES.practise,

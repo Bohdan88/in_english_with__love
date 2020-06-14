@@ -212,3 +212,13 @@
 .lesson-view-exercise-check-container {
   margin-top: 20px;
 }
+
+.lesson-view-error-message {
+  margin: 1rem auto !important;
+  max-width: 500px;
+
+  .header,
+  .content {
+    text-align: center;
+  }
+}

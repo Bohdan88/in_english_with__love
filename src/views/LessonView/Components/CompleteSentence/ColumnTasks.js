@@ -56,9 +56,11 @@ class ColumnTasks extends Component {
         {Object.values(values.tasks).map((obj, key) => {
           const answerValues = obj.sentence.match(wordsInCurlyBraces);
           let clonedSentence = obj.sentence;
-          answerValues.forEach(
-            (rx) => (clonedSentence = clonedSentence.replace(rx, "** "))
-          );
+
+          answerValues &&
+            answerValues.forEach(
+              (rx) => (clonedSentence = clonedSentence.replace(rx, "** "))
+            );
           clonedSentence = clonedSentence.split("**");
           const column = values.columns[`answer-${key + 1}`];
           return (

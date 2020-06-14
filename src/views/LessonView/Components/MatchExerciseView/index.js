@@ -24,7 +24,19 @@ class MatchExerciseView extends Component {
     exerciseDescription: "",
   };
 
-  setInitValues = () => {};
+  setInitValues = () => {
+    const { lessonValues } = this.props;
+    let solutions = [];
+    Object.values(this.transformLessonValues(lessonValues.content).tasks).map(
+      (obj) => (solutions[obj.answer] = obj.id)
+    );
+    this.setState({
+      meaningColumn: this.transformLessonValues(lessonValues.content),
+      correctSequence: solutions,
+      exerciseDescription: lessonValues.description,
+      checked: false,
+    });
+  };
 
   componentDidMount() {
     this.setInitValues();
@@ -146,6 +158,7 @@ class MatchExerciseView extends Component {
     } = this.state;
     const { lessonValues } = this.props;
 
+    console.log(meaningColumn, "meaningColumn");
     return !!Object.entries(meaningColumn).length &&
       !!meaningColumn.column.taskIds.length ? (
       <div className="lesson-view-match-container">

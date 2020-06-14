@@ -445,3 +445,17 @@ export const CATEGORY_TOPICS = {
 // Complete Lesson
 
 export const SUB_FIELD = "second";
+
+// Account page
+
+// export const ACCOUNT_MENU_ITEMS = [
+//   { name: "Home" },
+//   { name: "Edit" },
+//   { name: "Change Password" },
+//   { name: "Linked Accounts" },
+//   { name: "Help" },
+// ];
+
+// Lessons List
+
+export const ONE_PAGE_LESSONS = 10;
