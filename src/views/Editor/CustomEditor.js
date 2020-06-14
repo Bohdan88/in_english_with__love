@@ -4,20 +4,26 @@ import {
   convertToRaw,
   convertFromRaw,
   AtomicBlockUtils,
+  ContentState,
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
+
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EDITOR_OPTIONS } from "../../constants/shared";
+
+import htmlToDraft from "html-to-draftjs";
+import { EDITOR_OPTIONS, POST_MODE } from "../../constants/shared";
 import { SLICED_UPLOADED_IMAGE_KEY } from "../../constants/shared";
 import { CustomColorPicker, VideoPlayer } from "./CustomComponents";
 import sanitizeHtml from "sanitize-html-react";
-import { setNewValues } from "../../redux/actions";
+import { setPostValues } from "../../redux/actions";
 import { connect } from "react-redux";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 import { POSTS_BUCKET_NAME } from "../../constants/shared";
 import _ from "lodash";
 import "./style.scss";
+
+// style
 
 class CustomEditor extends Component {
   constructor(props) {
@@ -81,11 +87,15 @@ class CustomEditor extends Component {
     // this.props.onEditorTextChange(checkIfcontainsJustSpaces);
   }, 300);
 
+  transformJsonText = (state) => {
+    return EditorState.createWithContent(convertFromRaw(JSON.parse(state)));
+  };
+
   fetchFromLocalStorage = () => {
     const { newPostState, sectionKey } = this.props;
 
-    const transformToEditorState = EditorState.createWithContent(
-      convertFromRaw(JSON.parse(newPostState.postLocalStorage[sectionKey]))
+    const transformToEditorState = this.transformJsonText(
+      newPostState.postLocalStorage[sectionKey]
     );
 
     this.props.onSetPostNewValues({
@@ -95,24 +105,49 @@ class CustomEditor extends Component {
       },
     });
 
-    this.setState({
-      editorState: transformToEditorState,
-    });
+    this.setState({ editorState: transformToEditorState });
   };
 
   componentDidMount() {
-    const { newPostState, sectionKey } = this.props;
+    const { newPostState, sectionKey, postMode } = this.props;
 
-    if (newPostState.post[sectionKey] !== "") {
+    if (
+      !newPostState.post[sectionKey] ||
+      newPostState.post[sectionKey] === ""
+    ) {
+      this.setState({
+        editorState: EditorState.createEmpty(),
+      });
+    } else if (!!newPostState.post[sectionKey]._immutable) {
       this.setState({
         editorState: EditorState.createWithContent(
           newPostState.post[sectionKey].getCurrentContent()
         ),
       });
-    } else if (
-      newPostState.postLocalStorage[sectionKey] !== "" &&
-      newPostState.post[sectionKey] === ""
-    ) {
+      // if typeof string after parsing it means that we received html code from db
+    } else if (typeof JSON.parse(newPostState.post[sectionKey]) === "string") {
+      const blocksFromHtml = htmlToDraft(
+        JSON.parse(newPostState.post[sectionKey])
+      );
+
+      const { contentBlocks, entityMap } = blocksFromHtml;
+
+      const contentState = ContentState.createFromBlockArray(
+        contentBlocks,
+        entityMap
+      );
+
+      const editorState = EditorState.createWithContent(contentState);
+
+      this.props.onSetPostNewValues({
+        post: {
+          ...this.props.newPostState.post,
+          [this.props.sectionKey]: editorState,
+        },
+      });
+
+      this.setState({ editorState: editorState });
+    } else if (newPostState.postLocalStorage[sectionKey] !== "") {
       this.fetchFromLocalStorage();
     }
   }
@@ -214,7 +249,6 @@ class CustomEditor extends Component {
     // console.log(post[sectionKey], "post[sectionKey]");
     // console.log(post, "post");
     // console.log(sectionKey, "sectionKey");
-    // console.log(fontFamilyOptionWrapper && fontFamilyOptionWrapper.children);
     return (
       <div className="editor-component">
         <div className="container-editor">
@@ -262,7 +296,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setPostValues(values)),
   };
 };
 

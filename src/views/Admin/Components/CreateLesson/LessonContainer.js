@@ -23,7 +23,7 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { getAllPostsValues, setNewValues } from "../../../../redux/actions";
+import { getAllPostsValues, setPostValues } from "../../../../redux/actions";
 import {
   LESSON_STATUS,
   ICON_POST_REMOVE_STATUS,
@@ -130,7 +130,7 @@ class CreateLesson extends Component {
     // });
     // console.log(this.props.newPostState.postMode, "postMode");
 
-    console.log(this.props.newPostState, "NEWW");
+    // console.log(this.props.newPostState, "NEWW");
   }
 
   onDropDownChange = (data, dropDownType) => {
@@ -240,11 +240,11 @@ class CreateLesson extends Component {
     // clone an opbject to avoid immutability
     const post = Object.assign({}, this.props.newPostState.post);
     const assets = this.props.newPostState.assets;
-    console.log(this.props.newPostState, "newPostState");
+
     Object.entries(post).forEach((arr) => {
       // if string is not empty
       if (!!arr[1]) {
-        console.log(arr,'ARRRRRRRRR LOOL')
+        console.log(arr, "ARRRRRRRRR LOOL");
         // entityMap => uploaded images
         const editorRow = Object.values(
           convertToRaw(arr[1].getCurrentContent()).entityMap
@@ -269,11 +269,17 @@ class CreateLesson extends Component {
         );
       }
     });
+
+    // this.props.onSetPostNewValues({
+    //   date: new Date().getTime();
+    // })
     // console.log()
     // change props values
     return new Promise((resolve) => {
-      post.date = new Date().getTime();
-      resolve(this.props.onSetPostNewValues({ post }));
+      // post.date = new Date().getTime();
+      resolve(
+        this.props.onSetPostNewValues({ post, date: new Date().getTime() })
+      );
     }).then(() => {
       // push to db afterwards
       this.pushPostToDb();
@@ -375,7 +381,7 @@ class CreateLesson extends Component {
       iconPath,
     } = this.props.newPostState;
     const { categories, focuses, subCategories } = this.props.posts;
-    console.log(this.props.newPostState,'NEEEW')
+    // console.log(this.props.newPostState,'NEEEW')
     const panes = [
       {
         menuItem: CREATE_LESSON_STAGES.practise,
@@ -631,7 +637,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setPostValues(values)),
   };
 };
 

@@ -329,6 +329,21 @@ export const ICON_POST_REMOVE_STATUS = {
   },
 };
 
+export const POST_REMOVED_STATUS = {
+  icon: {
+    success: "success",
+    error: "error",
+  },
+  text: {
+    success: "A post has been deleted!",
+    error: "Something went wrong!",
+  },
+  title: {
+    success: "Success!",
+    error: "Oops...",
+  },
+};
+
 export const ICON_POST_ADD_STATUS = {
   icon: {
     success: "success",
@@ -365,6 +380,15 @@ export const REMOVE_EXERCISE = {
   },
   text: {
     success: "Are you sure you want to remove this Exercise?",
+  },
+};
+
+export const REMOVE_POST = {
+  icon: {
+    success: "question",
+  },
+  text: {
+    success: "Are you sure you want to remove this Post?",
   },
 };
 

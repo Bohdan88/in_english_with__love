@@ -12,7 +12,7 @@ import {
   COMPLETE_THE_SENTENCES,
   ANOTHER_WAY,
 } from "../../../../../constants/shared";
-import { getAllPostsValues, setNewValues } from "../../../../../redux/actions";
+import { getAllPostsValues, setPostValues } from "../../../../../redux/actions";
 import {
   Form,
   Header,
@@ -375,7 +375,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setPostValues(values)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(PractiseContainer);

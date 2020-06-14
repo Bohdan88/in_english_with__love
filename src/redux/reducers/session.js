@@ -1,6 +1,6 @@
 /* manages the authUser object */
 
-import { AUTH_USER_SET, SET_NEW_VALUES } from "../constants/actionTypes";
+import { AUTH_USER_SET, SET_USER_ACTIVITY_VALUES } from "../constants/actionTypes";
 
 const INITIAL_STATE = {
   authUser: null,
@@ -17,7 +17,7 @@ function sessionReducer(state = INITIAL_STATE, action) {
     case AUTH_USER_SET: {
       return applySetAuthUser(state, action);
     }
-    case SET_NEW_VALUES:
+    case SET_USER_ACTIVITY_VALUES:
       return {
         ...state,
         ...action.payload,

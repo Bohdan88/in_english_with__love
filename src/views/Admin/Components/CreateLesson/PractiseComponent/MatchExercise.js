@@ -11,7 +11,7 @@ import {
   POST_MODE,
   MATCHING,
 } from "../../../../../constants/shared";
-import { getAllPostsValues, setNewValues } from "../../../../../redux/actions";
+import { getAllPostsValues, setPostValues } from "../../../../../redux/actions";
 import {
   Form,
   Grid,
@@ -136,8 +136,6 @@ class MatchExercise extends PureComponent {
   };
 
   onChangePostExerciseValues = (data, objValues, fieldId, keyName) => {
-    // console.log(data, objValues, fieldId, keyName, "ALO");
-    // console.log(keyName, "KENAME HERE VASA");
     const { content } = this.state;
     const { newPostExercisesValues } = this.props.newPostState;
 
@@ -207,23 +205,21 @@ class MatchExercise extends PureComponent {
     const { newPostExercisesValues, postMode } = this.props.newPostState;
     const { currentExerciseValues } = this.props;
     const { charValues } = this.state;
-
+    console.log(this.props.newPostState, "DAVA");
     const postId = newPostExercisesValues[currentExerciseValues.id];
     const postName =
       newPostExercisesValues[currentExerciseValues.id] &&
       newPostExercisesValues[currentExerciseValues.id].name;
 
-    // check if post has values
-    if (
-      postId &&
-      postId.content &&
-      !!postId.content.length &&
-      postMode !== POST_MODE.EDIT
-    ) {
+    //  INIT_VALUEs
+
+    if (postId && postId.content && !!postId.content.length) {
       this.setState({
         charValues: !charValues[postName]
           ? {
-              [postName]: INIT_CHAR_VALUES,
+              [postName]: transformToOptions(
+                CHAR_SEQUENCE.slice(0, currentExerciseValues.content.length)
+              ),
             }
           : {
               ...charValues,
@@ -232,15 +228,6 @@ class MatchExercise extends PureComponent {
               ),
             },
         content: postId.content,
-      });
-    } else if (postMode === POST_MODE.EDIT) {
-      this.setState({
-        charValues: {
-          [postName]: transformToOptions(
-            CHAR_SEQUENCE.slice(0, currentExerciseValues.content.length)
-          ),
-        },
-        content: currentExerciseValues.content,
       });
     }
   }
@@ -286,8 +273,6 @@ class MatchExercise extends PureComponent {
     const { currentExerciseValues } = this.props;
     const { newPostExercisesValues } = this.props.newPostState;
 
-    // console.log(newPostExercisesValues[0].content, "newPostExercisesValues");
-    // console.log(this.state, "THIS>STATE");
     return (
       <Segment className="exercises-container">
         <div className="exercises-handler">
@@ -370,10 +355,6 @@ class MatchExercise extends PureComponent {
                 newPostExercisesValues[currentExerciseValues.id] &&
                 newPostExercisesValues[currentExerciseValues.id].content.map(
                   (obj) => {
-                    const currentObj =
-                      newPostExercisesValues[currentExerciseValues.id];
-                    {/* console.log(content[obj.id], "CONTENT");
-                    console.log(obj.id, "obj.id"); */}
                     return (
                       obj && (
                         <Grid.Row key={obj.id} className="math-field-row">
@@ -543,7 +524,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setPostValues(values)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(MatchExercise);

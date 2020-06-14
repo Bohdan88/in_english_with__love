@@ -1,7 +1,13 @@
 import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
 import { LESSON_TOPIC } from "../../../../constants/routes";
-import { ONE_PAGE_LESSONS } from "../../../../constants/shared";
+import {
+  ONE_PAGE_LESSONS,
+  POSTS_BUCKET_NAME,
+  POST_REMOVED_STATUS,
+  REMOVE_POST,
+  CONFIRMATION_REMOVE_ALERT,
+} from "../../../../constants/shared";
 import { connect } from "react-redux";
 import { compose } from "recompose";
 import _ from "lodash";
@@ -18,12 +24,13 @@ import {
   Input,
   Pagination,
 } from "semantic-ui-react";
-import { getAllPostsValues, setNewValues } from "../../../../redux/actions";
+import { getAllPostsValues, setPostValues } from "../../../../redux/actions";
 import { withFirebase } from "../../../Firebase";
 
 // styles
 import "./style.scss";
 import { POST_MODE } from "../../../../constants/shared";
+import { fireAlert } from "../../../../utils";
 
 class LessonsList extends PureComponent {
   state = {
@@ -37,6 +44,8 @@ class LessonsList extends PureComponent {
     column: null,
     direction: null,
     activePage: 1,
+    startIndex: 0,
+    endIndex: ONE_PAGE_LESSONS,
   };
 
   handleSort = (clickedColumn) => () => {
@@ -92,10 +101,9 @@ class LessonsList extends PureComponent {
             uid: key,
           }));
 
-          // execute first 10 topics
           this.setState({
             isLoading: false,
-            postsList: postsList.slice(0, ONE_PAGE_LESSONS),
+            postsList,
           });
           // set posts
           this.props.onGetAllPostsValues({
@@ -119,10 +127,9 @@ class LessonsList extends PureComponent {
 
     if (!allPosts.length) {
       this.fetchPostsFromDb();
-      console.log("FETCH FROM ");
     } else {
       this.setState({
-        postsList: allPosts.slice(0, ONE_PAGE_LESSONS),
+        postsList: allPosts,
         isLoading: false,
       });
     }
@@ -140,23 +147,40 @@ class LessonsList extends PureComponent {
     // });
   };
 
-  onPagination = (data) => {
-    // console.log(
-    //   this.props.posts.allPosts.slice(10, 20),
-    //   "this.props.posts.allPosts"
-    // );
+  removePostFromDb = (post) => {
+    const { firebase } = this.props;
+    let userResponse = "";
+    fireAlert({ state: true, type: CONFIRMATION_REMOVE_ALERT })
+      .then((val) => {
+        userResponse = val;
+        return (
+          !val.dismiss &&
+          firebase.db.ref(`${POSTS_BUCKET_NAME}/${post.uid}`).remove()
+        );
+      })
+      .then(() => {
+        if (!userResponse.dismiss) {
+          let values = POST_REMOVED_STATUS;
+          values.text.success = `${post.title} has been deleted successfully.`;
 
+          fireAlert({ state: true, values });
+        }
+      })
+      .catch((error) => {
+        let values = POST_REMOVED_STATUS;
+        values.text.error = `${error.text}.`;
+        fireAlert({ state: true, values });
+      });
+  };
+
+  onPagination = (data) => {
     // an example =>  page number (2 * 10) - 10 == start index is 10
     const startIndex = data.activePage * ONE_PAGE_LESSONS - 10;
 
-    const copiedLessons = this.props.posts.allPosts.slice(
-      startIndex >= 0 ? startIndex : 0,
-      data.activePage * ONE_PAGE_LESSONS
-    );
-    console.log(startIndex, "startIndex");
     this.setState({
       activePage: data.activePage,
-      postsList: copiedLessons,
+      startIndex,
+      endIndex: startIndex + ONE_PAGE_LESSONS,
     });
   };
 
@@ -169,10 +193,9 @@ class LessonsList extends PureComponent {
       direction,
       column,
       activePage,
+      startIndex,
+      endIndex,
     } = this.state;
-    const { allPosts } = this.props.posts;
-
-    console.log(allPosts, "allPosts");
 
     return isLoading && !error ? (
       <Segment className="loader-admin">
@@ -239,65 +262,60 @@ class LessonsList extends PureComponent {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {postsList.map((lesson, key) => {
-                      console.log(lesson, "lesson");
-                      return (
-                        <Table.Row key={lesson.title}>
-                          <Table.Cell width="6">
-                            <Link
-                              className="topics-lesson-link"
-                              to={`${LESSON_TOPIC}/${lesson.title
-                                .toLowerCase()
-                                .split(" ")
-                                .join("-")}`}
-                              target="_blank"
-                            >
-                              {lesson.title}
-                            </Link>
-                          </Table.Cell>
-                          <Table.Cell width="3">{lesson.category}</Table.Cell>
-                          <Table.Cell width="3">
-                            {lesson.subCategory}
-                          </Table.Cell>
-                          <Table.Cell width="3">12 April</Table.Cell>
-                          <Table.Cell width="1" textAlign="center">
-                            <Button
-                              className="lesson-list-edit"
-                              onClick={() => {
-                                this.props.setEditPostTabIndex();
-                                this.props.onSetPostNewValues({
-                                  postMode: POST_MODE.EDIT,
-                                  ...lesson,
-                                });
-                              }}
-                            >
-                              <Icon name="edit" color="yellow" />
-                            </Button>
-                          </Table.Cell>
-                          <Table.Cell width="1" textAlign="center">
-                            <Button
-                              className="lesson-list-remove"
-                              onClick={() => console.log("remove PAZANA")}
-                            >
-                              <Icon name="remove" color="red" />
-                            </Button>
-                          </Table.Cell>
-                        </Table.Row>
-                      );
-                    })}
+                    {postsList
+                      .slice(startIndex, endIndex)
+                      .map((lesson, key) => {
+                        return (
+                          <Table.Row key={lesson.title + key}>
+                            <Table.Cell width="6">
+                              <Link
+                                className="topics-lesson-link"
+                                to={`${LESSON_TOPIC}/${lesson.title
+                                  .toLowerCase()
+                                  .split(" ")
+                                  .join("-")}`}
+                                target="_blank"
+                              >
+                                {lesson.title}
+                              </Link>
+                            </Table.Cell>
+                            <Table.Cell width="3">{lesson.category}</Table.Cell>
+                            <Table.Cell width="3">
+                              {lesson.subCategory}
+                            </Table.Cell>
+                            <Table.Cell width="3">12 April</Table.Cell>
+                            <Table.Cell width="1" textAlign="center">
+                              <Button
+                                className="lesson-list-edit"
+                                onClick={() => {
+                                  this.props.setEditPostTabIndex();
+                                  this.props.onSetPostNewValues({
+                                    postMode: POST_MODE.EDIT,
+                                    ...lesson,
+                                  });
+                                }}
+                              >
+                                <Icon name="edit" color="yellow" />
+                              </Button>
+                            </Table.Cell>
+                            <Table.Cell width="1" textAlign="center">
+                              <Button
+                                className="lesson-list-remove"
+                                onClick={() => this.removePostFromDb(lesson)}
+                              >
+                                <Icon name="remove" color="red" />
+                              </Button>
+                            </Table.Cell>
+                          </Table.Row>
+                        );
+                      })}
                   </Table.Body>
                 </Table>
                 <Pagination
                   className="lessons-list-pagination"
-                  totalPages={Math.ceil(allPosts.length / ONE_PAGE_LESSONS)}
-                  /* totalPages={Math.ceil(allPosts.length / ONE_PAGE_LESSONS)} */
-                  /* activePage={activePage} */
-                  onPageChange={(e, data) =>
-                    this.onPagination(
-                      data,
-                      Math.ceil(allPosts.length / ONE_PAGE_LESSONS)
-                    )
-                  }
+                  totalPages={Math.ceil(postsList.length / ONE_PAGE_LESSONS)}
+                  activePage={activePage}
+                  onPageChange={(e, data) => this.onPagination(data)}
                 />
               </>
             ) : (
@@ -321,7 +339,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setPostValues(values)),
   };
 };
 export default compose(

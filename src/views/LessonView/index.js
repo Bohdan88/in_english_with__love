@@ -1,10 +1,10 @@
 import React, { Component, createRef } from "react";
 import { compose } from "recompose";
 import { connect } from "react-redux";
-import { getAllPostsValues, setNewValues } from "../../redux/actions";
+import { getAllPostsValues, setSessionValues } from "../../redux/actions";
 import { withFirebase } from "../Firebase";
 import draftToHtml from "draftjs-to-html";
-import { convertToRaw } from "draft-js";
+import { convertToRaw, EditorState, convertFromRaw } from "draft-js";
 import Swal from "sweetalert2";
 import {
   MatchExerciseView,
@@ -19,6 +19,7 @@ import {
   CREATE_LESSON_STAGES,
   LESSON_COMPLETE_CONFIRMATION,
   USERS_BUCKET_NAME,
+  ANOTHER_WAY,
 } from "../../constants/shared";
 import {
   Grid,
@@ -68,7 +69,6 @@ class LessonView extends Component {
     this.setState({ isLoadingLesson: true });
 
     if (mode && mode === CREATE_LESSON_STAGES.preview) {
-      console.log(this.props.newPostState, "PREVIEW");
       const clonedNewPostState = Object.assign({}, newPostState, {
         post: Object.assign({}, newPostState.post),
       });
@@ -160,6 +160,10 @@ class LessonView extends Component {
     });
   };
 
+  transformJsonText = (state) => {
+    return EditorState.createWithContent(convertFromRaw(JSON.parse(state)));
+  };
+
   visualizeChapterContent = (currentChapter) => {
     const { fullLeson } = this.state;
     const { mode } = this.props;
@@ -171,7 +175,9 @@ class LessonView extends Component {
 
     // check if it's json string  or editor state
     if (lessonChapter) {
-      if (typeof lessonChapter === "string" || lessonChapter._immutable) {
+      if (lessonChapter._immutable) {
+        console.log(lessonChapter, "lessonChapter._immutable");
+        console.log(lessonChapter._immutable, "._immutable");
         // check if mode is preview, if so do not parse it because we don't stringify it yet
         return (
           <div
@@ -190,7 +196,7 @@ class LessonView extends Component {
       }
 
       if (lessonChapter && lessonChapter.name) {
-        if (lessonChapter.name.includes(ANOTHER_WAY_TO_SAY)) {
+        if (lessonChapter.name.includes(ANOTHER_WAY)) {
           return <AnotherWay lessonValues={lessonChapter} />;
         }
         if (lessonChapter.name.includes(COMPLETE_THE_SENTENCES)) {
@@ -415,15 +421,17 @@ class LessonView extends Component {
                     attached
                     className="lesson-view-chapter-container chapter-content"
                   >
-                    {/* check if mode is preview. because in preview we do not stringify values yet */}
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: fullLeson.post[CREATE_LESSON_STAGES.content.key]
-                          ? mode === CREATE_LESSON_STAGES.preview
-                            ? fullLeson.post[
-                                CREATE_LESSON_STAGES.content.key
-                              ] &&
-                              draftToHtml(
+                    {console.log(
+                      fullLeson.post[CREATE_LESSON_STAGES.content.key]
+                    )}
+                    {/* check whether it's editor state or stringified json */}
+                    {fullLeson.post[CREATE_LESSON_STAGES.content.key] && (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: fullLeson.post[
+                            CREATE_LESSON_STAGES.content.key
+                          ]._immutable
+                            ? draftToHtml(
                                 convertToRaw(
                                   fullLeson.post[
                                     CREATE_LESSON_STAGES.content.key
@@ -432,11 +440,10 @@ class LessonView extends Component {
                               )
                             : JSON.parse(
                                 fullLeson.post[CREATE_LESSON_STAGES.content.key]
-                              )
-                          : "",
-                      }}
-                    />
-
+                              ),
+                        }}
+                      />
+                    )}
                     {!fullLeson.post[CREATE_LESSON_STAGES.content.key] && (
                       <Message
                         className="lesson-view-error-message"
@@ -529,7 +536,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
     // onSetNewUserValues: (values) => dispatch(setNewValues(values)),
-    onSetLessonComplete: (values) => dispatch(setNewValues(values)),
+    onSetLessonComplete: (values) => dispatch(setSessionValues(values)),
   };
 };
 export default compose(

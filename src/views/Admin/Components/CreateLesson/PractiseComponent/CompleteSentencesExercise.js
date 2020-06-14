@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getAllPostsValues, setNewValues } from "../../../../../redux/actions";
+import { getAllPostsValues, setPostValues } from "../../../../../redux/actions";
 import {
   Segment,
   Icon,
@@ -381,7 +381,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    onSetPostNewValues: (values) => dispatch(setNewValues(values)),
+    onSetPostNewValues: (values) => dispatch(setPostValues(values)),
   };
 };
 export default connect(
