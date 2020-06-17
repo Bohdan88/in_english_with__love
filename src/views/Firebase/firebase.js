@@ -78,6 +78,11 @@ class Firebase {
   doPasswordUpdate = (password) =>
     this.auth.currentUser.updatePassword(password);
 
+  doProfileUpdate = (profileValues) =>
+    this.auth.currentUser.updateProfile(profileValues);
+
+  getUserProfile = () => this.auth.currentUser;
+  
   // *** User API ***
 
   /* The paths in the ref() method match 

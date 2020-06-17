@@ -69,6 +69,7 @@ export const ADMIN_TABS = {
   create_lesson: { key: "lesson ", content: "Create a lesson", icon: "add" },
   all_lessons: { key: "all_lessons ", content: "All lessons", icon: "list" },
   users: { key: "users ", content: "Users", icon: "users" },
+  reset: { key: "reset ", content: "Reset", icon: "redo" },
 };
 
 export const CREATE_LESSON_STAGES = {
@@ -365,12 +366,24 @@ export const LESSON_COMPLETE_CONFIRMATION = {
     error: "error",
   },
   text: {
-    success: "You successfully completed the lesson!",
+    success: "You successfully completed this lesson!",
     error: "Something went wrong!",
   },
   title: {
     success: "Good job!",
     error: "Oops...",
+  },
+};
+
+export const PASSWORD_CHANGE_CONFIRMATION = {
+  icon: {
+    success: "success",
+  },
+  text: {
+    success: "You successfully changed password!",
+  },
+  title: {
+    success: "Success!",
   },
 };
 

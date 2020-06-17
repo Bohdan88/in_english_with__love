@@ -208,7 +208,7 @@ class TopicList extends Component {
           <Grid.Row centered columns={2}>
             {error && !isLoadingLessons ? (
               <Message className="error-message" size="massive" negative>
-                <Message.Header>Oops! something went wrong...</Message.Header>
+                <Message.Header>Oops! Something went wrong...</Message.Header>
                 <p>{errorText}</p>
               </Message>
             ) : isSearchingPost ? (

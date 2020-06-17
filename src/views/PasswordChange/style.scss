@@ -1,0 +1,26 @@
+.password-change-button-container {
+  display: flex !important;
+
+  .message {
+    padding: 0.5rem 1.5em 0em 1.5em !important;
+    margin: 0px !important;
+
+    .content {
+      position: relative;
+      top: 3px;
+    }
+  }
+  .button {
+    height: 40px !important;
+    align-self: flex-end;
+  }
+}
+
+.password-chate-requirement {
+  font-size: 1.1rem;
+}
+
+.password-chate-requirement-list > .item {
+  font-size: 1.1rem;
+  line-height: 1.5rem !important;
+}

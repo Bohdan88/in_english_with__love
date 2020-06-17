@@ -183,7 +183,7 @@ class AnotherWay extends Component {
       </div>
     ) : (
       <Message className="error-message" size="massive" negative>
-        <Message.Header>Oops! something went wrong...</Message.Header>
+        <Message.Header>Oops! Something went wrong...</Message.Header>
         <Message.Content>
           Unfortunately an exercise can't be loaded = (
         </Message.Content>

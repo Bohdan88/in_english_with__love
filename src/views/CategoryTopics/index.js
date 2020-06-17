@@ -193,7 +193,7 @@ class CategoryTopics extends Component {
           </Segment>
         ) : error && !dbValuesLoading ? (
           <Message className="error-message" size="massive" negative>
-            <Message.Header>Oops! something went wrong...</Message.Header>
+            <Message.Header>Oops! Something went wrong...</Message.Header>
             <p>{errorText}</p>
           </Message>
         ) : (

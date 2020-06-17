@@ -333,9 +333,10 @@ class CreateLesson extends Component {
       .then(() => {
         this.setState({ isLoading: false });
         // call success modal and refresh props
-        fireAlert({ state: true, values: LESSON_STATUS }).then(() =>
-          this.fetchPostsFromDb()
-        );
+        fireAlert({ state: true, values: LESSON_STATUS }).then(() => {
+          this.fetchPostsFromDb();
+          this.props.onSetPostNewValues(INIT_NEW_POST_VALUES);
+        });
       })
       .catch((error) => {
         let valuesText = LESSON_STATUS;

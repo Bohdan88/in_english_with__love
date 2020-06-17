@@ -17,13 +17,24 @@ import {
   POSTS_BUCKET_NAME,
   EDIT_CREATE_POST_TAB_INDEX,
   POST_MODE,
+  INIT_NEW_POST_VALUES,
+  CONFIRMATION_REMOVE_ALERT,
 } from "../../constants/shared";
-import { Dimmer, Segment, Loader, Tab, Grid } from "semantic-ui-react";
+import {
+  Dimmer,
+  Segment,
+  Loader,
+  Tab,
+  Grid,
+  Button,
+  Icon,
+} from "semantic-ui-react";
 
-import { getAllPostsValues } from "../../redux/actions";
+import { getAllPostsValues, setPostValues } from "../../redux/actions";
 
 import "./style.scss";
 import LessonsList from "./Components/LessonsList";
+import { fireAlert } from "../../utils";
 // Admin
 
 const transformToOptions = (arr) => {
@@ -102,6 +113,15 @@ class AdminPage extends Component {
       postMode: POST_MODE.EDIT,
     });
 
+  setReduxToInit = () => {
+    fireAlert({
+      state: true,
+      type: CONFIRMATION_REMOVE_ALERT,
+    }).then((val) => {
+      !val.dismiss && this.props.onSetPostNewValues(INIT_NEW_POST_VALUES);
+    });
+  };
+
   render() {
     const { loading, activeTabIndex, postMode } = this.state;
     // console.log(this.props,'this.state')
@@ -128,6 +148,25 @@ class AdminPage extends Component {
         menuItem: ADMIN_TABS.users,
         render: () => <Tab.Pane>Tab 2 Content</Tab.Pane>,
       },
+
+      // {
+      //   menuItem: ADMIN_TABS.reset,
+      //   render: () => <Button> Button </Button>,
+      // },
+
+      // {
+      //   menuItem: CREATE_LESSON_STAGES.preview,
+      //   render: () => (
+      //     <Tab.Pane className="preview-tab">
+      //       <LessonPreview
+      //         focus={focus}
+      //         title={title}
+      //         iconSrc={this.props.newPostState.iconPath}
+      //         sectionKey={CREATE_LESSON_STAGES.preview.key}
+      //       />
+      //     </Tab.Pane>
+      //   ),
+      // },
     ];
 
     // console.log(this.state, "STAATE");
@@ -144,6 +183,14 @@ class AdminPage extends Component {
             <Grid.Row>
               <Grid.Column className="column-admin">
                 {/* <Container> */}
+                <Button
+                  style={{ display: activeTabIndex === 1 ? "" : "none" }}
+                  onClick={() => this.setReduxToInit()}
+                  className="admin-reset-progress"
+                >
+                  <Icon name="redo" />
+                  Reset
+                </Button>
                 <Tab
                   activeIndex={activeTabIndex}
                   onTabChange={(e, data) => this.onTabChange(data)}
@@ -294,6 +341,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     // onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
     onSetUsers: (users) => dispatch({ type: "USERS_SET", users }),
+    onSetPostNewValues: (values) => dispatch(setPostValues(values)),
   };
 };
 

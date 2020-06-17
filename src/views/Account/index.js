@@ -24,10 +24,11 @@ import "./style.scss";
 
 class AccountPage extends Component {
   state = {
-    activeItem: "Home",
+    activeItem: "Edit",
     menuItems: [
-      { name: "Home", component: HomePage },
       { name: "Edit", component: EditAccount },
+      { name: "Home", component: HomePage },
+
       // { name: "Change Password", component: Form },
       // { name: "Linked Accounts" },
       { name: "Help", component: Help },
@@ -66,9 +67,7 @@ class AccountPage extends Component {
               </Menu>
             </Grid.Column>
             <Grid.Column width={12}>
-              <Segment>
-                <ComponentName {...this.props} />
-              </Segment>
+              <ComponentName {...this.props} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

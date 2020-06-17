@@ -175,7 +175,7 @@ class LessonView extends Component {
 
     // check if it's json string  or editor state
     if (lessonChapter) {
-      if (lessonChapter._immutable) {
+      if (typeof lessonChapter === "string") {
         console.log(lessonChapter, "lessonChapter._immutable");
         console.log(lessonChapter._immutable, "._immutable");
         // check if mode is preview, if so do not parse it because we don't stringify it yet
@@ -318,7 +318,6 @@ class LessonView extends Component {
 
     const menu = isMenuOpen ? "menu-open" : "";
 
-    console.log(this.state, "this.state");
     return (
       <div>
         {isLoadingLesson && !error ? (
@@ -333,7 +332,7 @@ class LessonView extends Component {
             size="massive"
             negative
           >
-            <Message.Header>Oops! something went wrong...</Message.Header>
+            <Message.Header>Oops! Something went wrong...</Message.Header>
             <Message.Content>{errorText}</Message.Content>
           </Message>
         ) : !Object.entries(fullLeson).length ? (
@@ -342,7 +341,7 @@ class LessonView extends Component {
             size="massive"
             negative
           >
-            <Message.Header>Oops! something went wrong...</Message.Header>
+            <Message.Header>Oops! Something went wrong...</Message.Header>
             <Message.Content>
               {currentTopic === "admin"
                 ? "You have nothing to preview."
@@ -368,7 +367,6 @@ class LessonView extends Component {
                       </Step.Content>
                     </Step>
                   </Step.Group>
-
                   <Segment
                     attached
                     className={`lesson-view-chapter-container lesson-view-${menu}`}
@@ -384,7 +382,7 @@ class LessonView extends Component {
                           negative
                         >
                           <Message.Header>
-                            Oops! something went wrong...
+                            Oops! Something went wrong...
                           </Message.Header>
                           <Message.Content>
                             {currentTopic === "admin"
@@ -421,9 +419,6 @@ class LessonView extends Component {
                     attached
                     className="lesson-view-chapter-container chapter-content"
                   >
-                    {console.log(
-                      fullLeson.post[CREATE_LESSON_STAGES.content.key]
-                    )}
                     {/* check whether it's editor state or stringified json */}
                     {fullLeson.post[CREATE_LESSON_STAGES.content.key] && (
                       <div
@@ -451,7 +446,7 @@ class LessonView extends Component {
                         negative
                       >
                         <Message.Header>
-                          Oops! something went wrong...
+                          Oops! Something went wrong...
                         </Message.Header>
                         <Message.Content>
                           {currentTopic === "admin"
