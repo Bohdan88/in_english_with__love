@@ -69,10 +69,10 @@ class PasswordChangeForm extends Component {
 
     return (
       <React.Fragment>
-        <p className="password-chate-requirement">
+        <p className="password-change-requirement">
           We require you to have a secure password. Make sure you:
         </p>
-        <List className="password-chate-requirement-list" bulleted>
+        <List className="password-change-requirement-list" bulleted>
           <List.Item>Use at least 6 characters</List.Item>
           <List.Item>Use a mix of upper and lower case characters</List.Item>
           <List.Item>Use at least 1 number</List.Item>
@@ -91,6 +91,7 @@ class PasswordChangeForm extends Component {
               error={isInvalid}
               name="passwordOne"
               placeholder="New Password"
+              value={passwordOne}
             />
           </Form.Field>
           <Form.Field onChange={this.onChange}>
@@ -99,6 +100,7 @@ class PasswordChangeForm extends Component {
               error={isInvalid}
               name="passwordTwo"
               placeholder="Confirmation of New Password"
+              value={passwordTwo}
             />
           </Form.Field>
           <div

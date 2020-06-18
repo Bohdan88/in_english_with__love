@@ -387,6 +387,18 @@ export const PASSWORD_CHANGE_CONFIRMATION = {
   },
 };
 
+export const UPDATE_PROFILE_CONFIRMATION = {
+  icon: {
+    success: "success",
+  },
+  text: {
+    success: "You successfully updated your profile!",
+  },
+  title: {
+    success: "Success!",
+  },
+};
+
 export const REMOVE_EXERCISE = {
   icon: {
     success: "question",
