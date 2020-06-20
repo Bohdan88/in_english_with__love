@@ -6,11 +6,13 @@ import {
   CHAR_SEQUENCE,
   INIT_CHAR_VALUES,
   MATH_KEYS,
-  ICON_POST_REMOVE_STATUS,
   EXERCISES_LABELS_COLORS,
   POST_MODE,
   MATCHING,
 } from "../../../../../constants/shared";
+
+import { ICON_POST_REMOVE_STATUS } from "../../../../../constants/alertContent";
+
 import { getAllPostsValues, setPostValues } from "../../../../../redux/actions";
 import {
   Form,

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 // import { FirebaseContext } from "../Firebase";
+import { connect } from "react-redux";
 import { withFirebase } from "../Firebase";
 import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
@@ -13,6 +14,7 @@ import {
   INITIAL_FORM_STATE,
 } from "../../constants/shared";
 import { SignButton, FormInput, AnotherAccount, LeftGridAuth } from "../Shared";
+import { setSessionValues } from "../../redux/actions";
 
 const checkIfIncludes = (error, ...rest) =>
   error &&
@@ -74,11 +76,14 @@ class SignUpFormBase extends Component {
             username,
             email,
             roles,
+            lessonsCompleted: {
+              ...JSON.parse(localStorage.getItem("firstCompletedLesson")),
+            },
           });
         })
         .then(() => {
           this.setState({ ...INITIAL_FORM_STATE });
-          // // props from the router
+
           this.props.history.push(ROUTES.HOME);
         })
         .catch((error) => {
@@ -182,7 +187,22 @@ const SignUpLink = () => (
   </p>
 );
 
-const SignUpForm = compose(withRouter, withFirebase)(SignUpFormBase);
+const mapStateToProps = (state) => {
+  const { sessionState } = state;
+  return { sessionState };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAddFirstLesson: (values) => dispatch(setSessionValues(values)),
+  };
+};
+
+const SignUpForm = compose(
+  connect(null, mapDispatchToProps),
+  withRouter,
+  withFirebase
+)(SignUpFormBase);
 
 export default SignUpPage;
 

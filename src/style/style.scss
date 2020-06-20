@@ -7,16 +7,12 @@ html {
 
 body {
   margin: 0;
-  // overflow-y: hidden;
-  // font-family: "Amatic SC", cursive;
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   // background: url("../views/assets/backg.svg") !important;
   background: url("https://firebasestorage.googleapis.com/v0/b/in-english-with-love.appspot.com/o/backg.svg?alt=media&token=9a2541c9-1cfe-4ddd-8905-5f46bbe19fdd") !important;
   background-repeat: no-repeat !important;
-
-  // background-size: 100vw !important;
   background-size: cover !important;
   // background: #fbfafb !important;
 }
@@ -195,7 +191,11 @@ body {
 
   .error-no-user,
   .error-no-user-sign-up {
-    font-size: 18px;
+    font-size: 0.7rem;
+  }
+  
+  .error-no-user {
+    top: 15%;
   }
 
   .container-form-header {

@@ -1,19 +1,25 @@
 /* a modal to display  either an error or confirmation*/
 
 import Swal from "sweetalert2";
-import { CONFIRMATION_REMOVE_ALERT } from "../constants/shared";
+import { CONFIRMATION_ALERT } from "../constants/alertContent";
 
 const fireAlert = ({ state, type, values, error = null }) => {
   switch (type) {
-    case CONFIRMATION_REMOVE_ALERT:
+    case CONFIRMATION_ALERT:
       return Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
+        icon: values.icon,
+        title: values.title,
+        // "Are you sure?",
+        // text: "You won't be able to revert this!",
+        text: values.text,
+        // icon: "warning",
+
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: values.cancelButtonText,
+        confirmButtonText: values.confirmButton,
+        // "Yes, delete it!",
         position: "top-end",
       });
     default:

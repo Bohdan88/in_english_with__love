@@ -25,10 +25,10 @@ import {
 } from "semantic-ui-react";
 import { getAllPostsValues, setPostValues } from "../../../../redux/actions";
 import {
-  LESSON_STATUS,
   ICON_POST_REMOVE_STATUS,
   ICON_POST_ADD_STATUS,
-} from "../../../../constants/shared";
+} from "../../../../constants/alertContent";
+import { LESSON_STATUS } from "../../../../constants/shared";
 import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
 import { transformToOptions, fireAlert } from "../../../../utils";
 import AboutTheLesson from "./AboutTheLesson";

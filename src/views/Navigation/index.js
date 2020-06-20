@@ -11,6 +11,7 @@ import MobileMenu from "./MobileMenu";
 import "./style.scss";
 
 const NavigationAuth = ({ authUser }) => {
+  console.log(authUser, "authUser");
   const [activeItem, setActiveItem] = useState(ROUTES.SIGN_IN);
   return (
     <div>
@@ -29,11 +30,11 @@ const NavigationAuth = ({ authUser }) => {
               {ROUTES.SHARED_AUTH_ROUTES.map((route) => (
                 <Menu.Item key={route} active={activeItem === route}>
                   <Link onClick={() => setActiveItem(route)} to={route}>
-                    {route.slice(1).toUpperCase()}
+                    {route && route.slice(1).toUpperCase()}
                   </Link>
                 </Menu.Item>
               ))}
-              {!!authUser.roles[ROLES.ADMIN] && (
+              {!!authUser.roles && !!authUser.roles[ROLES.ADMIN] && (
                 <Menu.Item as="a" href={ROUTES.ADMIN}>
                   ADMIN
                 </Menu.Item>

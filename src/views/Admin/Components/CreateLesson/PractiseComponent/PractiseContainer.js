@@ -6,12 +6,14 @@ import {
   EXERCISES_NAMES,
   EXERCISES_DESCRIPTIONS,
   EXERCISES_TYPES,
-  REMOVE_EXERCISE,
-  CONFIRMATION_REMOVE_ALERT,
   MATCHING,
   COMPLETE_THE_SENTENCES,
   ANOTHER_WAY,
 } from "../../../../../constants/shared";
+import {
+  CONFIRMATION_ALERT,
+  REMOVE_EXERCISE_CONFIRMATION,
+} from "../../../../../constants/alertContent";
 import { getAllPostsValues, setPostValues } from "../../../../../redux/actions";
 import {
   Form,
@@ -59,8 +61,8 @@ class PractiseContainer extends PureComponent {
     const { newPostExercisesValues } = this.props.newPostState;
     fireAlert({
       state: true,
-      type: CONFIRMATION_REMOVE_ALERT,
-      values: REMOVE_EXERCISE,
+      type: CONFIRMATION_ALERT,
+      values: REMOVE_EXERCISE_CONFIRMATION,
     }).then((res) => {
       if (res.value) {
         this.props.onSetPostNewValues({

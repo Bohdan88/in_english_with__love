@@ -18,8 +18,11 @@ import {
   EDIT_CREATE_POST_TAB_INDEX,
   POST_MODE,
   INIT_NEW_POST_VALUES,
-  CONFIRMATION_REMOVE_ALERT,
 } from "../../constants/shared";
+import {
+  CONFIRMATION_ALERT,
+  CONFIRMATION_REMOVE_CONTENT,
+} from "../../constants/alertContent";
 import {
   Dimmer,
   Segment,
@@ -116,7 +119,8 @@ class AdminPage extends Component {
   setReduxToInit = () => {
     fireAlert({
       state: true,
-      type: CONFIRMATION_REMOVE_ALERT,
+      type: CONFIRMATION_ALERT,
+      values: CONFIRMATION_REMOVE_CONTENT,
     }).then((val) => {
       !val.dismiss && this.props.onSetPostNewValues(INIT_NEW_POST_VALUES);
     });

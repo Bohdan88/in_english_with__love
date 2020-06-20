@@ -1,3 +1,34 @@
+@import "../../style/variables.scss";
+
 .account-row {
   margin: 2rem !important;
 }
+
+.home-page-message {
+  display: block;
+  margin: 4rem auto 0px auto !important;
+  width: 500px;
+  padding: 200px;
+  text-align: center;
+
+  .content {
+    padding: 5px;
+  }
+}
+
+// home page
+.home-page-container {
+  min-height: 500px;
+}
+
+.home-page-tooltip {
+  background-color: $white;
+  padding: 10px;
+  border: 1px solid $grey;
+}
+
+.home-page-statistic {
+  margin-left: 50px!important;
+}
+
+// --------------------------------

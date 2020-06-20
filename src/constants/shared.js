@@ -12,6 +12,16 @@ export const FACEBOOK_LINK =
 export const BACKGROUND_LINK =
   "https://firebasestorage.googleapis.com/v0/b/in-english-with-love.appspot.com/o/backg.svg?alt=media&token=9a2541c9-1cfe-4ddd-8905-5f46bbe19fdd";
 
+export const PASSWORD_SPECIAL_CHARACTERS = [
+  "!",
+  "#",
+  "$",
+  "%",
+  "@",
+  "^",
+  "&",
+  "*",
+];
 export const PASSWORD_FORGET_INIT = {
   email: "",
   error: null,
@@ -44,22 +54,26 @@ export const SIGN_UP = "SIGN_UP";
 export const SIGN_OUT = "SIGN OUT";
 
 export const SIGN_IN_METHODS = [
+  // {
+  //   id: "password",
+  //   icon: "lock",
+  //   provider: null,
+  // },
   {
-    id: "password",
-    provider: null,
-  },
-  {
+    name: "Google",
     id: "google.com",
+    icon: "google",
     provider: "googleProvider",
   },
   {
+    name: "Facebook",
     id: "facebook.com",
+    icon: "facebook f",
     provider: "facebookProvider",
   },
 ];
 
 // admin page
-export const CONFIRMATION_REMOVE_ALERT = "CONFIRMATION_REMOVE_ALERT";
 export const MATCHING = "Matching";
 export const COMPLETE_THE_SENTENCES = "Complete the Sentences";
 export const ANOTHER_WAY_TO_SAY = "Another way to say";
@@ -315,108 +329,6 @@ export const CHAR_SEQUENCE = [
   "Z",
 ];
 
-export const ICON_POST_REMOVE_STATUS = {
-  icon: {
-    success: "success",
-    error: "error",
-  },
-  text: {
-    success: "An Icon has been deleted!",
-    error: "Something went wrong!",
-  },
-  title: {
-    success: "Success!",
-    error: "Oops...",
-  },
-};
-
-export const POST_REMOVED_STATUS = {
-  icon: {
-    success: "success",
-    error: "error",
-  },
-  text: {
-    success: "A post has been deleted!",
-    error: "Something went wrong!",
-  },
-  title: {
-    success: "Success!",
-    error: "Oops...",
-  },
-};
-
-export const ICON_POST_ADD_STATUS = {
-  icon: {
-    success: "success",
-    error: "error",
-  },
-  text: {
-    success: "An Icon has been uploded successfully!",
-    error: "Something went wrong!",
-  },
-  title: {
-    success: "Success!",
-    error: "Oops...",
-  },
-};
-
-export const LESSON_COMPLETE_CONFIRMATION = {
-  icon: {
-    success: "success",
-    error: "error",
-  },
-  text: {
-    success: "You successfully completed this lesson!",
-    error: "Something went wrong!",
-  },
-  title: {
-    success: "Good job!",
-    error: "Oops...",
-  },
-};
-
-export const PASSWORD_CHANGE_CONFIRMATION = {
-  icon: {
-    success: "success",
-  },
-  text: {
-    success: "You successfully changed password!",
-  },
-  title: {
-    success: "Success!",
-  },
-};
-
-export const UPDATE_PROFILE_CONFIRMATION = {
-  icon: {
-    success: "success",
-  },
-  text: {
-    success: "You successfully updated your profile!",
-  },
-  title: {
-    success: "Success!",
-  },
-};
-
-export const REMOVE_EXERCISE = {
-  icon: {
-    success: "question",
-  },
-  text: {
-    success: "Are you sure you want to remove this Exercise?",
-  },
-};
-
-export const REMOVE_POST = {
-  icon: {
-    success: "question",
-  },
-  text: {
-    success: "Are you sure you want to remove this Post?",
-  },
-};
-
 // db values
 export const POSTS_BUCKET_NAME = "posts";
 export const TOPICS_BUCKET_NAME = "topics";
@@ -494,16 +406,6 @@ export const CATEGORY_TOPICS = {
 // Complete Lesson
 
 export const SUB_FIELD = "second";
-
-// Account page
-
-// export const ACCOUNT_MENU_ITEMS = [
-//   { name: "Home" },
-//   { name: "Edit" },
-//   { name: "Change Password" },
-//   { name: "Linked Accounts" },
-//   { name: "Help" },
-// ];
 
 // Lessons List
 

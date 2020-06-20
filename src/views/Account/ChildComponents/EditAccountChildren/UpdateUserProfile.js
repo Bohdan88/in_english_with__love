@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "recompose";
-import { withFirebase } from "../Firebase";
-import { Form, Button, Message } from "semantic-ui-react";
-import { fireAlert } from "../../utils";
-import { UPDATE_PROFILE_CONFIRMATION } from "../../constants/shared";
-import { setSessionValues } from "../../redux/actions";
+import { withFirebase } from "../../../Firebase";
+import { Form, Button, Message, Header, Segment } from "semantic-ui-react";
+import { fireAlert } from "../../../../utils";
+import { UPDATE_PROFILE_CONFIRMATION } from "../../../../constants/alertContent";
+import { setSessionValues } from "../../../../redux/actions";
 
 // style
 import "./style.scss";
@@ -77,7 +77,10 @@ class UpdateUserProfile extends Component {
     const isInvalid = isSubmitted && (!!error || username.trim().length < 6);
 
     return (
-      <div>
+      <Segment>
+        <Header as="h3" textAlign="center">
+          Update Profile
+        </Header>
         <p className="change-user-name-requirement">
           Please note that your <b>Username</b> should contain at least 6
           characters.
@@ -102,7 +105,7 @@ class UpdateUserProfile extends Component {
             </Button>
           </div>
         </Form>
-      </div>
+      </Segment>
     );
   }
 }

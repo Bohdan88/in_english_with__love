@@ -4,10 +4,12 @@ import { LESSON_TOPIC } from "../../../../constants/routes";
 import {
   ONE_PAGE_LESSONS,
   POSTS_BUCKET_NAME,
-  POST_REMOVED_STATUS,
-  REMOVE_POST,
-  CONFIRMATION_REMOVE_ALERT,
 } from "../../../../constants/shared";
+import {
+  POST_REMOVED_STATUS,
+  CONFIRMATION_ALERT,
+  REMOVE_POST_CONFIRMATION,
+} from "../../../../constants/alertContent";
 import { connect } from "react-redux";
 import { compose } from "recompose";
 import _ from "lodash";
@@ -150,7 +152,11 @@ class LessonsList extends PureComponent {
   removePostFromDb = (post) => {
     const { firebase } = this.props;
     let userResponse = "";
-    fireAlert({ state: true, type: CONFIRMATION_REMOVE_ALERT })
+    fireAlert({
+      state: true,
+      type: CONFIRMATION_ALERT,
+      values: REMOVE_POST_CONFIRMATION,
+    })
       .then((val) => {
         userResponse = val;
         return (

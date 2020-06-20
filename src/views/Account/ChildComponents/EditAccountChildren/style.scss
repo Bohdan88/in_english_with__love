@@ -1,0 +1,64 @@
+// common
+
+.change-user-name-requirement,
+.sign-in-management-description,
+.password-change-requirement,
+.delete-account-warning {
+  font-size: 1.1rem;
+}
+
+// change password
+.password-change-button-container {
+  display: flex !important;
+
+  .message {
+    padding: 0.5rem 1.5em 0em 1.5em !important;
+    margin: 0px !important;
+
+    .content {
+      position: relative;
+      top: 3px;
+    }
+  }
+  .button {
+    height: 40px !important;
+    align-self: flex-end;
+  }
+}
+
+.password-change-requirement-list > .item {
+  font-size: 1.1rem;
+  line-height: 1.5rem !important;
+}
+
+// remove profile
+
+.delete-account-button-container {
+  display: flex;
+}
+
+.delete-account-message {
+  margin: 0px !important;
+  padding-top: 10px !important;
+  padding-bottom: 11px !important;
+}
+
+.delete-account-button {
+  height: 40px !important;
+}
+
+// sign in management
+
+.sign-in-management-social-container {
+  display: flex;
+}
+
+.sign-in-management-social-name {
+  display: table;
+  width: 120px;
+  height: 40px;
+  span {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}

@@ -234,7 +234,7 @@ class TopicList extends Component {
                 <Message.Header>Sorry! No data found!</Message.Header>
                 <Message.Content>
                   <span className="capitalize">{`${currentTopic}  `}</span>
-                  doesn't have {` ${value || "lessons"} `}
+                  doesn't have <b>{` '${value}' `}</b>
                 </Message.Content>
                 {/* !!allIconImagesByTopic[DEFAULT_TOPIC_IMAGE] && */}
               </Message>
@@ -327,7 +327,8 @@ class TopicList extends Component {
                                     fitted
                                   />
                                 </div>
-                                {authUser.lessonsCompleted &&
+                                {authUser &&
+                                  authUser.lessonsCompleted &&
                                   Object.keys(
                                     authUser.lessonsCompleted
                                   ).findIndex((keyId) => keyId === topic.uid) !=

@@ -320,7 +320,8 @@ class CategoryTopics extends Component {
                     <span className="capitalize">
                       {`${this.props.location.pathname.slice(1)} Category `}
                     </span>
-                    doesn't have {`'${this.state.value || `lessons`}' `} =(
+                    doesn't have <b>{`'${this.state.value || `lessons`}' `}</b>{" "}
+                    =(
                   </p>
                 </Message>
               )}

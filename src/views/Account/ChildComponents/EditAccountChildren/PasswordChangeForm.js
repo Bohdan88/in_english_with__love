@@ -1,9 +1,17 @@
 import React, { Component } from "react";
 
-import { withFirebase } from "../Firebase";
-import { Form, Button, List, Message } from "semantic-ui-react";
-import { passwordValidator, fireAlert } from "../../utils";
-import { PASSWORD_CHANGE_CONFIRMATION } from "../../constants/shared";
+import { withFirebase } from "../../../Firebase";
+import {
+  Form,
+  Button,
+  List,
+  Message,
+  Header,
+  Segment,
+} from "semantic-ui-react";
+import { passwordValidator, fireAlert } from "../../../../utils";
+import { PASSWORD_CHANGE_CONFIRMATION } from "../../../../constants/alertContent";
+import { PASSWORD_SPECIAL_CHARACTERS } from "../../../../constants/shared";
 
 // Style
 import "./style.scss";
@@ -61,14 +69,17 @@ class PasswordChangeForm extends Component {
     const { passwordOne, passwordTwo, error, isSubmitted } = this.state;
 
     const isInvalid =
-      isSubmitted &&
-      (!!error ||
-        (passwordOne === "" && passwordTwo === "") ||
-        passwordOne !== passwordTwo ||
-        !passwordValidator(passwordOne));
+      (isSubmitted &&
+        (!!error ||
+          (passwordOne === "" && passwordTwo === "") ||
+          passwordOne !== passwordTwo)) ||
+      !passwordValidator;
 
     return (
-      <React.Fragment>
+      <Segment>
+        <Header as="h3" textAlign="center">
+          Change Password
+        </Header>
         <p className="password-change-requirement">
           We require you to have a secure password. Make sure you:
         </p>
@@ -77,7 +88,15 @@ class PasswordChangeForm extends Component {
           <List.Item>Use a mix of upper and lower case characters</List.Item>
           <List.Item>Use at least 1 number</List.Item>
           <List.Item>
-            Use at least 1 special character like “.”, “&”, or “*”
+            Use at least 1 special character like:
+            {PASSWORD_SPECIAL_CHARACTERS.map((sign, key) => (
+              <b key={sign}>
+                {" "}
+                {` ${sign} ${
+                  key === PASSWORD_SPECIAL_CHARACTERS.length - 1 ? " ." : ", "
+                }  `}{" "}
+              </b>
+            ))}
           </List.Item>
           <List.Item>
             Please, try not to use common words or simple passwords like
@@ -92,6 +111,7 @@ class PasswordChangeForm extends Component {
               name="passwordOne"
               placeholder="New Password"
               value={passwordOne}
+              type="password"
             />
           </Form.Field>
           <Form.Field onChange={this.onChange}>
@@ -101,6 +121,7 @@ class PasswordChangeForm extends Component {
               name="passwordTwo"
               placeholder="Confirmation of New Password"
               value={passwordTwo}
+              type="password"
             />
           </Form.Field>
           <div
@@ -109,11 +130,11 @@ class PasswordChangeForm extends Component {
           >
             <Message error content={error} />
             <Button disabled={false} floated="right" color="blue" type="submit">
-              Change Passowrd
+              Change Password
             </Button>
           </div>
         </Form>
-      </React.Fragment>
+      </Segment>
     );
   }
 }

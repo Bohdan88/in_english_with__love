@@ -15,5 +15,8 @@ const passwordValidator = (str) =>
   /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{6,}$/.test(
     str
   );
+  // /^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,}$/.test(
+  //   str
+  // );
 
 export default passwordValidator;

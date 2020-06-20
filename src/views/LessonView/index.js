@@ -17,10 +17,15 @@ import {
   MATCHING,
   ANOTHER_WAY_TO_SAY,
   CREATE_LESSON_STAGES,
-  LESSON_COMPLETE_CONFIRMATION,
+  // LESSON_COMPLETE_CONFIRMATION,
   USERS_BUCKET_NAME,
   ANOTHER_WAY,
 } from "../../constants/shared";
+import {
+  LESSON_COMPLETE_CONFIRMATION,
+  CONFIRMATION_ALERT,
+  SIGN_UP_SUGGESTION_CONFIRMATION,
+} from "../../constants/alertContent";
 import {
   Grid,
   Step,
@@ -38,7 +43,7 @@ import fireAlert from "../../utils/fireAlert";
 
 // style
 import "./style.scss";
-import { HOME } from "../../constants/routes";
+import { HOME, SIGN_UP } from "../../constants/routes";
 
 class LessonView extends Component {
   contextRef = createRef();
@@ -260,43 +265,68 @@ class LessonView extends Component {
     const { fullLeson } = this.state;
     const { sessionState } = this.props;
 
-    this.props.firebase.db
-      .ref(`${USERS_BUCKET_NAME}/${sessionState.authUser.uid}`)
-      .update({
-        ...sessionState.authUser,
-        // email: sessionState.authUser.email
-        // uid: sessionState.authUser.uid,
-        // username: sessionState.authUser.username,
-        // roles: sessionState.authUser.roles,
-        lessonsCompleted: {
-          ...sessionState.authUser.lessonsCompleted,
-          [fullLeson.uid]: new Date().getTime(),
-        },
-      })
-      .then(() => {
-        this.props.onSetLessonComplete({
-          authUser: {
-            ...sessionState.authUser,
-            lessonsCompleted: {
-              ...sessionState.lessonsCompleted,
-
-              [fullLeson.uid]: new Date().getTime(),
-            },
+    if (sessionState.authUser) {
+      this.props.firebase.db
+        .ref(`${USERS_BUCKET_NAME}/${sessionState.authUser.uid}`)
+        .update({
+          ...sessionState.authUser,
+          // email: sessionState.authUser.email
+          // uid: sessionState.authUser.uid,
+          // username: sessionState.authUser.username,
+          // roles: sessionState.authUser.roles,
+          lessonsCompleted: {
+            ...sessionState.authUser.lessonsCompleted,
+            [fullLeson.uid]: new Date().getTime(),
           },
+        })
+        .then(() => {
+          this.props.onSetLessonComplete({
+            authUser: {
+              ...sessionState.authUser,
+              lessonsCompleted: {
+                ...sessionState.lessonsCompleted,
+
+                [fullLeson.uid]: new Date().getTime(),
+              },
+            },
+          });
+          fireAlert({
+            state: true,
+            values: LESSON_COMPLETE_CONFIRMATION,
+          }).then(() => {
+            // once a lesson completed, a user will be taken to home page
+            window.location.pathname = HOME;
+          });
+        })
+        .catch((error) => {
+          let values = LESSON_COMPLETE_CONFIRMATION;
+          values.text.error = error.text;
+          fireAlert({ state: false, values });
         });
-        fireAlert({
-          state: true,
-          values: LESSON_COMPLETE_CONFIRMATION,
-        }).then(() => {
-          // once a lesson completed, a user will be taken to home page
-          window.location.pathname = HOME;
-        });
-      })
-      .catch((error) => {
-        let values = LESSON_COMPLETE_CONFIRMATION;
-        values.text.error = error.text;
-        fireAlert({ state: false, values });
+    } else {
+      // console.log(sessionState,'SEK')
+
+      fireAlert({
+        state: true,
+        type: CONFIRMATION_ALERT,
+        values: SIGN_UP_SUGGESTION_CONFIRMATION,
+      }).then((response) => {
+        if (response.dismiss) {
+          // window.location.href = HOME;
+          this.props.history.push(HOME);
+        } else {
+          // set completed lesson to locale storage to push in db later on
+          localStorage.setItem(
+            "firstCompletedLesson",
+            JSON.stringify({
+              [fullLeson.uid]: new Date().getTime(),
+            })
+          );
+          // window.location.href = SIGN_UP;
+          this.props.history.push(SIGN_UP);
+        }
       });
+    }
   };
 
   render() {
@@ -530,10 +560,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
-    // onSetNewUserValues: (values) => dispatch(setNewValues(values)),
     onSetLessonComplete: (values) => dispatch(setSessionValues(values)),
   };
 };
+
 export default compose(
   withFirebase,
   connect(mapStateToProps, mapDispatchToProps)
