@@ -311,7 +311,7 @@ class LessonView extends Component {
           localStorage.setItem(
             "firstCompletedLesson",
             JSON.stringify({
-              [fullLeson.uid]: new Date().getTime(),
+              [`${fullLeson.uid}${CATEGORY_ID}${fullLeson.category}`]: new Date().getTime(),
             })
           );
           // window.location.href = SIGN_UP;
@@ -340,7 +340,7 @@ class LessonView extends Component {
 
     const menu = isMenuOpen ? "menu-open" : "";
 
-    console.log(this.state, "THIS_STATE");
+    console.log(stepsVisited, "stepsVisited");
     return (
       <div>
         {isLoadingLesson && !error ? (
@@ -494,6 +494,7 @@ class LessonView extends Component {
                     currentChapter={currentChapter}
                     checkMenu={this.checkMenu}
                     setCurrentChapter={this.setCurrentChapter}
+                    addVisitedStep={this.addVisitedStep}
                   />
 
                   <div className="lesson-view-footer-buttons">

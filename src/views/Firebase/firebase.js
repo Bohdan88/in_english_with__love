@@ -94,8 +94,6 @@ class Firebase {
   post = (uid) => this.db.ref(`posts/${uid}`);
   posts = () => this.db.ref("posts");
 
-  // media = () => this.db.ref("images");
-
   // *** Merge Auth and DB User API *** //
   onAuthUserListener = (next, fallback) =>
     this.auth.onAuthStateChanged((authUser) => {

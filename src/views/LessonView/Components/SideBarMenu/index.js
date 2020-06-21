@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { CREATE_LESSON_STAGES } from "../../../../constants/shared";
 import { Label, Menu, Transition } from "semantic-ui-react";
 import "./style.scss";
 
-class SideBarMenu extends Component {
+class SideBarMenu extends PureComponent {
   state = {
     isMenuOpen: false,
     stepsVisited: {},
@@ -17,14 +17,6 @@ class SideBarMenu extends Component {
 
   onMenuItemClick = (data) => {
     this.props.setCurrentChapter(data.name);
-  };
-
-  addVisitedStep = (step) => {
-    // this.setState({
-    //   stepsVisited: { ...this.state.stepsVisited, [step]: true },
-    // });
-    // this.props.addVisitedStep({ ...this.state.stepsVisited, [step]: true });
-    this.props.addVisitedStep({ [step]: true });
   };
 
   componentDidMount() {
@@ -48,63 +40,58 @@ class SideBarMenu extends Component {
       : "close-menu";
 
     return (
-      <div>
-        <div className="burger-menu">
-          <div
-            className="menu-icon-wrapper float-left"
-            onClick={() => this.toggleMenu()}
-          >
-            <div id="hamburger" className={hamburgerClass}>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
+      <div className="burger-menu">
+        <div
+          className="menu-icon-wrapper float-left"
+          onClick={() => this.toggleMenu()}
+        >
+          <div id="hamburger" className={hamburgerClass}>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-          <Transition
-            visible={isMenuOpen ? true : false}
-            animation="slide right"
-            duration={100}
-            unmountOnHide={false}
-          >
-            <Menu size="large" secondary vertical className={menuClass}>
-              {filteredLessonItems.map((item, key) => {
-                return (
-                  <Menu.Item
-                    disabled={currentStep < key && !stepsVisited[key + 1]}
-                    key={item}
-                    name={item}
-                    className="lesson-view-menu-item"
-                    active={currentChapter === item}
-                    header
-                    link
-                    onClick={(e, data) => {
-                      this.onMenuItemClick(data);
-                      this.addVisitedStep(currentStep);
-                    }}
-                  >
-                    <Label
-                      className="lesson-view-label-name"
-                      color={
-                        !Object.entries(stepsVisited).length ||
-                        !stepsVisited[key + 1]
-                          ? "yellow"
-                          : "teal"
-                      }
-                    >
-                      {key + 1}
-                    </Label>
-                    {/* <Icon name={CHAPTERS_ICONS[item]} /> */}
-                    <p className="capitalize">{item} </p>
-                  </Menu.Item>
-                );
-              })}
-            </Menu>
-          </Transition>
         </div>
-        {/* </div> */}
+        <Transition
+          visible={isMenuOpen ? true : false}
+          animation="slide right"
+          duration={100}
+          unmountOnHide={false}
+        >
+          <Menu size="large" secondary vertical className={menuClass}>
+            {filteredLessonItems.map((item, key) => {
+              return (
+                <Menu.Item
+                  disabled={currentStep < key && !stepsVisited[key + 1]}
+                  key={item}
+                  name={item}
+                  active={currentChapter === item}
+                  header
+                  link
+                  onClick={(e, data) => {
+                    this.onMenuItemClick(data);
+                    this.props.addVisitedStep({ [currentStep]: true });
+                  }}
+                >
+                  <Label
+                    className="lesson-view-label-name"
+                    color={
+                      !Object.entries(stepsVisited).length ||
+                      !stepsVisited[key + 1]
+                        ? "yellow"
+                        : "teal"
+                    }
+                  >
+                    {key + 1}
+                  </Label>
+                  <p className="capitalize">{item} </p>
+                </Menu.Item>
+              );
+            })}
+          </Menu>
+        </Transition>
       </div>
     );
   }

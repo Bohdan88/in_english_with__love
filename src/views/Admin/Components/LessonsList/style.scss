@@ -3,6 +3,11 @@
 .lesson-list-edit,
 .lesson-list-remove {
   background: none !important;
+  margin: 0px !important;
+
+  .icon {
+    margin: 0px !important;
+  }
 }
 
 .lesson-list-remove {

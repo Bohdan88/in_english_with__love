@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { List } from "semantic-ui-react";
 import { SIGN_IN } from "../../constants/routes";
-import SignButton from "../Shared/SignButton";
 
 const BuildRoutes = ({ routes }) =>
   routes &&
@@ -41,7 +40,6 @@ const MobileMenu = ({ routes, signRoutes }) => {
 
       <div className={menuClass}>
         <BuildRoutes routes={routes} />
-        {/* <BuildRoutes routes={signRoutes} /> */}
         {signRoutes &&
           signRoutes.map((item, key) => {
             return (
@@ -53,7 +51,6 @@ const MobileMenu = ({ routes, signRoutes }) => {
                 className="mobile-sidebar-menu"
               >
                 <List.Content>
-                  {/* <SignButton value={item === SIGN_IN ? "Sign In" : "Sign Up"}/> */}
                   {item === SIGN_IN ? "Sign In" : "Sign Up"}
                 </List.Content>
               </List.Item>

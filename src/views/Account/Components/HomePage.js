@@ -46,65 +46,71 @@ class HomePage extends PureComponent {
 
   componentDidMount() {
     const { authUser } = this.props.sessionState;
-    // console.log(authUser,'authUser')
+
     let dataAreaChart = [];
     let dataPieChart = [];
     let allLessons = 0;
-    // console.log(authUser,'auth')
-    Object.entries(authUser.lessonsCompleted).forEach(([subCategory, date]) => {
-      // transform from miliseconds to date
-      const isoDate = new Date(date).toISOString().slice(0, 10);
 
-      // area chart array-------------------------
+    if (authUser.lessonsCompleted) {
+      Object.entries(authUser.lessonsCompleted).forEach(
+        ([subCategory, date]) => {
+          // transform from miliseconds to date
+          const isoDate = new Date(date).toISOString().slice(0, 10);
 
-      // add lesson
-      allLessons += 1;
+          // area chart array-------------------------
 
-      // check if current date exists in array already
-      const dateIndex = dataAreaChart.findIndex((obj) => obj.date === isoDate);
-      // if don't exist push in array
-      if (dateIndex === -1) {
-        dataAreaChart.push({
-          date: isoDate,
-          lessonsCompleted: 1,
-        });
-      } else {
-        dataAreaChart[dateIndex].lessonsCompleted += 1;
-      }
-      //--------------------------------
+          // add lesson
+          allLessons += 1;
 
-      //  pie chart array -------------------
+          // check if current date exists in array already
+          const dateIndex = dataAreaChart.findIndex(
+            (obj) => obj.date === isoDate
+          );
+          // if don't exist push in array
+          if (dateIndex === -1) {
+            dataAreaChart.push({
+              date: isoDate,
+              lessonsCompleted: 1,
+            });
+          } else {
+            dataAreaChart[dateIndex].lessonsCompleted += 1;
+          }
+          //--------------------------------
 
-      // identify lessons subCategory
-      const subCategoryNameIndex = subCategory.lastIndexOf(CATEGORY_ID);
+          // pie chart array -------------------
 
-      /* slice value by index and add length of the connected word which is "-subCategory-".
+          // identify lessons subCategory
+          const subCategoryNameIndex = subCategory.lastIndexOf(CATEGORY_ID);
+
+          /* slice value by index and add length of the connected word which is "-subCategory-".
          So we have to slice  it from the end subCategory, 
          that is why we add its length to find out its ending index
-      */
+          */
 
-      const transformedName = subCategory.slice(
-        subCategoryNameIndex + CATEGORY_ID.length
-      );
-      // console.log(subCategoryNameIndex,'subCategoryNameIndex')
-      if (subCategoryNameIndex !== -1) {
-        // check if current subcategory exists in array already
-        const subCategoryIndex = dataPieChart.findIndex(
-          (obj) => obj.subCategory === transformedName
-        );
+          const transformedName = subCategory.slice(
+            subCategoryNameIndex + CATEGORY_ID.length
+          );
 
-        if (subCategoryIndex === -1) {
-          dataPieChart.push({
-            subCategory: transformedName,
-            lessonsCompleted: 1,
-          });
-        } else {
-          dataPieChart[subCategoryIndex].lessonsCompleted += 1;
+          if (subCategoryNameIndex !== -1) {
+            // check if current subcategory exists in array already
+            const subCategoryIndex = dataPieChart.findIndex(
+              (obj) => obj.subCategory === transformedName
+            );
+
+            if (subCategoryIndex === -1) {
+              dataPieChart.push({
+                subCategory: transformedName,
+                lessonsCompleted: 1,
+              });
+            } else {
+              dataPieChart[subCategoryIndex].lessonsCompleted += 1;
+            }
+          }
         }
-      }
-    });
+      );
 
-    this.setState({ dataAreaChart, allLessons, dataPieChart });
+      this.setState({ dataAreaChart, allLessons, dataPieChart });
+    }
   }
   render() {
     const { dataAreaChart, dataPieChart, allLessons } = this.state;
@@ -128,7 +134,7 @@ class HomePage extends PureComponent {
 
                 <List.Item>
                   <List.Icon name="mail outline" />
-                  <List.Content className="capitalize">
+                  <List.Content>
                     Email: <b> {authUser.email}</b>
                   </List.Content>
                 </List.Item>

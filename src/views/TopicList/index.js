@@ -156,7 +156,6 @@ class TopicList extends Component {
           }
         },
         (errorObject) => {
-          console.log("ERROR");
           this.setState({
             error: true,
             errorText: errorObject.code,
@@ -183,7 +182,7 @@ class TopicList extends Component {
       transitionDuration,
     } = this.state;
     const { authUser } = this.props.sessionState;
-    const { allIconImagesByTopic, allPosts } = this.props.posts;
+    const { allIconImagesByTopic } = this.props.posts;
     // console.log(authUser.lessonsCompleted, "authUser");
     // console.log(this.state, "this.state");
     return (
@@ -367,6 +366,7 @@ const mapDispatchToProps = (dispatch) => {
     onGetAllPostsValues: (database) => dispatch(getAllPostsValues(database)),
   };
 };
+
 export default compose(
   withFirebase,
   connect(mapStateToProps, mapDispatchToProps)

@@ -10,6 +10,7 @@ const HomePage = () => (
 );
 
 // authUser != null;
-const condition = (authUser) => !!authUser;
+// const condition = (authUser) => !!authUser;
 
-export default withAuthorization(condition)(HomePage);
+// export default withAuthorization(condition)(HomePage);
+export default HomePage;

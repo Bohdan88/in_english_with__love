@@ -1,4 +1,4 @@
-// 
+//
 export const PASSWORD_SPECIAL_CHARACTERS = [
   "!",
   "#",
@@ -184,7 +184,12 @@ export const INIT_NEW_POST_VALUES = {
     [CREATE_LESSON_STAGES.before.key]: "",
     [CREATE_LESSON_STAGES.content.key]: "",
     [CREATE_LESSON_STAGES.after.key]: "",
-    // [CREATE_LESSON_STAGES.practise.key]: "",
+  },
+  postLocalStorage: {
+    [CREATE_LESSON_STAGES.about.key]: "",
+    [CREATE_LESSON_STAGES.before.key]: "",
+    [CREATE_LESSON_STAGES.content.key]: "",
+    [CREATE_LESSON_STAGES.after.key]: "",
   },
   title: "",
   iconPath: "",

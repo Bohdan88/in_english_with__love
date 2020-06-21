@@ -2,9 +2,6 @@ import { SET_POST_VALUES } from "../constants/actionTypes";
 import {
   CREATE_LESSON_STAGES,
   CATEGORIES,
-  EXERCISES_NAMES,
-  EXERCISES_TYPES,
-  EXERCISES_DESCRIPTIONS,
   POST_MODE,
 } from "../../constants/shared";
 

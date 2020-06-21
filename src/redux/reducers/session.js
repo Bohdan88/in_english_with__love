@@ -19,7 +19,6 @@ const applySetAuthUser = (state, action) => ({
 function sessionReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case AUTH_USER_SET: {
-      console.log(action, "action");
       return applySetAuthUser(state, action);
     }
     case SET_USER_ACTIVITY_VALUES:

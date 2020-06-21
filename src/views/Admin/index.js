@@ -110,7 +110,7 @@ class AdminPage extends Component {
       postMode: POST_MODE.EDIT,
     });
 
-  setReduxToInit = () => {
+  setNewPostToInit = () => {
     fireAlert({
       state: true,
       type: CONFIRMATION_ALERT,
@@ -183,7 +183,7 @@ class AdminPage extends Component {
                 {/* <Container> */}
                 <Button
                   style={{ display: activeTabIndex === 1 ? "" : "none" }}
-                  onClick={() => this.setReduxToInit()}
+                  onClick={() => this.setNewPostToInit()}
                   className="admin-reset-progress"
                 >
                   <Icon name="redo" />

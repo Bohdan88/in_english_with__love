@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import { FirebaseContext } from "../Firebase";
 import { connect } from "react-redux";
 import { withFirebase } from "../Firebase";
 import { Link, withRouter } from "react-router-dom";
@@ -24,13 +23,6 @@ const checkIfIncludes = (error, ...rest) =>
     (el) => !error.message.toUpperCase().includes(el.toUpperCase())
   );
 
-//   {error &&
-//     error.message &&
-//     !error.message.toUpperCase().includes("password".toUpperCase()) &&
-//     !error.message.toUpperCase().includes("username".toUpperCase()) &&
-//     !error.message.toUpperCase().includes("email".toUpperCase())
-// }
-
 const SignUpPage = () => (
   <Grid columns={2} className="sign-grid">
     <Grid.Row>
@@ -49,7 +41,7 @@ class SignUpFormBase extends Component {
   }
 
   onSubmit = (event) => {
-    const { username, email, password, isAdmin, error } = this.state;
+    const { username, email, password, isAdmin } = this.state;
     // check userName and password match
     if (username.length < 4) {
       this.setState({
@@ -57,7 +49,7 @@ class SignUpFormBase extends Component {
           message: ERROR_MESSAGES.username,
         },
       });
-    } else if (password != this.state["repeat password"]) {
+    } else if (password !== this.state["repeat password"]) {
       this.setState({
         error: {
           message: ERROR_MESSAGES.confirmPassword,
@@ -77,6 +69,7 @@ class SignUpFormBase extends Component {
             username,
             email,
             roles,
+            // add completed lesson in case if user finished one before signing up
             lessonsCompleted: {
               ...JSON.parse(localStorage.getItem("firstCompletedLesson")),
             },
@@ -108,7 +101,7 @@ class SignUpFormBase extends Component {
   };
 
   render() {
-    const { username, email, password, error, isAdmin } = this.state;
+    const { error } = this.state;
     return (
       <div>
         <Form className="sign-form" onSubmit={this.onSubmit}>
@@ -188,11 +181,6 @@ const SignUpLink = () => (
     Already have an account?? <Link to={ROUTES.SIGN_IN}>Sign In</Link>
   </p>
 );
-
-const mapStateToProps = (state) => {
-  const { sessionState } = state;
-  return { sessionState };
-};
 
 const mapDispatchToProps = (dispatch) => {
   return {

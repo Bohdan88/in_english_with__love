@@ -13,11 +13,11 @@ import "./style.scss";
 // assets
 import logo from "../../assets/images/default.png";
 
-const identifyActiveLink = () => {
+const identifyActiveLink = (routes) => {
   const currentPathName = window.location.pathname;
   const currentLocation = window.location.search;
 
-  if (ROUTES.ROLES_AUTH_ROUTES.includes(currentPathName)) {
+  if (routes.includes(currentPathName)) {
     return currentPathName;
   } else if (currentPathName === ROUTES.LESSON_TOPIC_LIST) {
     // looking for the first = to understand its listen or read category
@@ -35,7 +35,7 @@ const NavigationAuth = ({ authUser }) => {
   const [activeItem, setActiveItem] = useState(ROUTES.SIGN_IN);
 
   useEffect(() => {
-    setActiveItem(identifyActiveLink());
+    setActiveItem(identifyActiveLink(ROUTES.ROLES_AUTH_ROUTES));
   }, [activeItem]);
 
   return (
@@ -82,10 +82,16 @@ const NavigationAuth = ({ authUser }) => {
 };
 
 const NavigationNonAuth = () => {
-  const [activeItem, setActiveItem] = useState(ROUTES.SIGN_IN);
+  const [activeItem, setActiveItem] = useState(
+    window.location.pathname || ROUTES.SIGN_IN
+  );
 
   useEffect(() => {
-    setActiveItem(identifyActiveLink());
+    setActiveItem(
+      identifyActiveLink(
+        ROUTES.SHARED_AUTH_ROUTES.concat([ROUTES.SIGN_IN, ROUTES.SIGN_UP])
+      )
+    );
   }, [activeItem]);
 
   return (
@@ -100,8 +106,8 @@ const NavigationNonAuth = () => {
             <Menu.Menu className="main-menu">
               <Menu.Item className="logo-container">
                 <Link
-                  onClick={() => setActiveItem(ROUTES.READ)}
-                  to={ROUTES.READ}
+                  onClick={() => setActiveItem(ROUTES.HOME)}
+                  to={ROUTES.HOME}
                 >
                   <Image className="menu-logo" src={logo} />
                 </Link>

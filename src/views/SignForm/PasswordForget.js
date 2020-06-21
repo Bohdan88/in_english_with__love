@@ -23,11 +23,6 @@ const PasswordForgetPage = () => (
   </Grid>
 );
 
-// const INITIAL_STATE = {
-//   email: "",
-//   error: null,
-// };
-
 class PasswordForgetFormBase extends Component {
   constructor(props) {
     super(props);
@@ -54,9 +49,7 @@ class PasswordForgetFormBase extends Component {
   };
 
   render() {
-    const { email, error } = this.state;
-
-    const isInvalid = email === "";
+    const { error } = this.state;
 
     return (
       <Form className="forget-password-form" onSubmit={this.onSubmit}>
@@ -80,23 +73,6 @@ class PasswordForgetFormBase extends Component {
       </Form>
     );
   }
-}
-
-{
-  /* <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={this.state.email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <button disabled={isInvalid} type="submit">
-          Reset My Password
-        </button>
-
-        {error && <p>{error.message}</p>}
-      </form> */
 }
 
 const PasswordForgetLink = () => (

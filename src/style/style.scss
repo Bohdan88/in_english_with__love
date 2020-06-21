@@ -141,7 +141,7 @@ body {
 
 .sign-form,
 .forget-password-form {
-  width: 500px;
+  width: 450px;
   padding: 20px;
   margin: auto;
   box-shadow: 1px 1px 5px 0px $dark-grey;
@@ -164,11 +164,6 @@ body {
 }
 
 @media only screen and (max-width: 1919px) {
-  .sign-form {
-    width: 61% !important;
-    // height:500px;
-  }
-
   .sign-grid {
     margin-top: 1% !important;
   }
@@ -192,19 +187,12 @@ body {
 
   .sign-word > a {
     color: $dark-blue !important;
-    // font-weight: bold !important;
     padding-left: 10px;
 
     &:hover {
       cursor: pointer !important;
-      // text-shadow: 2px 2px 12px $light-grey !important;
     }
   }
-
-  // .sign-column {
-  //   display: block !important;
-  //   margin: auto !important;
-  // }
 }
 
 @media only screen and (max-width: 1199px) {
@@ -217,11 +205,6 @@ body {
     margin: auto;
   }
 
-  .main-menu,
-  .sign-menu {
-    // font-size: 25px;
-  }
-
   .sign-form {
     width: 80% !important;
   }
@@ -230,9 +213,9 @@ body {
 @media only screen and (max-width: 992px) {
   .main-menu,
   .sign-menu {
-    // font-size: 18px;
     padding: 0px !important;
   }
+
   .sign-form {
     width: 80% !important;
   }

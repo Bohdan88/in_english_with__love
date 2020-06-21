@@ -399,7 +399,10 @@ class CreateLesson extends Component {
         menuItem: CREATE_LESSON_STAGES.about,
         render: () => (
           <Tab.Pane>
-            <AboutTheLesson sectionKey={CREATE_LESSON_STAGES.about.key} />
+            <AboutTheLesson
+              setEditorToInit={this.props.setEditorToInit}
+              sectionKey={CREATE_LESSON_STAGES.about.key}
+            />
           </Tab.Pane>
         ),
       },

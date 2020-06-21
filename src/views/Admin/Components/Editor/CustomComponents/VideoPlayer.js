@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { AtomicBlockUtils } from "draft-js";
-import { Icon, Modal, Input, Popup } from "semantic-ui-react";
+import { Icon, Popup } from "semantic-ui-react";
 
 const transformEmbeddedLink = (link) => {
   if (link.includes("youtube")) {
@@ -146,81 +146,6 @@ class VideoPlayer extends Component {
             </div>
           }
         />
-        {/* <Modal.Content>
-            <div className="rdw-embedded-modal-header">
-              <span className="rdw-embedded-modal-header-option">
-                URL
-                <span className="rdw-embedded-modal-header-label"></span>
-              </span>
-            </div>
-          </Modal.Content> */}
-
-        {/* <div
-          style={{ display: `${view ? "flex" : "none"}  ` }}
-          className="rdw-embedded-modal"
-        >
-          <div className="rdw-embedded-modal-header">
-            <span className="rdw-embedded-modal-header-option">
-              URL
-              <span className="rdw-embedded-modal-header-label"></span>
-            </span>
-          </div>
-
-          <div className="rdw-embedded-modal-link-section">
-            <span className="rdw-embedded-modal-link-input-wrapper">
-              <input
-                className="rdw-embedded-modal-link-input"
-                placeholder="Enter link"
-                name="embeddedLink"
-                value={embeddedLink}
-                onChange={this.onChangeInput}
-              />
-              <span className="rdw-image-mandatory-sign">*</span>
-            </span>
-            <div className="rdw-embedded-modal-size">
-              <span>
-                <input
-                  name="height"
-                  className="rdw-embedded-modal-size-input"
-                  placeholder="Height"
-                  value="auto" 
-                  value={height}
-                  onChange={this.onChangeInput}
-                />
-                <span className="rdw-image-mandatory-sign">*</span>
-              </span>
-              <span>
-                <input
-                  name="width"
-                  className="rdw-embedded-modal-size-input"
-                  placeholder="Width"
-                  value="auto"
-                  value={width}
-                  onChange={this.onChangeInput}
-                />
-                <span className="rdw-image-mandatory-sign">*</span>
-              </span>
-            </div>
-          </div>
-
-          <span className="rdw-embedded-modal-btn-section">
-            <button
-              type="button"
-              className="rdw-embedded-modal-btn"
-              disabled=""
-              onClick={this.addToEditor}
-            >
-              Add
-            </button>
-            <button
-              type="button"
-              className="rdw-embedded-modal-btn"
-              onClick={this.closeView}
-            >
-              Cancel
-            </button>
-          </span>
-        </div> */}
       </div>
     );
   }

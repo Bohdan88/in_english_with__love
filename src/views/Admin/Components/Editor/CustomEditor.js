@@ -106,7 +106,6 @@ class CustomEditor extends Component {
 
   componentDidMount() {
     const { newPostState, sectionKey } = this.props;
-
     if (
       !newPostState.post[sectionKey] ||
       newPostState.post[sectionKey] === ""
@@ -151,14 +150,18 @@ class CustomEditor extends Component {
 
   componentDidUpdate() {
     const { newPostState, sectionKey } = this.props;
-    // console.log("UPDATE");
-    // check if local storage has some values
-    // if (
-    //   newPostState.postLocalStorage[sectionKey] !== "" &&
-    //   newPostState.post[sectionKey] === ""
-    // ) {
-    //   this.fetchFromLocalStorage();
-    // }
+    const { editorState } = this.state;
+
+    // check if local storage and redux are empty,  make state editor empty as well
+    if (
+      newPostState.postLocalStorage[sectionKey] === "" &&
+      newPostState.post[sectionKey] === "" &&
+      editorState.getCurrentContent().hasText()
+    ) {
+      this.setState({
+        editorState: EditorState.createEmpty(),
+      });
+    }
   }
 
   onPreview = () => {
@@ -224,9 +227,14 @@ class CustomEditor extends Component {
     onChange(newEditorState);
     this.doCollapse();
   };
+
+  setEditorToInit = () => {
+    console.log("SET EDITOR TO INIT");
+    // this.props.setEditorToInit();
+  };
   render() {
     const { editorState } = this.state;
-    const { newPostState, sectionKey } = this.props;
+    const { sectionKey } = this.props;
     const { post } = this.props.newPostState;
     // console.log(this.props.newPostState, " this.props.newPostState");
     // console.log(post[sectionKey], "RENDER_RENDER");
@@ -238,8 +246,9 @@ class CustomEditor extends Component {
     //     post[sectionKey][0] === "<")
     //     ? EditorState.createEmpty()
     //     : post[sectionKey];
-    const currentEditor =
-      post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
+    
+    // const currentEditor =
+    //   post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
 
     return (
       <div className="editor-component">

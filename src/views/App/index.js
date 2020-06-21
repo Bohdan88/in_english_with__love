@@ -6,11 +6,9 @@ import HomePage from "../Home";
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
 import CategoryTopics from "../CategoryTopics";
-import Write from "../Write";
 import TopicList from "../TopicList";
 import LessonView from "../LessonView";
 import { withAuthentication } from "../Session";
-// import Blog from "../Blog";
 import About from "../About";
 import { createBrowserHistory } from "history";
 import * as ROUTES from "../../constants/routes";
@@ -34,10 +32,8 @@ const App = () => {
             />
             <Route path={ROUTES.ACCOUNT} component={AccountPage} />
             <Route path={ROUTES.ADMIN} component={AdminPage} />
-            <Route path={ROUTES.WRITE} component={Write} />
             <Route path={ROUTES.READ} component={CategoryTopics} />
             <Route path={ROUTES.LISTEN} component={CategoryTopics} />
-            {/* <Route path={ROUTES.BLOG} component={Blog} /> */}
             <Route path={ROUTES.ABOUT} component={About} />
             <Route path={ROUTES.LESSON_TOPIC_LIST} component={TopicList} />
             <Route path={ROUTES.LESSON_TOPIC} component={LessonView} />
