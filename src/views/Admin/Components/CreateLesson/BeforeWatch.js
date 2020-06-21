@@ -1,5 +1,6 @@
 import React from "react";
-import CustomEditor from "../../../Editor/CustomEditor";
+import CustomEditor from "../Editor/CustomEditor";
+
 
 const BeforeWatch = ({ sectionKey }) => {
   return (

@@ -3,16 +3,20 @@ import { Link } from "react-router-dom";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
-import { PASSWORD_FORGET_INIT, LOGO_LINK } from "../../constants/shared";
-import { Grid, Header, Image, Form } from "semantic-ui-react";
-import { LeftGridAuth, FormInput, SignButton } from "../Shared";
+import { PASSWORD_FORGET_INIT } from "../../constants/shared";
+import { Grid, Header, Form } from "semantic-ui-react";
+import { LeftGridAuth, SignButton } from "../Shared";
+
+import { FormInput } from "./Components";
+
+// style
 import "./style.scss";
 
 const PasswordForgetPage = () => (
   <Grid columns={2} className="sign-grid">
     <Grid.Row>
       <LeftGridAuth />
-      <Grid.Column  mobile={16} tablet={9} computer={8} verticalAlign="top">
+      <Grid.Column mobile={16} tablet={9} computer={8} verticalAlign="top">
         <PasswordForgetForm />
       </Grid.Column>
     </Grid.Row>

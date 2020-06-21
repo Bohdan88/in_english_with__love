@@ -1,7 +1,6 @@
 @import "./variables";
 
 html {
-  // overflow-y: hidden; // hide vertical
   scroll-behavior: smooth !important;
 }
 
@@ -10,11 +9,10 @@ body {
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  // background: url("../views/assets/backg.svg") !important;
-  background: url("https://firebasestorage.googleapis.com/v0/b/in-english-with-love.appspot.com/o/backg.svg?alt=media&token=9a2541c9-1cfe-4ddd-8905-5f46bbe19fdd") !important;
+  background: url("../assets/images/background.svg") !important;
   background-repeat: no-repeat !important;
-  background-size: cover !important;
-  // background: #fbfafb !important;
+  background-size: 200vh !important;
+  background-color: #fbfafb;
 }
 
 // shared selectors
@@ -106,7 +104,7 @@ body {
   background: #fff !important;
   border: 1px solid #e0b4b4 !important;
   color: #9f3a38 !important;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 300;
   text-align: center;
   padding: 1px !important;
@@ -143,32 +141,18 @@ body {
 
 .sign-form,
 .forget-password-form {
-  box-shadow: 2px 2px 5px 2px $dark-grey;
-  background: $grey;
-  width: 55%;
-  border-radius: 5px;
+  width: 500px;
   padding: 20px;
   margin: auto;
+  box-shadow: 1px 1px 5px 0px $dark-grey;
+  background: $grey;
+  border-radius: 5px;
   background-color: #fbfafb;
-  // background-color: $white;
 }
 
-.sign-form {
-  height: 100%;
-  widows: 50%;
-}
-//
 .forget-password-form {
   vertical-align: top !important;
 }
-
-// @media only screen and (min-width: 2560px) {
-//   .sign-form {
-//     width: 50%;
-//   }
-// }
-
-// common components
 
 .error-message {
   margin: auto !important;
@@ -193,7 +177,7 @@ body {
   .error-no-user-sign-up {
     font-size: 0.7rem;
   }
-  
+
   .error-no-user {
     top: 15%;
   }

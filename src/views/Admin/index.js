@@ -3,18 +3,12 @@ import { connect } from "react-redux";
 
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
-import ReactDOM from "react-dom";
-import { Editor, EditorState } from "draft-js";
 import { withAuthorization } from "../Session";
 import * as ROLES from "../../constants/roles";
-import CustomEditor from "../Editor/CustomEditor";
 import { CreateLesson } from "./Components";
 import "firebase/storage";
 import {
   ADMIN_TABS,
-  CATEGORIES,
-  ADMIN_DROPDOWN_TITLES,
-  POSTS_BUCKET_NAME,
   EDIT_CREATE_POST_TAB_INDEX,
   POST_MODE,
   INIT_NEW_POST_VALUES,

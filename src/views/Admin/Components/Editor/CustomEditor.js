@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withFirebase } from "../../../Firebase";
+import { compose } from "recompose";
 import {
   EditorState,
   convertToRaw,
@@ -6,31 +9,24 @@ import {
   AtomicBlockUtils,
   ContentState,
 } from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
-
-import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
-import htmlToDraft from "html-to-draftjs";
-import { EDITOR_OPTIONS, POST_MODE } from "../../constants/shared";
-import { SLICED_UPLOADED_IMAGE_KEY } from "../../constants/shared";
-import { CustomColorPicker, VideoPlayer } from "./CustomComponents";
-import sanitizeHtml from "sanitize-html-react";
-import { setPostValues } from "../../redux/actions";
-import { connect } from "react-redux";
-import { withFirebase } from "../Firebase";
-import { compose } from "recompose";
-import { POSTS_BUCKET_NAME } from "../../constants/shared";
 import _ from "lodash";
-import "./style.scss";
+import { Editor } from "react-draft-wysiwyg";
+import htmlToDraft from "html-to-draftjs";
+import {
+  EDITOR_OPTIONS,
+  SLICED_UPLOADED_IMAGE_KEY,
+} from "../../../../constants/shared";
+import { CustomColorPicker, VideoPlayer } from "./CustomComponents";
+import { setPostValues } from "../../../../redux/actions";
 
 // style
+import "../../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import "./style.scss";
 
 class CustomEditor extends Component {
   constructor(props) {
     super(props);
     this.editorRef = React.createRef();
-
-    // EditorState.createEmpty()
     this.state = {
       editorState: EditorState.createEmpty(),
       uploadedImages: [],
@@ -47,9 +43,11 @@ class CustomEditor extends Component {
   onChangeReduxState = _.debounce((editorState) => {
     const { sectionKey } = this.props;
     // get all entities we uplaoded, for examples media, link, custom elements
+
     const entitityValues = Object.values(
       convertToRaw(editorState.getCurrentContent()).entityMap
     );
+
     //  get all images uploaded from local device
     const allUploadedImagesLinks =
       !!entitityValues.length &&
@@ -83,8 +81,6 @@ class CustomEditor extends Component {
         ),
       },
     });
-
-    // this.props.onEditorTextChange(checkIfcontainsJustSpaces);
   }, 300);
 
   transformJsonText = (state) => {
@@ -109,7 +105,7 @@ class CustomEditor extends Component {
   };
 
   componentDidMount() {
-    const { newPostState, sectionKey, postMode } = this.props;
+    const { newPostState, sectionKey } = this.props;
 
     if (
       !newPostState.post[sectionKey] ||
@@ -124,6 +120,7 @@ class CustomEditor extends Component {
           newPostState.post[sectionKey].getCurrentContent()
         ),
       });
+
       // if typeof string after parsing it means that we received html code from db
     } else if (typeof JSON.parse(newPostState.post[sectionKey]) === "string") {
       const blocksFromHtml = htmlToDraft(
@@ -171,8 +168,6 @@ class CustomEditor extends Component {
   };
 
   _uploadImageCallBack = (file) => {
-    const { iconPath } = this.props.newPostState;
-    const { firebase } = this.props;
     const { sectionKey } = this.props;
 
     // every time we upload an image, we
@@ -246,9 +241,6 @@ class CustomEditor extends Component {
     const currentEditor =
       post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
 
-    // console.log(post[sectionKey], "post[sectionKey]");
-    // console.log(post, "post");
-    // console.log(sectionKey, "sectionKey");
     return (
       <div className="editor-component">
         <div className="container-editor">
@@ -262,12 +254,6 @@ class CustomEditor extends Component {
             toolbarClassName="toolbar-class"
             editorClassName="editor-area"
             toolbarClassName="editor-toolbar"
-            /* onChange={(e,v) => console.log(e,v,"onChange")}   */
-            /* onContentStateChange={(e,v) => console.log(e,v,"onContentStateChange")} */
-            /* toolbar={{
-              colorPicker: { component: CustomColorPicker },
-            }} */
-
             toolbar={{
               fontFamily: { options: EDITOR_OPTIONS.fontFamily },
               colorPicker: { component: CustomColorPicker },

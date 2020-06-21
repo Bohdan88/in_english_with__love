@@ -28,7 +28,32 @@
 }
 
 .home-page-statistic {
-  margin-left: 50px!important;
+  margin-left: 50px !important;
+}
+
+.home-page-overview {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+
+  .list {
+    margin: auto 0 !important;
+  }
+}
+
+.home-page-pie-chart {
+  display: flex;
+  justify-content: center;
+
+  .recharts-wrapper
+    > .recharts-legend-wrapper
+    > .recharts-default-legend
+    > .recharts-legend-item
+    > .recharts-surface
+    > .recharts-legend-item-text {
+    position: relative !important;
+    top: 22px !important;
+  }
 }
 
 // --------------------------------

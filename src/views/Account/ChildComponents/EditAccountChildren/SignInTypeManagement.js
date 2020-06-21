@@ -11,7 +11,6 @@ import {
   Button,
   Message,
   Form,
-  Input,
   Icon,
 } from "semantic-ui-react";
 import { passwordValidator } from "../../../../utils";
@@ -61,7 +60,6 @@ class SignInTypeManagement extends Component {
 
   onSocialLoginLink = (provider) => {
     const { firebase } = this.props;
-    const { authUser } = this.props.sessionState;
 
     firebase.auth.currentUser
       .linkWithPopup(this.props.firebase[provider])
@@ -211,10 +209,6 @@ const mapDispatchToProps = (dispatch) => {
     onUpdateUserProfile: (values) => dispatch(setSessionValues(values)),
   };
 };
-
-// const LoginManagement = withFirebase(SignInTypeManagement);
-
-// export default withFirebase(SignInTypeManagement);
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),

@@ -1,0 +1,60 @@
+@import "../../../../style/variables.scss";
+
+.form-label {
+  letter-spacing: 1px;
+}
+
+.form-input > .input > input {
+  height: 40px !important;
+  border-radius: 4px !important;
+  margin-bottom: 2rem !important;
+  width: 100%;
+  vertical-align: middle !important;
+}
+
+.sign-form > .field > .error > .prompt.label {
+  position: absolute;
+  font-size: 13px;
+  font-weight: 300;
+  padding: 5px 3px;
+  border-radius: 2px !important;
+  right: 18px !important;
+
+  &:before {
+    display: none !important;
+  }
+}
+
+.sign-form > .field {
+  .error.email-signin > .prompt.label,
+  .error.password-signin > .prompt.label,
+  .error.password-signup > .prompt.label,
+  .error.username > .prompt.label {
+    margin-top: -2.15rem !important;
+  }
+
+  .error.repeat-password-signup > .prompt.label {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 1919px) {
+  .sign-form > .field > .error > .prompt.label {
+    font-size: 13px;
+  }
+
+  .form-label {
+    padding-bottom: 1px !important;
+    letter-spacing: 2px;
+  }
+
+  .form-input > .input > input {
+    height: 40px !important;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .sign-form > .field {
+    font-size: 12px;
+  }
+}

@@ -6,8 +6,8 @@ export const CONFIRMATION_REMOVE_CONTENT = {
   icon: "warning",
   title: "Are you sure?",
   text: "You won't be able to revert this!",
-  confirmButton: "Yes, delete it!",
-  cancelButtonText: "Cancel",
+  confirmButton: "Yes, cancel progress!",
+  cancelButtonText: "Go back",
 };
 
 export const REMOVE_EXERCISE_CONFIRMATION = {

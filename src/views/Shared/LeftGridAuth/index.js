@@ -1,6 +1,9 @@
 import React from "react";
 import { Grid, Image, Header } from "semantic-ui-react";
-import { LOGO_LINK } from "../../../constants/shared";
+
+import logo from "../../../assets/images/default.png";
+
+// style
 import "./style.scss";
 
 const LeftGridAuth = () => {
@@ -9,7 +12,7 @@ const LeftGridAuth = () => {
       <Header className="left-side-header form-header" as="h3">
         IN ENGLISH WITH <span className="style-love">LOVE</span>
       </Header>
-      <Image className="left-logo-size" src={LOGO_LINK} />
+      <Image className="left-logo-size" src={logo} />
       <Header className="left-side-header form-header" as="h3">
         LEARN NATURALLY.
       </Header>

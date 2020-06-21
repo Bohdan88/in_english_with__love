@@ -5,16 +5,17 @@ import { withFirebase } from "../Firebase";
 import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import * as ROLES from "../../constants/roles";
-import { ERROR_CODE_ACCOUNT_EXISTS } from "../../constants/shared";
 import * as ROUTES from "../../constants/routes";
-import { Grid, Header, Image, Form } from "semantic-ui-react";
+import { Grid, Header, Form } from "semantic-ui-react";
 import {
-  LOGO_LINK,
   ERROR_MESSAGES,
   INITIAL_FORM_STATE,
+  ERROR_CODE_ACCOUNT_EXISTS,
 } from "../../constants/shared";
-import { SignButton, FormInput, AnotherAccount, LeftGridAuth } from "../Shared";
+import { SignButton, LeftGridAuth } from "../Shared";
 import { setSessionValues } from "../../redux/actions";
+
+import { FormInput, AnotherAccount } from "./Components";
 
 const checkIfIncludes = (error, ...rest) =>
   error &&
@@ -79,6 +80,7 @@ class SignUpFormBase extends Component {
             lessonsCompleted: {
               ...JSON.parse(localStorage.getItem("firstCompletedLesson")),
             },
+            signDate: new Date(),
           });
         })
         .then(() => {

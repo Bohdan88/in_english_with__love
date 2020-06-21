@@ -5,7 +5,6 @@ import { getAllPostsValues, setSessionValues } from "../../redux/actions";
 import { withFirebase } from "../Firebase";
 import draftToHtml from "draftjs-to-html";
 import { convertToRaw, EditorState, convertFromRaw } from "draft-js";
-import Swal from "sweetalert2";
 import {
   MatchExerciseView,
   CompleteSentence,
@@ -15,11 +14,10 @@ import {
 import {
   COMPLETE_THE_SENTENCES,
   MATCHING,
-  ANOTHER_WAY_TO_SAY,
   CREATE_LESSON_STAGES,
-  // LESSON_COMPLETE_CONFIRMATION,
   USERS_BUCKET_NAME,
   ANOTHER_WAY,
+  CATEGORY_ID,
 } from "../../constants/shared";
 import {
   LESSON_COMPLETE_CONFIRMATION,
@@ -174,15 +172,10 @@ class LessonView extends Component {
     const { mode } = this.props;
 
     const lessonChapter = fullLeson.post[currentChapter];
-    // const lessonChapter = fullLeson.post["Vocabulary Practise"];
-    // return <CompleteSentence lessonValues={lessonChapter} />;
-    // console.log(lessonChapter,'lessonChapter')
 
     // check if it's json string  or editor state
     if (lessonChapter) {
       if (typeof lessonChapter === "string") {
-        console.log(lessonChapter, "lessonChapter._immutable");
-        console.log(lessonChapter._immutable, "._immutable");
         // check if mode is preview, if so do not parse it because we don't stringify it yet
         return (
           <div
@@ -209,7 +202,6 @@ class LessonView extends Component {
         }
 
         if (lessonChapter.name.includes(MATCHING)) {
-          // console.log('MATCH HERE')
           return <MatchExerciseView lessonValues={lessonChapter} />;
         }
       }
@@ -224,7 +216,7 @@ class LessonView extends Component {
 
   onNextChapter = () => {
     const { filteredLessonItems, currentChapter, stepsVisited } = this.state;
-    // find index and set  current step
+    // find index and set current step
     const findCurrentChapterIndex = filteredLessonItems.findIndex(
       (chapter) => chapter === currentChapter
     );
@@ -276,7 +268,7 @@ class LessonView extends Component {
           // roles: sessionState.authUser.roles,
           lessonsCompleted: {
             ...sessionState.authUser.lessonsCompleted,
-            [fullLeson.uid]: new Date().getTime(),
+            [`${fullLeson.uid}${CATEGORY_ID}${fullLeson.category}`]: new Date().getTime(),
           },
         })
         .then(() => {
@@ -348,6 +340,7 @@ class LessonView extends Component {
 
     const menu = isMenuOpen ? "menu-open" : "";
 
+    console.log(this.state, "THIS_STATE");
     return (
       <div>
         {isLoadingLesson && !error ? (

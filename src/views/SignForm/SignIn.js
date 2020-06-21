@@ -3,30 +3,21 @@ import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
 import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
-import { SignUpLink } from "../SignUp";
-import { PasswordForgetLink } from "../PasswordForget";
+import { Grid, Form, Header } from "semantic-ui-react";
+import { PasswordForgetLink } from "./PasswordForget";
 import { SIGN_IN } from "../../constants/shared";
-import { Grid, Image, Form, Button, Header, Label } from "semantic-ui-react";
 import * as ROUTES from "../../constants/routes";
-// import logot from "./file.svg";
+import { SignButton, LeftGridAuth } from "../Shared";
+import { AnotherAccount, FormInput } from "./Components";
+
+// style
 import "./style.scss";
 
-import { SignButton, FormInput, AnotherAccount, LeftGridAuth } from "../Shared";
 const INITIAL_STATE = {
-  //   username: "",
   email: "",
   password: "",
   error: null,
 };
-
-{
-  /* <div>
-    <h1>SignIn</h1>
-    <SignInForm />
-    <PasswordForgetLink />
-    <SignUpLink />
-  </div> */
-}
 
 const SignInPage = () => (
   <Grid columns={2} className="sign-grid">
@@ -46,7 +37,7 @@ class SignInFormBase extends Component {
   }
 
   onSubmit = (event) => {
-    const { username, email, password } = this.state;
+    const { email, password } = this.state;
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
       .then((authUser) => {
@@ -66,7 +57,7 @@ class SignInFormBase extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
   render() {
-    const { username, email, password, passwordTwo, error } = this.state;
+    const { error } = this.state;
     return (
       <div>
         <Form className="sign-form" onSubmit={this.onSubmit}>

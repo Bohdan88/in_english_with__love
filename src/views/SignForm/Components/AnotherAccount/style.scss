@@ -1,4 +1,4 @@
-@import "../../../style/variables.scss";
+@import "../../../../style/variables.scss";
 
 .contaniner-social-assets {
   display: flex;
@@ -7,10 +7,7 @@
 
 .container-another-account {
   margin: 14px 0;
-  // color: $dark-green;
   color: rgba(0, 0, 0, 0.87);
-  // font-size: 18px;
-  // font-weight: bold;
 }
 
 .another-account {

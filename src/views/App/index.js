@@ -1,16 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Navigation from "../Navigation";
-// import LandingPage from "../Landing";
-import SignUpPage from "../SignUp";
-import SignInPage from "../SignIn";
-import { AuthUserContext } from "../Session";
-import PasswordForgetPage from "../PasswordForget";
+import { PasswordForgetPage, SignUpPage, SignInPage } from "../SignForm";
 import HomePage from "../Home";
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
 import CategoryTopics from "../CategoryTopics";
-import ListenTopics from "../ListenTopics";
 import Write from "../Write";
 import TopicList from "../TopicList";
 import LessonView from "../LessonView";

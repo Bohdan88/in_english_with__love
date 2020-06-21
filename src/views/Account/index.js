@@ -20,14 +20,13 @@ class AccountPage extends Component {
     menuItems: [
       { name: "Home", component: HomePage },
       { name: "Edit", component: EditAccount },
-      { name: "Help", component: Help },
+      // { name: "Help", component: Help },
     ],
   };
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   render() {
-    const { authUser } = this.props;
     const { activeItem, menuItems } = this.state;
 
     const activeComponent = menuItems.findIndex(
@@ -65,7 +64,7 @@ const mapStateToProps = (state) => ({
   authUser: state.sessionState.authUser,
 });
 
-// which means true. authUser exits
+// check if auth user exists
 const condition = (authUser) => !!authUser;
 
 // export default withAuthorization(condition)(AccountPage);

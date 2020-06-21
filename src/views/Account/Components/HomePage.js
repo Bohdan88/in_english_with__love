@@ -8,13 +8,20 @@ import {
   Tooltip,
   Area,
   Brush,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
 
 import { connect } from "react-redux";
-import { Segment, Header, Message, Statistic } from "semantic-ui-react";
+import { Segment, Header, Message, List } from "semantic-ui-react";
 
 //
 import "../style.scss";
+import { CATEGORY_ID } from "../../../constants/shared";
+
+const PIE_CHART_COLORS = ["#0088FE", "#00C49F"];
 
 const CustomizedTooltip = (props) => {
   const { label, payload, active } = props;
@@ -32,62 +39,157 @@ const CustomizedTooltip = (props) => {
 
 class HomePage extends PureComponent {
   state = {
-    dateChartFormat: [],
+    dataAreaChart: [],
+    dataPieChart: [],
     allLessons: 0,
   };
 
   componentDidMount() {
     const { authUser } = this.props.sessionState;
     // console.log(authUser,'authUser')
-    let dateChartFormat = [];
+    let dataAreaChart = [];
+    let dataPieChart = [];
     let allLessons = 0;
-    Object.values(authUser.lessonsCompleted).forEach((date) => {
-      // add lesson
-      allLessons += 1;
+    // console.log(authUser,'auth')
+    Object.entries(authUser.lessonsCompleted).forEach(([subCategory, date]) => {
       // transform from miliseconds to date
       const isoDate = new Date(date).toISOString().slice(0, 10);
+
+      // area chart array-------------------------
+
+      // add lesson
+      allLessons += 1;
+
       // check if current date exists in array already
-      const findIndex = dateChartFormat.findIndex(
-        (obj) => obj.date === isoDate
-      );
+      const dateIndex = dataAreaChart.findIndex((obj) => obj.date === isoDate);
       // if don't exist push in array
-      if (findIndex === -1) {
-        dateChartFormat.push({
+      if (dateIndex === -1) {
+        dataAreaChart.push({
           date: isoDate,
           lessonsCompleted: 1,
         });
       } else {
-        dateChartFormat[findIndex].lessonsCompleted += 1;
+        dataAreaChart[dateIndex].lessonsCompleted += 1;
+      }
+      //--------------------------------
+
+      //  pie chart array -------------------
+
+      // identify lessons subCategory
+      const subCategoryNameIndex = subCategory.lastIndexOf(CATEGORY_ID);
+
+      /* slice value by index and add length of the connected word which is "-subCategory-".
+         So we have to slice  it from the end subCategory, 
+         that is why we add its length to find out its ending index
+      */
+
+      const transformedName = subCategory.slice(
+        subCategoryNameIndex + CATEGORY_ID.length
+      );
+      // console.log(subCategoryNameIndex,'subCategoryNameIndex')
+      if (subCategoryNameIndex !== -1) {
+        // check if current subcategory exists in array already
+        const subCategoryIndex = dataPieChart.findIndex(
+          (obj) => obj.subCategory === transformedName
+        );
+
+        if (subCategoryIndex === -1) {
+          dataPieChart.push({
+            subCategory: transformedName,
+            lessonsCompleted: 1,
+          });
+        } else {
+          dataPieChart[subCategoryIndex].lessonsCompleted += 1;
+        }
       }
     });
 
-    this.setState({ dateChartFormat, allLessons });
+    this.setState({ dataAreaChart, allLessons, dataPieChart });
   }
   render() {
-    const { dateChartFormat, allLessons } = this.state;
+    const { dataAreaChart, dataPieChart, allLessons } = this.state;
+    const { authUser } = this.props.sessionState;
 
     return (
       <>
         <Segment>
           <Header as="h3" textAlign="center">
-            Statistics
+            Overview
           </Header>
+          {!!dataPieChart.length ? (
+            <div className="home-page-overview">
+              <List size="huge">
+                <List.Item>
+                  <List.Icon name="user" />
+                  <List.Content className="capitalize">
+                    Username: <b>{authUser.username}</b>
+                  </List.Content>
+                </List.Item>
+
+                <List.Item>
+                  <List.Icon name="mail outline" />
+                  <List.Content className="capitalize">
+                    Email: <b> {authUser.email}</b>
+                  </List.Content>
+                </List.Item>
+                <List.Item>
+                  <List.Icon name="sort numeric up" />
+                  <List.Content>
+                    Completed lessons: <b>{allLessons}</b>
+                  </List.Content>
+                </List.Item>
+              </List>
+              <div className="home-page-pie-chart">
+                <PieChart width={300} height={250}>
+                  <Pie
+                    isAnimationActive={false}
+                    data={dataPieChart}
+                    innerRadius={65}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    paddingAngle={5}
+                    dataKey="lessonsCompleted"
+                  >
+                    {dataPieChart.map((entry, index) => (
+                      <Cell
+                        key={index}
+                        fill={PIE_CHART_COLORS[index % PIE_CHART_COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+
+                  <Legend
+                    payload={dataPieChart.map((item, index) => ({
+                      id: item.subCategory,
+                      type: "circle",
+                      color: PIE_CHART_COLORS[index % PIE_CHART_COLORS.length],
+                      value: `${item.subCategory} (${item.lessonsCompleted})`,
+                    }))}
+                  />
+                </PieChart>
+              </div>
+            </div>
+          ) : (
+            <Message
+              info
+              className="home-page-message"
+              header={"You haven't done any lesson yet."}
+              size="huge"
+            />
+          )}
         </Segment>
         <Segment>
           <Header as="h3" textAlign="center">
             Your Progress
           </Header>
-          {/* <Statistic className="home-page-statistic" size={"mini"} color="teal">
-          <Statistic.Label>Lessons Completed </Statistic.Label>
-          <Statistic.Value>{allLessons}</Statistic.Value>
-        </Statistic> */}
-          {!!dateChartFormat.length ? (
+
+          {!!dataAreaChart.length ? (
             <ResponsiveContainer width={"100%"} height={300}>
               <AreaChart
-                data={dateChartFormat}
+                data={dataAreaChart}
                 margin={{ top: 50, right: 30, left: 0, bottom: 0 }}
               >
-                <XAxis dataKey="date" />
+                <XAxis dataKey="date" angle={-50} dy={25} height={80} />
                 <YAxis
                   dataKey="lessonsCompleted"
                   allowDecimals={false}
@@ -104,7 +206,7 @@ class HomePage extends PureComponent {
                   stroke="#82ca9d"
                   fill="#82ca9d"
                 />
-                <Brush dataKey="date" height={30} stroke="#8884d8" />
+                <Brush height={30} stroke="#8884d8" />
               </AreaChart>
             </ResponsiveContainer>
           ) : (

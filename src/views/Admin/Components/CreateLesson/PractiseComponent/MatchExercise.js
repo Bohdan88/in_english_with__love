@@ -7,8 +7,6 @@ import {
   INIT_CHAR_VALUES,
   MATH_KEYS,
   EXERCISES_LABELS_COLORS,
-  POST_MODE,
-  MATCHING,
 } from "../../../../../constants/shared";
 
 import { ICON_POST_REMOVE_STATUS } from "../../../../../constants/alertContent";
@@ -204,16 +202,16 @@ class MatchExercise extends PureComponent {
   );
 
   componentDidMount() {
-    const { newPostExercisesValues, postMode } = this.props.newPostState;
+    const { newPostExercisesValues } = this.props.newPostState;
     const { currentExerciseValues } = this.props;
     const { charValues } = this.state;
-    console.log(this.props.newPostState, "DAVA");
+
     const postId = newPostExercisesValues[currentExerciseValues.id];
     const postName =
       newPostExercisesValues[currentExerciseValues.id] &&
       newPostExercisesValues[currentExerciseValues.id].name;
 
-    //  INIT_VALUEs
+    //  INIT_VALUES
 
     if (postId && postId.content && !!postId.content.length) {
       this.setState({
