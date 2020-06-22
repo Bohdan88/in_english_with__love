@@ -13,9 +13,9 @@ import {
   Segment,
   Dimmer,
   Header,
-  Input,
   Transition,
   Message,
+  Form,
 } from "semantic-ui-react";
 import { LESSON_TOPIC } from "../../constants/routes";
 import { convertMillisecondsToDate } from "../../utils";
@@ -130,6 +130,25 @@ class TopicList extends Component {
     }, 300);
   };
 
+  onClickCheckBox = (event, data) => {
+    const { currentTopicPosts } = this.state;
+    const { authUser } = this.props.sessionState;
+
+    if (data.checked && !!currentTopicPosts.length) {
+      this.setState({
+        currentTopicPosts: currentTopicPosts.filter((topic) =>
+          Object.keys(authUser.lessonsCompleted).findIndex(
+            (keyId) => keyId === topic.uid
+          )
+        ),
+      });
+    } else {
+      this.setState({
+        currentTopicPosts: this.filterPostsList(this.props.posts.allPosts),
+      });
+    }
+  };
+  
   componentDidMount() {
     const { allPosts } = this.props.posts;
 
@@ -145,11 +164,13 @@ class TopicList extends Component {
               ...postsObject[key],
               uid: key,
             }));
+
             // set posts
             this.props.onGetAllPostsValues({
               allPosts: postsList,
             });
 
+            // make transition a bit long to give time to fetch needed data from db
             this.setState({ transitionDuration: 3000 });
 
             this.getAllPostsByTopicName(postsList);
@@ -164,6 +185,7 @@ class TopicList extends Component {
         }
       );
     } else {
+      // if data is already in redux, we make transitionDuration quick
       this.setState({ transitionDuration: 300 });
 
       this.getAllPostsByTopicName(allPosts);
@@ -189,19 +211,31 @@ class TopicList extends Component {
       <div>
         <Grid className="topics-container">
           <Grid.Row centered className="selected-topic-header-row">
-            <Grid.Column floated="left">
+            <Grid.Column computer="8" floated="left">
               <Header className="topics-header capitalize" as="h1">
                 {currentTopic}
               </Header>
             </Grid.Column>
-            <Grid.Column floated="right" className="topics-column-search">
-              <Input
-                className="topics-input-search"
-                size="large"
-                icon="search"
-                placeholder="Search topics..."
-                onChange={this.handleSearchChange}
-              />
+            <Grid.Column computer="8" className="topics-list-column-search">
+              <Form>
+                <Form.Group>
+                  <Form.Field className="topics-checkbox-field">
+                    <Form.Checkbox
+                      label="Uncompleted Lessons"
+                      onClick={this.onClickCheckBox}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <Form.Input
+                      className="topics-input-search"
+                      size="large"
+                      icon="search"
+                      placeholder="Search topics..."
+                      onChange={this.handleSearchChange}
+                    />
+                  </Form.Field>
+                </Form.Group>
+              </Form>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row centered columns={2}>

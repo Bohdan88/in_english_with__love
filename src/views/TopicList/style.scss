@@ -19,9 +19,30 @@
   margin-bottom: 2rem !important;
 }
 
-.topics-column-search {
+.topics-list-column-search {
   display: flex !important;
   justify-content: flex-end !important;
+
+  .form > .fields {
+    margin: 0 !important;
+  }
+}
+
+.topics-checkbox-field {
+  margin: auto !important;
+  padding-right: 1rem !important;
+
+  .field > .checkbox {
+    label {
+      font-size: 18px;
+    }
+    label:before {
+      width: 25px !important;
+      height: 25px !important;
+      margin-left: 2px;
+      margin-top: -5px;
+    }
+  }
 }
 
 .topics-input-search:hover,
@@ -32,8 +53,8 @@
 
 .selected-topic-header-row {
   border-bottom: 2px solid $chetwode-blue;
-  margin: -0.35rem 5.2rem 1rem;
-
+  // margin: -0.35rem 5.2rem 1rem;
+  margin: 0px;
   .column {
     padding: 0px !important;
   }
