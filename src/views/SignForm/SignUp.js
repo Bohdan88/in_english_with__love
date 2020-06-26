@@ -5,16 +5,16 @@ import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
 import * as ROLES from "../../constants/roles";
 import * as ROUTES from "../../constants/routes";
-import { Grid, Header, Form } from "semantic-ui-react";
+import { Header, Form } from "semantic-ui-react";
 import {
   ERROR_MESSAGES,
   INITIAL_FORM_STATE,
   ERROR_CODE_ACCOUNT_EXISTS,
-} from "../../constants/shared";
-import { SignButton, LeftGridAuth } from "../Shared";
+} from "../../constants";
+import { SignButton } from "../Shared";
 import { setSessionValues } from "../../redux/actions";
 
-import { FormInput, AnotherAccount } from "./Components";
+import { FormInput, AnotherAccount, SignLanding } from "./Components";
 
 const checkIfIncludes = (error, ...rest) =>
   error &&
@@ -24,14 +24,9 @@ const checkIfIncludes = (error, ...rest) =>
   );
 
 const SignUpPage = () => (
-  <Grid columns={2} className="sign-grid">
-    <Grid.Row>
-      <LeftGridAuth />
-      <Grid.Column mobile={16} tablet={9} computer={8}>
-        <SignUpForm />
-      </Grid.Column>
-    </Grid.Row>
-  </Grid>
+  <SignLanding>
+    <SignUpForm />
+  </SignLanding>
 );
 
 class SignUpFormBase extends Component {
@@ -103,64 +98,62 @@ class SignUpFormBase extends Component {
   render() {
     const { error } = this.state;
     return (
-      <div>
-        <Form className="sign-form" onSubmit={this.onSubmit}>
-          <div className="container-form-header">
-            <Header className="form-header" as="h2">
-              SIGN UP
-            </Header>
-            {checkIfIncludes(error, "password", "username", "email") && (
-              <p className="error-no-user-sign-up">{`${
-                error.message.split(".")[0]
-              }.`}</p>
-            )}
-          </div>
-          <FormInput
-            styleVal="username"
-            error={error}
-            type="text"
-            value="username"
-            onChange={this.onChange}
-          />
-          <FormInput
-            styleVal="email-signup"
-            error={error}
-            type="email"
-            value="email"
-            onChange={this.onChange}
-          />
-          <FormInput
-            styleVal="password-signup"
-            error={error}
-            type="password"
-            value="password"
-            onChange={this.onChange}
-          />
+      <Form className="sign-form" onSubmit={this.onSubmit}>
+        <div className="container-form-header">
+          <Header className="form-header" as="h3">
+            SIGN UP
+          </Header>
+          {checkIfIncludes(error, "password", "username", "email") && (
+            <p className="error-no-user-sign-up">{`${
+              error.message.split(".")[0]
+            }.`}</p>
+          )}
+        </div>
+        <FormInput
+          styleVal="username"
+          error={error}
+          type="text"
+          value="username"
+          onChange={this.onChange}
+        />
+        <FormInput
+          styleVal="email-signup"
+          error={error}
+          type="email"
+          value="email"
+          onChange={this.onChange}
+        />
+        <FormInput
+          styleVal="password-signup"
+          error={error}
+          type="password"
+          value="password"
+          onChange={this.onChange}
+        />
 
-          <FormInput
-            styleVal="repeat-password-signup"
-            error={error}
-            type="password"
-            value="repeat password"
-            onChange={this.onChange}
-          />
-          <SignButton value="SIGN UP" />
-          <AnotherAccount
-            history={this.props.history}
-            firebase={this.props.firebase}
-            noUser={"error-no-user-sign-up"}
-            actionType="SIGN UP"
-          />
-          <div className="container-account-ask">
-            <p className="">
-              Already have an account?
-              <span className="sign-word">
-                <Link to={ROUTES.SIGN_IN}>Sign in</Link>
-              </span>
-            </p>
-          </div>
-        </Form>
-      </div>
+        <FormInput
+          styleVal="repeat-password-signup"
+          error={error}
+          type="password"
+          value="repeat password"
+          onChange={this.onChange}
+        />
+        <SignButton value="SIGN UP" />
+        <AnotherAccount
+          history={this.props.history}
+          firebase={this.props.firebase}
+          noUser={"error-no-user-sign-up"}
+          actionType="SIGN UP"
+        />
+        <div className="container-account-ask">
+          <p className="">
+            Already have an account?
+            <span className="sign-word">
+              <Link to={ROUTES.SIGN_IN}>Sign in</Link>
+            </span>
+          </p>
+        </div>
+      </Form>
     );
   }
 }

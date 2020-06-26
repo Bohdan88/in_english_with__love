@@ -3,7 +3,7 @@ import {
   CREATE_LESSON_STAGES,
   CATEGORIES,
   POST_MODE,
-} from "../../constants/shared";
+} from "../../constants";
 
 const initState = {
   uid: "",

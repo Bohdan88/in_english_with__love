@@ -4,7 +4,7 @@ import ColumnAnswers from "./ColumnAnswers";
 import ColumnTasks from "./ColumnTasks";
 import { Popup, Icon, Button, Sticky, Message } from "semantic-ui-react";
 import { shuffleArray } from "../../../../utils";
-import { SUB_FIELD } from "../../../../constants/shared";
+import { SUB_FIELD } from "../../../../constants";
 
 // styles
 import "./style.scss";
@@ -27,6 +27,7 @@ class CompleteSentence extends Component {
         ...transformedValues,
         columns: {
           ...transformedValues.columns,
+          // eslint-disable-next-line
           ["column-1"]: {
             ...transformedValues.columns["column-1"],
             taskIds: shuffleArray(
@@ -196,6 +197,7 @@ class CompleteSentence extends Component {
         ...transformedValues,
         columns: {
           ...transformedValues.columns,
+          // eslint-disable-next-line
           ["column-1"]: {
             ...transformedValues.columns["column-1"],
             taskIds: shuffleArray(

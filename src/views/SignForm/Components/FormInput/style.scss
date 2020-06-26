@@ -9,32 +9,34 @@
   border-radius: 4px !important;
   margin-bottom: 1rem !important;
   width: 100%;
-  vertical-align: middle !important;
-}
-
-.sign-form > .field > .error > .prompt.label {
-  position: absolute;
-  font-size: 13px;
-  font-weight: 300;
-  padding: 5px 3px;
-  border-radius: 2px !important;
-  right: 18px !important;
-
-  &:before {
-    display: none !important;
-  }
 }
 
 .sign-form > .field {
+  // margin-bottom: 0.5rem !important;
+
   .error.email-signin > .prompt.label,
   .error.password-signin > .prompt.label,
   .error.password-signup > .prompt.label,
-  .error.username > .prompt.label {
+  .error.username > .prompt.label,
+  .email-signup > .prompt.label {
     margin-top: -2.15rem !important;
   }
 
   .error.repeat-password-signup > .prompt.label {
     display: none;
+  }
+
+  .error > .prompt.label {
+    position: absolute;
+    font-size: 13px;
+    font-weight: 300;
+    padding: 5px 3px;
+    border-radius: 2px !important;
+    right: 18px !important;
+
+    &:before {
+      display: none !important;
+    }
   }
 }
 
@@ -46,10 +48,6 @@
   .form-label {
     padding-bottom: 1px !important;
     letter-spacing: 2px;
-  }
-
-  .form-input > .input > input {
-    height: 40px !important;
   }
 }
 

@@ -19,7 +19,7 @@ import {
 import {
   TOPICS_BUCKET_NAME,
   DEFAULT_TOPIC_IMAGE,
-} from "../../constants/shared";
+} from "../../constants";
 import { LESSON_TOPIC_LIST } from "../../constants/routes";
 import { Link } from "react-router-dom";
 // style

@@ -10,7 +10,7 @@ import {
   Image,
 } from "semantic-ui-react";
 import LessonView from "../../../LessonView";
-import { CREATE_LESSON_STAGES } from "../../../../constants/shared";
+import { CREATE_LESSON_STAGES } from "../../../../constants";
 
 import defaultPicture from "../../../../assets/images/default.png";
 import { convertMillisecondsToDate } from "../../../../utils";

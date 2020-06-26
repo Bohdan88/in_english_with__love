@@ -1,11 +1,58 @@
 @import "../../style/variables.scss";
 
-.mobile-nav-bar {
-  display: none;
+.nav-bar-menu-container {
+  background: $white;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
+  border-radius: 0.28571429rem;
 }
 
 .nav-bar-menu {
   margin: 0px !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  padding-right: 2.5rem;
+}
+
+.main-menu,
+.sign-menu {
+  font-size: 15px;
+
+  .item:hover {
+    background: $white !important;
+  }
+  .item > a {
+    color: $black !important;
+  }
+
+  .active.item {
+    background: $white !important;
+  }
+
+  .active > a {
+    cursor: default !important;
+    border-bottom: 4px solid $light-green !important;
+  }
+}
+
+.mobile-nav-bar {
+  display: none;
+}
+
+@media only screen and(min-width:1919px) {
+  .nav-bar-menu {
+    max-width: 1919px;
+    margin: 0 auto !important;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .main-menu,
+  .sign-menu {
+    padding: 0px !important;
+  }
 }
 
 @media only screen and (max-width: 767px) {
@@ -167,7 +214,7 @@
     padding: 1rem 0;
     color: #747888;
     // font-family: "Amatic SC", cursive;
-    font-size:20px;
+    font-size: 20px;
     font-weight: bold;
     letter-spacing: 2px;
   }

@@ -1,13 +1,11 @@
 import React, { Component } from "react";
 import { Grid, Menu } from "semantic-ui-react";
-import { EditAccount, HomePage, Help } from "./Components";
+import { EditAccount, HomePage } from "./Components";
 import { withAuthorization } from "../Session";
 
-// import { PasswordForgetForm } from "../PasswordForget";
-// import PasswordChangeForm from "../PasswordChange";
 // import { withAuthorization } from "../Session";
-import { SIGN_IN_METHODS } from "../../constants/shared";
-import { withFirebase } from "../Firebase";
+// import { SIGN_IN_METHODS } from "../../constants";
+// import { withFirebase } from "../Firebase";
 import { connect } from "react-redux";
 import { compose } from "recompose";
 

@@ -11,7 +11,7 @@ import {
 } from "semantic-ui-react";
 import { passwordValidator, fireAlert } from "../../../../utils";
 import { PASSWORD_CHANGE_CONFIRMATION } from "../../../../constants/alertContent";
-import { PASSWORD_SPECIAL_CHARACTERS } from "../../../../constants/shared";
+import { PASSWORD_SPECIAL_CHARACTERS } from "../../../../constants";
 
 // Style
 import "./style.scss";

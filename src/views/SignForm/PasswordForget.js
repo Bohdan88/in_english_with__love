@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
-import { PASSWORD_FORGET_INIT } from "../../constants/shared";
+import { PASSWORD_FORGET_INIT } from "../../constants";
 import { Grid, Header, Form } from "semantic-ui-react";
 import { LeftGridAuth, SignButton } from "../Shared";
 
-import { FormInput } from "./Components";
+import { FormInput, SignLanding } from "./Components";
 
 // style
 import "./style.scss";
@@ -54,7 +54,7 @@ class PasswordForgetFormBase extends Component {
     return (
       <Form className="forget-password-form" onSubmit={this.onSubmit}>
         <div className="container-form-header">
-          <Header className="form-header" as="h2">
+          <Header className="form-header" as="h3">
             Forgot your password?
           </Header>
           {error && error.message && (

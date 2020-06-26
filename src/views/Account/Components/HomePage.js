@@ -19,7 +19,7 @@ import { Segment, Header, Message, List } from "semantic-ui-react";
 
 //
 import "../style.scss";
-import { CATEGORY_ID } from "../../../constants/shared";
+import { CATEGORY_ID } from "../../../constants";
 
 const PIE_CHART_COLORS = ["#0088FE", "#00C49F"];
 
@@ -82,9 +82,9 @@ class HomePage extends PureComponent {
           // identify lessons subCategory
           const subCategoryNameIndex = subCategory.lastIndexOf(CATEGORY_ID);
 
-          /* slice value by index and add length of the connected word which is "-subCategory-".
-         So we have to slice  it from the end subCategory, 
-         that is why we add its length to find out its ending index
+          /* Slice value by index and add length of the connected word which is "-subCategory-".
+             So we have to slice  it from the end subCategory, 
+             that is why we add its length to find out its ending index
           */
 
           const transformedName = subCategory.slice(
@@ -109,7 +109,13 @@ class HomePage extends PureComponent {
         }
       );
 
-      this.setState({ dataAreaChart, allLessons, dataPieChart });
+      this.setState({
+        dataAreaChart: dataAreaChart.sort((a, b) =>
+          new Date(a.date) > new Date(b.date) ? 1 : -1
+        ),
+        allLessons,
+        dataPieChart,
+      });
     }
   }
   render() {

@@ -9,7 +9,7 @@ import {
   MATCHING,
   COMPLETE_THE_SENTENCES,
   ANOTHER_WAY,
-} from "../../../../../constants/shared";
+} from "../../../../../constants";
 import {
   CONFIRMATION_ALERT,
   REMOVE_EXERCISE_CONFIRMATION,

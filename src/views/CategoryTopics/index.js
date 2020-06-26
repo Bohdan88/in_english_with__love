@@ -17,7 +17,7 @@ import {
   Transition,
   Message,
 } from "semantic-ui-react";
-import { TOPICS_BUCKET_NAME, CATEGORY_TOPICS } from "../../constants/shared";
+import { TOPICS_BUCKET_NAME, CATEGORY_TOPICS } from "../../constants";
 import { LESSON_TOPIC_LIST } from "../../constants/routes";
 import { Link } from "react-router-dom";
 import defaultImage from "../../assets/images/default.png";
@@ -166,14 +166,13 @@ class CategoryTopics extends Component {
   };
 
   componentWillUnmount() {
-    // this.props.firebase.posts().off();
+    this.props.firebase.posts().off();
   }
 
   render() {
     const {
       searchTopicLoading,
       dbValuesLoading,
-      stateTopics,
       categoryType,
       error,
       errorText,
@@ -215,7 +214,7 @@ class CategoryTopics extends Component {
                 />
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row className="topics-cards-row">
+            <Grid.Row className="categories-cards-row">
               {searchTopicLoading ? (
                 <Segment inverted className="segment-loading-topics">
                   <Dimmer className="dimmer-topics" inverted active>
@@ -226,21 +225,9 @@ class CategoryTopics extends Component {
                 </Segment>
               ) : this.state[categoryType].names[0] ? (
                 this.state[categoryType].names.map((topic) => {
-                  {
-                    /* console.log(topic, "topic"); */
-                  }
                   const imgSrc = posts[categoryType].images.filter((imgUrl) =>
                     imgUrl.includes(`${topic.toLowerCase()}.`)
                   );
-                  {
-                    /* 
-                  const defaultImage = posts[
-                    categoryType
-                  ].images.filter((imgUrl) =>
-                    imgUrl.includes(DEFAULT_TOPIC_IMAGE)
-                  ); */
-                  }
-
                   const filteredLessons = allPosts.filter(
                     (obj) => obj.subCategory === topic
                   );
@@ -256,8 +243,8 @@ class CategoryTopics extends Component {
                       <Grid.Column
                         widescreen={3}
                         largeScreen={5}
-                        tablet={5}
-                        className="topics-column"
+                        tablet={8}
+                        className="categories-column"
                       >
                         <Link
                           className="card-topic-link"

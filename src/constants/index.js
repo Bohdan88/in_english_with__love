@@ -1,4 +1,7 @@
-//
+/*
+  Constants that are shared acccros the app
+*/
+
 export const PASSWORD_SPECIAL_CHARACTERS = [
   "!",
   "#",

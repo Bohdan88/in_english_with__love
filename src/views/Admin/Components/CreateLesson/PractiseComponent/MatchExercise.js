@@ -7,7 +7,7 @@ import {
   INIT_CHAR_VALUES,
   MATH_KEYS,
   EXERCISES_LABELS_COLORS,
-} from "../../../../../constants/shared";
+} from "../../../../../constants";
 
 import { ICON_POST_REMOVE_STATUS } from "../../../../../constants/alertContent";
 
@@ -137,25 +137,6 @@ class MatchExercise extends PureComponent {
 
   onChangePostExerciseValues = (data, objValues, fieldId, keyName) => {
     const { content } = this.state;
-    const { newPostExercisesValues } = this.props.newPostState;
-
-    // this.props.onSetPostNewValues({
-    //   newPostExercisesValues: newPostExercisesValues.map((obj) =>
-    //     obj.id === objValues.id
-    //       ? {
-    //           ...obj,
-    //           content: obj.content.map((nestedObj) =>
-    //             nestedObj.id === fieldId
-    //               ? {
-    //                   ...nestedObj,
-    //                   [keyName]: data.value,
-    //                 }
-    //               : nestedObj
-    //           ),
-    //         }
-    //       : obj
-    //   ),
-    // });
 
     const contentIndex = content.findIndex((obj) => obj.id === fieldId);
     this.setState({
@@ -197,7 +178,6 @@ class MatchExercise extends PureComponent {
         ),
       });
     },
-    // we don't need to wait if we change or add a letter from dropDown
     300
   );
 
@@ -212,7 +192,6 @@ class MatchExercise extends PureComponent {
       newPostExercisesValues[currentExerciseValues.id].name;
 
     //  INIT_VALUES
-
     if (postId && postId.content && !!postId.content.length) {
       this.setState({
         charValues: !charValues[postName]
@@ -239,8 +218,6 @@ class MatchExercise extends PureComponent {
       {},
       newPostState.newPostExercisesValues
     );
-
-    const content = this.state.content;
 
     const charValues = Object.assign({}, this.state.charValues);
     let currentExercise = newPostExercisesValues[exerciseId];

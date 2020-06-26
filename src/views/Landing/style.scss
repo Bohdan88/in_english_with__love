@@ -1,0 +1,18 @@
+.landing-wrapper {
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+.landing-wrapper::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.main-content-container {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}

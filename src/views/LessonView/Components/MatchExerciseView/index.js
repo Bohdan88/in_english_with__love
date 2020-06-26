@@ -10,7 +10,7 @@ import {
   Popup,
   Message,
 } from "semantic-ui-react";
-import { CHAR_SEQUENCE } from "../../../../constants/shared";
+import { CHAR_SEQUENCE } from "../../../../constants";
 
 // styles
 import "./style.scss";

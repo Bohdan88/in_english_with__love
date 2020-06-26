@@ -11,7 +11,7 @@ import {
   INIT_NEW_POST_VALUES,
   CREATE_LESSON_STAGES,
   POST_MODE,
-} from "../../../../constants/shared";
+} from "../../../../constants";
 import { EditorState, convertToRaw } from "draft-js";
 import {
   Form,
@@ -28,7 +28,7 @@ import {
   ICON_POST_REMOVE_STATUS,
   ICON_POST_ADD_STATUS,
 } from "../../../../constants/alertContent";
-import { LESSON_STATUS } from "../../../../constants/shared";
+import { LESSON_STATUS } from "../../../../constants";
 import { AfterWatch, BeforeWatch, LessonContent, Practise } from "./index";
 import { transformToOptions, fireAlert } from "../../../../utils";
 import AboutTheLesson from "./AboutTheLesson";
@@ -46,7 +46,6 @@ class CreateLesson extends Component {
       iconSrc: "",
       iconVisibility: false,
       editorState: EditorState.createEmpty(),
-      editorTextContent: true,
       isEditorEmpty: true,
       exercises: [],
       errorFields: [],
@@ -270,10 +269,6 @@ class CreateLesson extends Component {
       }
     });
 
-    // this.props.onSetPostNewValues({
-    //   date: new Date().getTime();
-    // })
-    // console.log()
     // change props values
     return new Promise((resolve) => {
       // post.date = new Date().getTime();
@@ -303,7 +298,7 @@ class CreateLesson extends Component {
           );
 
           //  put file in a storage
-          storageRef.put(Object.values(obj)[0]).then(() => {
+          return storageRef.put(Object.values(obj)[0]).then(() => {
             this.props.firebase.storage
               .ref()
               .child(storageRef.fullPath)
@@ -322,6 +317,7 @@ class CreateLesson extends Component {
           });
         });
       }
+      return null;
     });
   };
 
@@ -366,9 +362,8 @@ class CreateLesson extends Component {
     const {
       isLoading,
       iconFile,
-      iconVisibility,
+      // iconVisibility,
       preview,
-      editorTextContent,
       exercises,
       isEditorEmpty,
       errorFields,

@@ -15,7 +15,7 @@ import htmlToDraft from "html-to-draftjs";
 import {
   EDITOR_OPTIONS,
   SLICED_UPLOADED_IMAGE_KEY,
-} from "../../../../constants/shared";
+} from "../../../../constants";
 import { CustomColorPicker, VideoPlayer } from "./CustomComponents";
 import { setPostValues } from "../../../../redux/actions";
 
@@ -234,8 +234,8 @@ class CustomEditor extends Component {
   };
   render() {
     const { editorState } = this.state;
-    const { sectionKey } = this.props;
-    const { post } = this.props.newPostState;
+    // const { sectionKey } = this.props;
+    // const { post } = this.props.newPostState;
     // console.log(this.props.newPostState, " this.props.newPostState");
     // console.log(post[sectionKey], "RENDER_RENDER");
     // we check on blocks in case it's not editor state
@@ -246,7 +246,7 @@ class CustomEditor extends Component {
     //     post[sectionKey][0] === "<")
     //     ? EditorState.createEmpty()
     //     : post[sectionKey];
-    
+
     // const currentEditor =
     //   post[sectionKey] === "" ? EditorState.createEmpty() : post[sectionKey];
 
@@ -260,9 +260,8 @@ class CustomEditor extends Component {
             editorState={editorState}
             /* editorState={currentEditor} */
             onEditorStateChange={this.onEditorStateChange}
-            toolbarClassName="toolbar-class"
             editorClassName="editor-area"
-            toolbarClassName="editor-toolbar"
+            toolbarClassName="editor-toolbar toolbar-class"
             toolbar={{
               fontFamily: { options: EDITOR_OPTIONS.fontFamily },
               colorPicker: { component: CustomColorPicker },

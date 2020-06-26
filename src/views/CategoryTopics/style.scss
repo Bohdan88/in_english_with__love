@@ -8,7 +8,7 @@
   border-bottom: 2px solid $chetwode-blue;
 }
 
-.topics-column {
+.categories-column {
   margin-top: 0.7rem !important;
   margin-bottom: 2rem !important;
 }
@@ -115,5 +115,11 @@
 @media only screen and (max-width: 1919px) {
   .card-meta-time {
     padding-left: 2px;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .card-topic-container {
+    margin: auto!important;
   }
 }

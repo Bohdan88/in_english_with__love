@@ -18,7 +18,7 @@ import {
   EXERCISES_LABELS_COLORS,
   INIT_FIELDS_CONTENT,
   COMPLETE_FIELDS,
-} from "../../../../../constants/shared";
+} from "../../../../../constants";
 import _ from "lodash";
 
 const TutorialContent = () => {

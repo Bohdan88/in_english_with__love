@@ -8,7 +8,8 @@
   border-bottom: 2px solid $chetwode-blue;
 }
 
-.topic-list-error-message {
+.topic-list-error-message,
+.topic-list-completed-lessons-message {
   position: relative;
   top: 20px;
   width: 90%;
@@ -36,10 +37,14 @@
     label {
       font-size: 18px;
     }
-    label:before {
+    label:before,
+    label:after {
       width: 25px !important;
       height: 25px !important;
       margin-left: 2px;
+      color: teal !important;
+    }
+    label:before {
       margin-top: -5px;
     }
   }

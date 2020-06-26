@@ -4,7 +4,7 @@ import {
   EXERCISES_TYPES,
   EXERCISES_DESCRIPTIONS,
   EXERCISES_NAMES,
-} from "../../constants/shared";
+} from "../../constants";
 
 const initState = {
   loading: false,

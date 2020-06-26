@@ -106,7 +106,6 @@ class VideoPlayer extends Component {
                       name="height"
                       className="rdw-embedded-modal-size-input"
                       placeholder="Height"
-                      value="auto"
                       value={height}
                       onChange={this.onChangeInput}
                     />
@@ -117,7 +116,7 @@ class VideoPlayer extends Component {
                       name="width"
                       className="rdw-embedded-modal-size-input"
                       placeholder="Width"
-                      value="auto"
+                      /* value="auto" */
                       value={width}
                       onChange={this.onChangeInput}
                     />

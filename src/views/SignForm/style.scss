@@ -1,16 +1,102 @@
 @import "../../style/variables.scss";
 
+// form
+
+.sign-column {
+  display: block !important;
+  margin: auto !important;
+}
+
+.sign-form,
+.forget-password-form {
+  width: 450px;
+  padding: 20px;
+  margin-left: 3rem;
+  box-shadow: 1px 1px 5px 0px $dark-grey;
+  background: $grey;
+  border-radius: 5px;
+  background-color: $snow;
+
+  .field {
+    margin: 0 !important;
+  }
+}
+
+.container-form-header {
+  margin-bottom: 11% !important;
+}
+
+.form-header {
+  letter-spacing: 5px;
+  text-align: center !important;
+}
+
+.error-no-user,
+.error-no-user-sign-up {
+  position: absolute;
+  white-space: normal;
+  color: brown !important;
+  font-size: 13px;
+  font-weight: 300;
+  text-align: center;
+  padding: 1px !important;
+  width: 90%;
+  background: $white !important;
+  border: 1px solid $light-red !important;
+}
+
+.sign-word > a {
+  color: $dark-blue !important;
+  font-weight: bold !important;
+  padding-left: 10px;
+
+  &:hover {
+    cursor: pointer !important;
+    text-shadow: 2px 2px 12px $light-grey !important;
+  }
+}
+
+.container-account-ask {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.87); //$dark-grey;
+  letter-spacing: 1px;
+}
+
+.forget-password-form {
+  vertical-align: top !important;
+}
+
 // password forget page
 .container-forgot-password {
   position: relative !important;
-  top: -11px;
-  font-size: 14px;
+  top: -4px;
+  font-size: 13px;
   p > a {
-    color: $red !important;
+    color: $facebook-blue !important;
     letter-spacing: 1px;
 
     &:hover {
       text-shadow: 1px 1px 4px $light-grey;
     }
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .sign-form {
+    width: 80% !important;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .sign-form {
+    position: relative !important;
+    z-index: -1 !important;
+    width: 100% !important;
+  }
+
+  .sign-form,
+  .forget-password-form {
+    box-shadow: none;
+    background: none;
   }
 }

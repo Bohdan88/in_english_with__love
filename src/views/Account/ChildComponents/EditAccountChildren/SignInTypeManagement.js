@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { compose } from "recompose";
-import { SIGN_IN_METHODS } from "../../../../constants/shared";
+import { SIGN_IN_METHODS } from "../../../../constants";
 import { withFirebase } from "../../../Firebase";
 import { setSessionValues } from "../../../../redux/actions";
 import {

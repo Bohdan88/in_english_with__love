@@ -1,0 +1,18 @@
+.sign-grid {
+  height: 100%;
+  margin: 0 auto !important;
+  padding: 0 !important;
+
+  .row {
+    padding: 0 !important;
+    // margin: auto !important;
+    margin: 0 !important;
+  }
+}
+
+@media only screen and (min-width: 1919px) {
+  .sign-grid {
+    max-width: 1919px;
+    margin: auto !important;
+  }
+}

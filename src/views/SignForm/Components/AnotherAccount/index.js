@@ -5,7 +5,7 @@ import { compose } from "recompose";
 import {
   ERROR_CODE_ACCOUNT_EXISTS,
   ERROR_MSG_ACCOUNT_EXISTS,
-} from "../../../../constants/shared";
+} from "../../../../constants";
 import * as ROUTES from "../../../../constants/routes";
 import { withFirebase } from "../../../Firebase";
 
@@ -77,7 +77,7 @@ const AnotherAccountBase = ({
     <div className="container-another-account">
       <p className="another-account">
         <span className="action-another-account">
-          {actionType.toLowerCase()}
+          {`${actionType.toLowerCase()} `}
         </span>
         with another account:
       </p>

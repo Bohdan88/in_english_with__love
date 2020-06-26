@@ -4,7 +4,7 @@ import { LESSON_TOPIC } from "../../../../constants/routes";
 import {
   ONE_PAGE_LESSONS,
   POSTS_BUCKET_NAME,
-} from "../../../../constants/shared";
+} from "../../../../constants";
 import {
   POST_REMOVED_STATUS,
   CONFIRMATION_ALERT,
@@ -31,7 +31,7 @@ import { withFirebase } from "../../../Firebase";
 
 // styles
 import "./style.scss";
-import { POST_MODE } from "../../../../constants/shared";
+import { POST_MODE } from "../../../../constants";
 import { fireAlert } from "../../../../utils";
 
 class LessonsList extends PureComponent {
@@ -281,6 +281,7 @@ class LessonsList extends PureComponent {
                                   .split(" ")
                                   .join("-")}`}
                                 target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 {lesson.title}
                               </Link>

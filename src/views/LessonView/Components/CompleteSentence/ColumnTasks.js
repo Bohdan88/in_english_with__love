@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Droppable } from "react-beautiful-dnd";
-import { SUB_FIELD } from "../../../../constants/shared";
+import { SUB_FIELD } from "../../../../constants";
 
 class ColumnTasks extends Component {
   renderDroppableComponent = (key, value, dropId = undefined) => {

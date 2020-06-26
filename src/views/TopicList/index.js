@@ -136,6 +136,7 @@ class TopicList extends Component {
 
     if (data.checked && !!currentTopicPosts.length) {
       this.setState({
+        checkedCompleted: true,
         currentTopicPosts: currentTopicPosts.filter((topic) =>
           Object.keys(authUser.lessonsCompleted).findIndex(
             (keyId) => keyId === topic.uid
@@ -144,11 +145,12 @@ class TopicList extends Component {
       });
     } else {
       this.setState({
+        checkedCompleted: false,
         currentTopicPosts: this.filterPostsList(this.props.posts.allPosts),
       });
     }
   };
-  
+
   componentDidMount() {
     const { allPosts } = this.props.posts;
 
@@ -202,190 +204,197 @@ class TopicList extends Component {
       errorText,
       value,
       transitionDuration,
+      checkedCompleted,
     } = this.state;
     const { authUser } = this.props.sessionState;
     const { allIconImagesByTopic } = this.props.posts;
-    // console.log(authUser.lessonsCompleted, "authUser");
-    // console.log(this.state, "this.state");
+
     return (
-      <div>
-        <Grid className="topics-container">
-          <Grid.Row centered className="selected-topic-header-row">
-            <Grid.Column computer="8" floated="left">
-              <Header className="topics-header capitalize" as="h1">
-                {currentTopic}
-              </Header>
-            </Grid.Column>
-            <Grid.Column computer="8" className="topics-list-column-search">
-              <Form>
-                <Form.Group>
+      <Grid className="topics-container">
+        <Grid.Row centered className="selected-topic-header-row">
+          <Grid.Column computer="8" floated="left">
+            <Header className="topics-header capitalize" as="h1">
+              {currentTopic}
+            </Header>
+          </Grid.Column>
+          <Grid.Column computer="8" className="topics-list-column-search">
+            <Form>
+              <Form.Group>
+                {authUser && (
                   <Form.Field className="topics-checkbox-field">
                     <Form.Checkbox
                       label="Uncompleted Lessons"
                       onClick={this.onClickCheckBox}
                     />
                   </Form.Field>
-                  <Form.Field>
-                    <Form.Input
-                      className="topics-input-search"
-                      size="large"
-                      icon="search"
-                      placeholder="Search topics..."
-                      onChange={this.handleSearchChange}
-                    />
-                  </Form.Field>
-                </Form.Group>
-              </Form>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row centered columns={2}>
-            {error && !isLoadingLessons ? (
-              <Message className="error-message" size="massive" negative>
-                <Message.Header>Oops! Something went wrong...</Message.Header>
-                <p>{errorText}</p>
-              </Message>
-            ) : isSearchingPost ? (
-              <Segment inverted className="segment-loading-topics">
-                <Dimmer className="dimmer-topics" inverted active>
-                  <Loader className="loader-topics" size="big">
-                    Loading
-                  </Loader>
-                </Dimmer>
-              </Segment>
-            ) : isLoadingLessons ? (
-              <Segment className="loader-admin">
-                <Dimmer active>
-                  <Loader size="massive">Loading </Loader>
-                </Dimmer>
-              </Segment>
-            ) : !currentTopicPosts.length ? (
-              <Message
-                className="error-message topic-list-error-message"
-                size="massive"
-                negative
-              >
-                <Message.Header>Sorry! No data found!</Message.Header>
-                <Message.Content>
-                  <span className="capitalize">{`${currentTopic}  `}</span>
-                  doesn't have <b>{` '${value}' `}</b>
-                </Message.Content>
-                {/* !!allIconImagesByTopic[DEFAULT_TOPIC_IMAGE] && */}
-              </Message>
-            ) : (
-              currentTopicPosts.map((topic) => {
-                return (
-                  <Grid.Column
-                    widescreen={4}
-                    tablet={7}
-                    className="topics-column"
-                    key={topic.title}
+                )}
+                <Form.Field>
+                  <Form.Input
+                    className="topics-input-search"
+                    size="large"
+                    icon="search"
+                    placeholder="Search topics..."
+                    onChange={this.handleSearchChange}
+                  />
+                </Form.Field>
+              </Form.Group>
+            </Form>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row centered columns={2}>
+          {error && !isLoadingLessons ? (
+            <Message className="error-message" size="massive" negative>
+              <Message.Header>Oops! Something went wrong...</Message.Header>
+              <p>{errorText}</p>
+            </Message>
+          ) : isSearchingPost ? (
+            <Segment inverted className="segment-loading-topics">
+              <Dimmer className="dimmer-topics" inverted active>
+                <Loader className="loader-topics" size="big">
+                  Loading
+                </Loader>
+              </Dimmer>
+            </Segment>
+          ) : isLoadingLessons ? (
+            <Segment className="loader-admin">
+              <Dimmer active>
+                <Loader size="massive">Loading </Loader>
+              </Dimmer>
+            </Segment>
+          ) : !currentTopicPosts.length && !checkedCompleted ? (
+            <Message
+              className="error-message topic-list-error-message"
+              size="massive"
+              negative
+            >
+              <Message.Header>Sorry! No data found!</Message.Header>
+              <Message.Content>
+                <span className="capitalize">{`${currentTopic}  `}</span>
+                doesn't have <b>{` '${value}'. `}</b>
+              </Message.Content>
+            </Message>
+          ) : !currentTopicPosts.length && checkedCompleted ? (
+            <Message
+              className="error-message topic-list-completed-lessons-message"
+              size="massive"
+              success
+            >
+              <Message.Header>Good Job!</Message.Header>
+              <Message.Content>
+                <span>You completed all lessons in current category.</span>
+              </Message.Content>
+            </Message>
+          ) : (
+            currentTopicPosts.map((topic) => {
+              return (
+                <Grid.Column
+                  widescreen={4}
+                  tablet={7}
+                  className="topics-column"
+                  key={topic.title}
+                >
+                  <Transition
+                    visible={true}
+                    animation="fade"
+                    duration={transitionDuration}
+                    transitionOnMount={true}
                   >
-                    <Transition
-                      visible={true}
-                      animation="fade"
-                      duration={transitionDuration}
-                      transitionOnMount={true}
+                    <Link
+                      className="card-topic-link"
+                      to={`${LESSON_TOPIC}/${topic.title
+                        .toLowerCase()
+                        .split(" ")
+                        .join("-")}`}
                     >
-                      <Link
-                        className="card-topic-link"
-                        to={`${LESSON_TOPIC}/${topic.title
-                          .toLowerCase()
-                          .split(" ")
-                          .join("-")}`}
-                      >
-                        <Card fluid className="card-selected-topic-container">
-                          <Icon
-                            className="card-topic-arrow"
-                            name="arrow right"
-                          />
+                      <Card fluid className="card-selected-topic-container">
+                        <Icon className="card-topic-arrow" name="arrow right" />
 
-                          <Card.Content className="card-content-topic">
-                            <Card.Content className="card-content-image">
-                              <Image
-                                className="card-topic-image"
-                                src={
-                                  (allIconImagesByTopic[currentTopic] &&
-                                    allIconImagesByTopic[currentTopic][
-                                      topic.title
-                                    ]) ||
-                                  defaultImage
-                                }
-                                alt={topic.title}
-                                floated="left"
-                                size="mini"
-                              />
-                            </Card.Content>
-                            <Card.Content className="topic-list-card-container">
-                              <Card.Header
-                                as="h3"
-                                className="topic-list-card-header"
-                              >
-                                {topic.title}
-                              </Card.Header>
-
-                              <Card.Description
-                                className="card-selected-topic-description"
-                                textAlign="right"
-                              >
-                                <span className="selected-topic-focus">
-                                  {topic.focus}
-                                </span>
-                              </Card.Description>
-
-                              <Card.Meta
-                                textAlign="left"
-                                className="card-topic-meta"
-                              >
-                                <div>
-                                  <span className="card-lessons-length">
-                                    {topic.date
-                                      ? convertMillisecondsToDate(topic.date)
-                                      : convertMillisecondsToDate(
-                                          new Date().getTime()
-                                        )}
-                                  </span>
-                                </div>
-                                <div className="card-meta-time">
-                                  <Icon
-                                    className="topic-list-icon-circle"
-                                    name="circle"
-                                  />
-                                  <span className="card-lessons-length">
-                                    10 mintues
-                                  </span>
-                                  <Icon
-                                    className="topic-list-icon-start"
-                                    name="star"
-                                    size="small"
-                                    fitted
-                                  />
-                                </div>
-                                {authUser &&
-                                  authUser.lessonsCompleted &&
-                                  Object.keys(
-                                    authUser.lessonsCompleted
-                                  ).findIndex((keyId) => keyId === topic.uid) !=
-                                    -1 && (
-                                    <span className="card-topic-completed">
-                                      <span className="card-topic-completed-span">
-                                        Completed
-                                      </span>
-                                      <Icon name="check" />
-                                    </span>
-                                  )}
-                              </Card.Meta>
-                            </Card.Content>
+                        <Card.Content className="card-content-topic">
+                          <Card.Content className="card-content-image">
+                            <Image
+                              className="card-topic-image"
+                              src={
+                                (allIconImagesByTopic[currentTopic] &&
+                                  allIconImagesByTopic[currentTopic][
+                                    topic.title
+                                  ]) ||
+                                defaultImage
+                              }
+                              alt={topic.title}
+                              floated="left"
+                              size="mini"
+                            />
                           </Card.Content>
-                        </Card>
-                      </Link>
-                    </Transition>
-                  </Grid.Column>
-                );
-              })
-            )}
-          </Grid.Row>
-        </Grid>
-      </div>
+                          <Card.Content className="topic-list-card-container">
+                            <Card.Header
+                              as="h3"
+                              className="topic-list-card-header"
+                            >
+                              {topic.title}
+                            </Card.Header>
+
+                            <Card.Description
+                              className="card-selected-topic-description"
+                              textAlign="right"
+                            >
+                              <span className="selected-topic-focus">
+                                {topic.focus}
+                              </span>
+                            </Card.Description>
+
+                            <Card.Meta
+                              textAlign="left"
+                              className="card-topic-meta"
+                            >
+                              <div>
+                                <span className="card-lessons-length">
+                                  {topic.date
+                                    ? convertMillisecondsToDate(topic.date)
+                                    : convertMillisecondsToDate(
+                                        new Date().getTime()
+                                      )}
+                                </span>
+                              </div>
+                              <div className="card-meta-time">
+                                <Icon
+                                  className="topic-list-icon-circle"
+                                  name="circle"
+                                />
+                                <span className="card-lessons-length">
+                                  10 mintues
+                                </span>
+                                <Icon
+                                  className="topic-list-icon-start"
+                                  name="star"
+                                  size="small"
+                                  fitted
+                                />
+                              </div>
+                              {authUser &&
+                                authUser.lessonsCompleted &&
+                                Object.keys(
+                                  authUser.lessonsCompleted
+                                ).findIndex((keyId) => keyId === topic.uid) !==
+                                  -1 && (
+                                  <span className="card-topic-completed">
+                                    <span className="card-topic-completed-span">
+                                      Completed
+                                    </span>
+                                    <Icon name="check" />
+                                  </span>
+                                )}
+                            </Card.Meta>
+                          </Card.Content>
+                        </Card.Content>
+                      </Card>
+                    </Link>
+                  </Transition>
+                </Grid.Column>
+              );
+            })
+          )}
+        </Grid.Row>
+      </Grid>
     );
   }
 }

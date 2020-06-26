@@ -1,15 +1,35 @@
 @import "../../../style/variables.scss";
 
-.left-logo-size {
-  width: 75%;
-  height: 75%;
-  margin: auto;
+.left-side-header-learn-naturally {
+  // margin-top: 1rem !important;
 }
 
 .left-side-sign {
-  text-align: center !important;
+  // text-align: center !important;
   letter-spacing: 5px;
-  margin: auto;
+  // margin: auto;
+  // display: block!important;
+  // margin: auto!important;
+  margin: auto !important;
+  .header {
+    padding-right: 5rem !important;
+  }
+}
+
+.left-side-sign-container {
+  // display: block;
+  // height: 600px;
+  // margin-top: 4rem;
+}
+
+.left-logo-size {
+  // display: inline-block;
+  width: 450px;
+  // height: 75%;
+  height: 425px;
+  margin-left: auto;
+
+  // margin: auto;
 }
 
 .style-love {

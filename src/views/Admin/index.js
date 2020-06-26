@@ -11,7 +11,7 @@ import {
   EDIT_CREATE_POST_TAB_INDEX,
   POST_MODE,
   INIT_NEW_POST_VALUES,
-} from "../../constants/shared";
+} from "../../constants";
 import {
   CONFIRMATION_ALERT,
   CONFIRMATION_REMOVE_CONTENT,
@@ -102,17 +102,17 @@ class AdminPage extends Component {
   }
 }
 
-const removePostFromDb = (post, firebase) => {
-  firebase.db.ref(`posts/${post.uid}`).remove();
-};
+// const removePostFromDb = (post, firebase) => {
+//   firebase.db.ref(`posts/${post.uid}`).remove();
+// };
 
-const editPostFromDb = (post, firebase) => {
-  // firebase.db.ref(`posts/${post.uid}`).remove()
-  // console.log(firebase.db.ref(`posts/${post.uid}`))
-  firebase.db.ref(`posts/${post.uid}`).update({
-    post: "UPDATED",
-  });
-};
+// const editPostFromDb = (post, firebase) => {
+//   // firebase.db.ref(`posts/${post.uid}`).remove()
+//   // console.log(firebase.db.ref(`posts/${post.uid}`))
+//   firebase.db.ref(`posts/${post.uid}`).update({
+//     post: "UPDATED",
+//   });
+// };
 
 // const mapStateToProps = (state) => ({
 //   posts: state.posts,

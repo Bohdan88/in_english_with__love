@@ -1,12 +1,11 @@
 @import "../../../style/variables.scss";
 
 .sign-button {
-  height: 50px !important;
+  height: 40px !important;
   border-radius: 4px !important;
-  margin: 2% 0!important;
+  margin: 2% 0 !important;
   width: 100%;
   background-color: $dark-grey !important;
-  
 }
 
 .sign-button:hover {
@@ -14,20 +13,7 @@
 }
 
 .button-text {
-  // font-family: "Amatic SC", cursive !important;
   letter-spacing: 2px;
   color: $white;
-  // font-size: 30px;
   vertical-align: middle !important;
-}
-
-@media only screen and (max-width: 1919px) {
-  .sign-button {
-    height: 40px !important;
-  }
-
-  .sign-button {
-    margin-bottom: 3% !important;
-   
-  }
 }

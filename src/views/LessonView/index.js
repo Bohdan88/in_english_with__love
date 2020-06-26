@@ -18,7 +18,7 @@ import {
   USERS_BUCKET_NAME,
   ANOTHER_WAY,
   CATEGORY_ID,
-} from "../../constants/shared";
+} from "../../constants";
 import {
   LESSON_COMPLETE_CONFIRMATION,
   CONFIRMATION_ALERT,
@@ -119,7 +119,7 @@ class LessonView extends Component {
   }
 
   setSelectedLesson = (selectedLesson) => {
-    if (selectedLesson[0].newPostExercisesValues) {
+    if (!!selectedLesson.length && selectedLesson[0].newPostExercisesValues) {
       Object.values(selectedLesson[0].newPostExercisesValues).map((obj) => {
         return (selectedLesson[0].post[obj.type] = obj);
       });

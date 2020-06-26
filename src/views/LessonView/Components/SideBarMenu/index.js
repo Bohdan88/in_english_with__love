@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { CREATE_LESSON_STAGES } from "../../../../constants/shared";
+import { CREATE_LESSON_STAGES } from "../../../../constants";
 import { Label, Menu, Transition } from "semantic-ui-react";
 import "./style.scss";
 

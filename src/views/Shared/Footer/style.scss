@@ -1,0 +1,59 @@
+@import "../../../style/variables.scss";
+
+// .footer-container {
+//   height: 20%;
+//   // padding: 0 !important;
+//   border-radius: 0 !important;
+
+//   .grid {
+//   }
+// }
+
+.footer-container {
+  height: auto !important;
+  // height: 70px !important;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  margin: 0 !important;
+  background-color: $white-grey !important;
+  box-shadow: 2px 2px 2px 5px rgba(34, 36, 38, 0.15);
+  // color: $white;
+
+  .row {
+    max-width: 1919px;
+    margin: 0 auto !important;
+    padding: 0rem 2.5rem 0 0 !important;
+
+    .column > .menu > .item {
+      padding-bottom: 0.1rem !important;
+    }
+  }
+}
+
+// .footer-grid-logo {
+//   margin-top: auto !important;
+//   margin-bottom: auto !important;
+// }
+
+.footer-item-brand-name {
+  color: $black;
+  font-weight: bold !important;
+}
+
+.footer-grid-icons {
+  margin: 1em -0.6em !important;
+  .menu > .item > a > i {
+    opacity: 1 !important;
+  }
+}
+
+.footer-menu-brand {
+  display: flex !important;
+  justify-content: center;
+}
+
+.footer-icon-facebook {
+  color: $facebook-blue !important;
+}
