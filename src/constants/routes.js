@@ -13,6 +13,6 @@ export const LESSON_TOPIC_LIST = "/topic-list";
 export const LESSON_TOPIC = "/topic";
 export const PASSWORD_FORGET = "/pw-forget";
 export const ADMIN_DETAILS = "/admin/:id";
-export const NON_FOOTER_PAGES = [ADMIN, ADMIN];
+export const NON_FOOTER_PAGES = [ADMIN, LESSON_TOPIC];
 export const SHARED_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT];
 export const ROLES_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT, ACCOUNT, ADMIN];

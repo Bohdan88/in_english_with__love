@@ -40,7 +40,7 @@ const NavigationAuth = ({ authUser }) => {
 
   return (
     <Sticky className="nav-bar-sticky">
-      <Container fluid className="nav-bar-menu-container">
+      <div className="nav-bar-menu-container">
         <Menu className="nav-bar-menu" borderless>
           <Menu.Menu className="main-menu">
             <Menu.Item className="logo-container">
@@ -71,7 +71,7 @@ const NavigationAuth = ({ authUser }) => {
             </Menu.Item>
           </Menu.Menu>
         </Menu>
-      </Container>
+      </div>
     </Sticky>
   );
 };
@@ -91,7 +91,7 @@ const NavigationNonAuth = () => {
 
   return (
     <Sticky className="nav-bar-sticky">
-      <Container fluid className="nav-bar-menu-container">
+      <div className="nav-bar-menu-container">
         <MobileMenu
           signRoutes={[ROUTES.SIGN_IN, ROUTES.SIGN_UP]}
           routes={ROUTES.SHARED_AUTH_ROUTES}
@@ -134,7 +134,7 @@ const NavigationNonAuth = () => {
             </Menu.Item>
           </Menu.Menu>
         </Menu>
-      </Container>
+      </div>
     </Sticky>
   );
 };

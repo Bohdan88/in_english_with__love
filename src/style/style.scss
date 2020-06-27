@@ -4,11 +4,6 @@ html {
   scroll-behavior: smooth !important;
 }
 
-#root {
-  height: 100vh;
-  overflow: hidden;
-}
-
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
@@ -18,8 +13,13 @@ body {
     fixed !important;
   background-repeat: no-repeat !important;
   background-size: cover !important;
-  background-color: $snow;
+  // background-color: $snow;
   min-height: 100vh;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden;
 }
 
 // shared selectors
@@ -39,9 +39,9 @@ body {
   height: 50px;
 }
 
-.logo-container:hover {
-  background-color: $white !important;
-}
+// .logo-container:hover {
+//   background-color: $white !important;
+// }
 
 .error-message {
   margin: auto !important;
@@ -53,10 +53,6 @@ body {
 }
 
 @media only screen and (max-width: 1919px) {
-  // .form-header {
-  //   font-size: 15px !important;
-  // }
-
   .sign-word > a {
     color: $dark-blue !important;
     padding-left: 10px;
@@ -67,13 +63,19 @@ body {
   }
 }
 
-@media only screen and (max-width: 1199px) {
-  .sign-column {
-    margin: auto;
-  }
-}
+// @media only screen and (max-width: 1199px) {
+// }
 
 @media only screen and (max-width: 767px) {
+  body {
+    background: $white !important;
+  }
+
+  .nav-bar-sticky {
+    position: relative;
+    z-index: 1;
+  }
+
   .nav-bar-sticky > .ui.sticky {
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   }

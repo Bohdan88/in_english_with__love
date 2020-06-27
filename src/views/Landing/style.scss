@@ -1,3 +1,5 @@
+@import "../../style/variables.scss";
+
 .landing-wrapper {
   height: 100%;
   overflow-y: auto;
@@ -15,4 +17,19 @@
   box-shadow: none !important;
   margin: 0 !important;
   border-radius: 0 !important;
+}
+
+@media only screen and (max-width: 767px) {
+  .landing-wrapper {
+    position: relative !important;
+    z-index: 0 !important;
+    // background: $white;
+    // z-index: -1 !important;
+  }
+
+  .main-content-container {
+    position: relative !important;
+    top: -10px;
+    // z-index: -1 !important;
+  }
 }

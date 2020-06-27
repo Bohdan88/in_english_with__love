@@ -1,7 +1,5 @@
 @import "../../style/variables.scss";
 
-// form
-
 .sign-column {
   display: block !important;
   margin: auto !important;
@@ -27,7 +25,7 @@
 }
 
 .form-header {
-  letter-spacing: 5px;
+  letter-spacing: 3px;
   text-align: center !important;
 }
 
@@ -90,7 +88,7 @@
 @media only screen and (max-width: 767px) {
   .sign-form {
     position: relative !important;
-    z-index: -1 !important;
+    // z-index: -1 !important;
     width: 100% !important;
   }
 
@@ -98,5 +96,6 @@
   .forget-password-form {
     box-shadow: none;
     background: none;
+    margin-left: 0;
   }
 }

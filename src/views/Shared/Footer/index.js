@@ -1,20 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, Grid, Image, Icon, Container } from "semantic-ui-react";
+import { Menu, Grid, Image, Icon } from "semantic-ui-react";
 import * as ROUTES from "../../../constants/routes";
-
 // style
 import "./style.scss";
 
 // assets
 import logo from "../../../assets/images/default.png";
-
-/* <Segment
-        className="footer-container"
-        padded="very"
-        style={{ display: !isFooterExist ? "" : "none" }}
-      >
-      </Segment> */
 
 const Footer = () => {
   const [activeItem, setActiveItem] = useState(null);
@@ -32,10 +24,15 @@ const Footer = () => {
               © In English With Love
             </Menu.Item>
             <Menu.Item
+              link
               name="Privacy Policy"
               active={activeItem === "Privacy Policy"}
             />
-            <Menu.Item name="Contact Us" active={activeItem === "Contact Us"} />
+            <Menu.Item
+              link
+              name="Contact Us"
+              active={activeItem === "Contact Us"}
+            />
           </Menu>
         </Grid.Column>
 

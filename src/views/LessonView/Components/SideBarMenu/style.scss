@@ -5,12 +5,11 @@
   display: block;
   cursor: pointer;
   margin-top: 5px;
-  // margin-left: -57px;
 }
 
 #hamburger {
   // position: absolute;
-  top: 10px;
+  // top: 10px;
   width: 60px;
   // height: 45px;
   cursor: pointer;
@@ -85,7 +84,7 @@
 }
 
 #hamburger.open span:nth-child(5) {
-  left: 5px;
+  left: 3px;
   top: 29px;
 }
 

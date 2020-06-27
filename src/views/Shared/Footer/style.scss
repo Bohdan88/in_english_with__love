@@ -11,14 +11,13 @@
 
 .footer-container {
   height: auto !important;
-  // height: 70px !important;
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
   margin: 0 !important;
   background-color: $white-grey !important;
-  box-shadow: 2px 2px 2px 5px rgba(34, 36, 38, 0.15);
+  box-shadow: 2px 3px 1px 5px rgba(34, 36, 38, 0.15);
   // color: $white;
 
   .row {
@@ -31,11 +30,6 @@
     }
   }
 }
-
-// .footer-grid-logo {
-//   margin-top: auto !important;
-//   margin-bottom: auto !important;
-// }
 
 .footer-item-brand-name {
   color: $black;
@@ -56,4 +50,26 @@
 
 .footer-icon-facebook {
   color: $facebook-blue !important;
+}
+
+@media only screen and (max-width: 767px) {
+  .footer-grid-logo {
+    display: none !important;
+  }
+
+  .sign-form {
+    max-width: 400px !important;
+    margin: auto !important;
+  }
+
+  .footer-container {
+    .row {
+      flex-direction: column !important;
+      padding: 0 !important;
+    }
+  }
+
+  .footer-menu-brand {
+    margin: 0 !important;
+  }
 }

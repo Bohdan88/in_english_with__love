@@ -1,43 +1,28 @@
 @import "../../../style/variables.scss";
 
-.left-side-header-learn-naturally {
-  // margin-top: 1rem !important;
+.left-side-sign {
+  letter-spacing: 5px;
+  margin: auto !important;
 }
 
-.left-side-sign {
-  // text-align: center !important;
-  letter-spacing: 5px;
-  // margin: auto;
-  // display: block!important;
-  // margin: auto!important;
-  margin: auto !important;
+.left-side-sign-container-top-header,
+.left-side-sign-container-bottom-header,
+.left-logo-size {
+  width: 450px;
+  margin-left: auto;
+
   .header {
-    padding-right: 5rem !important;
+    text-align: center;
   }
 }
 
-.left-side-sign-container {
-  // display: block;
-  // height: 600px;
-  // margin-top: 4rem;
-}
-
 .left-logo-size {
-  // display: inline-block;
-  width: 450px;
-  // height: 75%;
   height: 425px;
-  margin-left: auto;
-
-  // margin: auto;
 }
 
 .style-love {
   font-family: "Lobster";
   color: $light-green;
-}
-
-@media only screen and (max-width: 1199px) {
 }
 
 @media only screen and (max-width: 992px) {

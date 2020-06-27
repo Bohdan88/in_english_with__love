@@ -3,11 +3,9 @@ import { Router, Route, Switch, Redirect } from "react-router-dom";
 import { withAuthentication } from "../Session";
 import { createBrowserHistory } from "history";
 import * as ROUTES from "../../constants/routes";
-import Footer from "../Shared/Footer";
 import Navigation from "../Navigation";
 import Landing from "../Landing";
 import routes from "../../routes";
-import { Segment } from "semantic-ui-react";
 
 const hist = createBrowserHistory();
 
@@ -16,7 +14,7 @@ const App = () => {
     <Router history={hist}>
       <Navigation />
 
-      <Landing history={hist}>
+      <Landing>
         <Switch>
           {routes.map((route) => {
             return (

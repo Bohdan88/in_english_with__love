@@ -4,7 +4,7 @@
   background: $white;
   border: 1px solid rgba(34, 36, 38, 0.15);
   box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-  border-radius: 0.28571429rem;
+  border-radius: 0;
 }
 
 .nav-bar-menu {
@@ -37,7 +37,8 @@
   }
 }
 
-.mobile-nav-bar {
+.mobile-nav-bar,
+.mobile-logo-container {
   display: none;
 }
 
@@ -56,37 +57,55 @@
 }
 
 @media only screen and (max-width: 767px) {
+  .nav-bar-menu-container {
+    margin: 0px !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
   .nav-bar-menu {
     display: none !important;
   }
 
   .mobile-nav-bar {
     display: block;
-    z-index: 100;
+    padding-left: 0 !important;
   }
 
   /*menu hamburger*/
   .mobile-view {
-    padding: 10px;
+    // padding: 10px;
     opacity: 1;
-    transform: translateX(-20px);
-    transition-delay: 0.3s;
-    height: 55px;
+    // transform: translateX(-20px);
+    // transition-delay: 0.3s;
+    // height: 55px;
     display: block;
     // position: relative;
     // right:0px!important
   }
 
-  .menu-icon-wrapper {
-    height: 35px;
-    display: block;
+  .nav-menu-icon-wrapper,
+  .mobile-view {
+    height: 55px;
+  }
+
+  .nav-menu-icon-wrapper {
+    display: flex !important;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
     cursor: pointer;
-    margin-left: -57px;
+  }
+
+  .mobile-logo-container {
+    display: block;
+    height: 40px;
+    width: 40px;
   }
 
   #hamburger {
-    position: absolute;
-    top: 10px;
+    // position: absolute;
+    // top: 5px;
     width: 60px;
     height: 45px;
     cursor: pointer;
@@ -173,11 +192,6 @@
     top: 29px;
   }
 
-  .mobile-nav-bar {
-    display: block;
-    z-index: 100;
-  }
-
   /*sidebar*/
   .mobile-close-menu {
     height: 100%;
@@ -185,36 +199,30 @@
     position: fixed;
     z-index: 50;
     top: 55px;
-    transition: 0.3s;
+    // transition: 0.3s;
     left: -175px;
   }
 
   .mobile-open-menu {
-    position: fixed;
+    // position: relative;
+    display: block;
     height: 100vh;
     width: 100vw;
-    z-index: 50;
-    top: 55px;
+    padding-top: 1.5rem !important;
     margin: auto;
     // background: #ededef !important;
-    background: white !important;
+    background: $white !important;
     overflow-x: hidden;
-    transition: 0.3s;
-    transition: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+    // transition: cubic-bezier(0.6, -0.28, 0.735, 0.045);
     border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .mobile-open-menu {
     text-align: center !important;
   }
 
   .mobile-sidebar-menu > .content {
-    background-color: $white !important;
     margin: 0 0.5rem;
     padding: 1rem 0;
     color: #747888;
-    // font-family: "Amatic SC", cursive;
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: bold;
     letter-spacing: 2px;
   }

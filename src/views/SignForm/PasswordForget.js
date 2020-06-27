@@ -13,14 +13,9 @@ import { FormInput, SignLanding } from "./Components";
 import "./style.scss";
 
 const PasswordForgetPage = () => (
-  <Grid columns={2} className="sign-grid">
-    <Grid.Row>
-      <LeftGridAuth />
-      <Grid.Column mobile={16} tablet={9} computer={8} verticalAlign="top">
-        <PasswordForgetForm />
-      </Grid.Column>
-    </Grid.Row>
-  </Grid>
+  <SignLanding>
+    <PasswordForgetForm />
+  </SignLanding>
 );
 
 class PasswordForgetFormBase extends Component {
@@ -64,7 +59,6 @@ class PasswordForgetFormBase extends Component {
 
         <FormInput
           styleVal="email-signin"
-          error={error}
           type="email"
           value="email"
           onChange={this.onChange}
