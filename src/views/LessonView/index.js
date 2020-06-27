@@ -169,9 +169,17 @@ class LessonView extends Component {
 
   visualizeChapterContent = (currentChapter) => {
     const { fullLeson } = this.state;
-    const { mode } = this.props;
 
     const lessonChapter = fullLeson.post[currentChapter];
+
+    // mode === CREATE_LESSON_STAGES.preview
+    // ? lessonChapter === ""
+    //   ? ""
+    //   : draftToHtml(
+    //       convertToRaw(lessonChapter.getCurrentContent())
+    //     )
+    // : JSON.parse(lessonChapter),
+    // console.log(lessonChapter, "lessonChapter");
 
     // check if it's json string  or editor state
     if (lessonChapter) {
@@ -180,20 +188,27 @@ class LessonView extends Component {
         return (
           <div
             dangerouslySetInnerHTML={{
-              __html:
-                mode === CREATE_LESSON_STAGES.preview
-                  ? lessonChapter === ""
-                    ? ""
-                    : draftToHtml(
-                        convertToRaw(lessonChapter.getCurrentContent())
-                      )
-                  : JSON.parse(lessonChapter),
+              __html: JSON.parse(lessonChapter),
             }}
           />
         );
       }
 
-      if (lessonChapter && lessonChapter.name) {
+      // check if it's still in editor state js
+      if (Object.keys(lessonChapter)[0] === "_immutable") {
+        return (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: draftToHtml(
+                convertToRaw(lessonChapter.getCurrentContent())
+              ),
+            }}
+          />
+        );
+      }
+
+      // if it has name, it means that it's an exercise -> not editor state
+      if (lessonChapter.name) {
         if (lessonChapter.name.includes(ANOTHER_WAY)) {
           return <AnotherWay lessonValues={lessonChapter} />;
         }
@@ -208,6 +223,7 @@ class LessonView extends Component {
     }
     return null;
   };
+
   componentWillMount() {
     // this.props.firebase.posts().off();
   }
@@ -258,43 +274,61 @@ class LessonView extends Component {
     const { sessionState } = this.props;
 
     if (sessionState.authUser) {
-      this.props.firebase.db
-        .ref(`${USERS_BUCKET_NAME}/${sessionState.authUser.uid}`)
-        .update({
-          ...sessionState.authUser,
-          // email: sessionState.authUser.email
-          // uid: sessionState.authUser.uid,
-          // username: sessionState.authUser.username,
-          // roles: sessionState.authUser.roles,
-          lessonsCompleted: {
-            ...sessionState.authUser.lessonsCompleted,
-            [`${fullLeson.uid}${CATEGORY_ID}${fullLeson.category}`]: new Date().getTime(),
-          },
-        })
-        .then(() => {
-          this.props.onSetLessonComplete({
-            authUser: {
-              ...sessionState.authUser,
-              lessonsCompleted: {
-                ...sessionState.lessonsCompleted,
-
-                [fullLeson.uid]: new Date().getTime(),
-              },
+      // send a lesson to db if a user hasn't completed a lesson already
+      if (
+        !sessionState.authUser.lessonsCompleted ||
+        !Object.keys(sessionState.authUser.lessonsCompleted).some((lessonId) =>
+          lessonId.includes(fullLeson.uid)
+        )
+      ) {
+        this.props.firebase.db
+          .ref(`${USERS_BUCKET_NAME}/${sessionState.authUser.uid}`)
+          .update({
+            ...sessionState.authUser,
+            // email: sessionState.authUser.email
+            // uid: sessionState.authUser.uid,
+            // username: sessionState.authUser.username,
+            // roles: sessionState.authUser.roles,
+            lessonsCompleted: {
+              ...sessionState.authUser.lessonsCompleted,
+              [`${fullLeson.uid}${CATEGORY_ID}${fullLeson.category}`]: new Date().getTime(),
             },
+          })
+          .then(() => {
+            this.props.onSetLessonComplete({
+              authUser: {
+                ...sessionState.authUser,
+                lessonsCompleted: {
+                  ...sessionState.lessonsCompleted,
+
+                  [fullLeson.uid]: new Date().getTime(),
+                },
+              },
+            });
+            fireAlert({
+              state: true,
+              values: LESSON_COMPLETE_CONFIRMATION,
+            }).then(() => {
+              // once a lesson completed, a user will be taken to home page
+              // window.location.pathname = HOME;
+              this.props.history.push(HOME);
+            });
+          })
+          .catch((error) => {
+            let values = LESSON_COMPLETE_CONFIRMATION;
+            values.text.error = error.text;
+            fireAlert({ state: false, values });
           });
-          fireAlert({
-            state: true,
-            values: LESSON_COMPLETE_CONFIRMATION,
-          }).then(() => {
-            // once a lesson completed, a user will be taken to home page
-            window.location.pathname = HOME;
-          });
-        })
-        .catch((error) => {
-          let values = LESSON_COMPLETE_CONFIRMATION;
-          values.text.error = error.text;
-          fireAlert({ state: false, values });
+        // just show confirmation modal if a user has already completed a lesson
+      } else {
+        fireAlert({
+          state: true,
+          values: LESSON_COMPLETE_CONFIRMATION,
+        }).then(() => {
+          // once a lesson completed, a user will be taken to home page
+          this.props.history.push(HOME);
         });
+      }
     } else {
       // console.log(sessionState,'SEK')
 
@@ -340,7 +374,6 @@ class LessonView extends Component {
 
     const menu = isMenuOpen ? "menu-open" : "";
 
-    console.log(stepsVisited, "stepsVisited");
     return (
       <div>
         {isLoadingLesson && !error ? (

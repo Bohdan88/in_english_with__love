@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
 import { withAuthorization } from "../Session";
@@ -19,7 +19,7 @@ import {
 import { Tab, Grid, Button, Icon } from "semantic-ui-react";
 import LessonsList from "./Components/LessonsList";
 import { fireAlert } from "../../utils";
-// import { setPostValues } from "../../redux/actions";
+import { setPostValues } from "../../redux/actions";
 
 // style
 import "./style.scss";
@@ -122,17 +122,16 @@ class AdminPage extends Component {
 //   })),
 // });
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     onSetUsers: (users) => dispatch({ type: "USERS_SET", users }),
-//     onSetPostNewValues: (values) => dispatch(setPostValues(values)),
-//   };
-// };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSetPostNewValues: (values) => dispatch(setPostValues(values)),
+  };
+};
 
 const condition = (authUser) => authUser && !!authUser.roles[ROLES.ADMIN];
 
 export default compose(
   withAuthorization(condition),
-  withFirebase
-  // connect(mapStateToProps, mapDispatchToProps)
+  withFirebase,
+  connect(null, mapDispatchToProps)
 )(AdminPage);

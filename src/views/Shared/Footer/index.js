@@ -27,7 +27,14 @@ const Footer = () => {
               link
               name="Privacy Policy"
               active={activeItem === "Privacy Policy"}
-            />
+            >
+              <Link
+                onClick={() => setActiveItem("Privacy Policy")}
+                to={ROUTES.PRIVACY_POLICY}
+              >
+                Privacy Policy
+              </Link>
+            </Menu.Item>
             <Menu.Item
               link
               name="Contact Us"
@@ -54,10 +61,11 @@ const Footer = () => {
                 rel="noopener noreferrer"
               >
                 <Icon
-                  className="footer-icon-facebook"
+                  /*className="footer-icon-facebook"*/
                   link
                   size="large"
-                  name="facebook"
+                  name="facebook f"
+                  color="black"
                 />
               </a>
             </Menu.Item>
@@ -67,7 +75,13 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Icon color="red" link size="large" name="pinterest square" />
+                <Icon
+                  /* color="red" */
+                  link
+                  size="large"
+                  name="pinterest p"
+                  color="black"
+                />
               </a>
             </Menu.Item>
           </Menu>

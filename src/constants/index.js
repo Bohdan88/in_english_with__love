@@ -333,7 +333,7 @@ export const USERS_BUCKET_NAME = "users";
 export const DEFAULT_TOPIC_IMAGE = "default";
 
 // editor page
-export const EDIT_CREATE_POST_TAB_INDEX = 1;
+export const EDIT_CREATE_POST_TAB_INDEX = 0;
 export const SLICED_UPLOADED_IMAGE_KEY = 27;
 export const POST_MODE = {
   EDIT: "edit",

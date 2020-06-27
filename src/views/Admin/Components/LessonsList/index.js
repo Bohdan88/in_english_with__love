@@ -295,6 +295,7 @@ class LessonsList extends PureComponent {
                               <Button
                                 className="lesson-list-edit"
                                 onClick={() => {
+                                  console.log("EDITR VASA")
                                   this.props.setEditPostTabIndex();
                                   this.props.onSetPostNewValues({
                                     postMode: POST_MODE.EDIT,

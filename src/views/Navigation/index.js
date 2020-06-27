@@ -20,7 +20,7 @@ const identifyActiveLink = (routes) => {
   if (routes.includes(currentPathName)) {
     return currentPathName;
   } else if (currentPathName === ROUTES.LESSON_TOPIC_LIST) {
-    // looking for the first = to understand its listen or read category
+    // looking for the first '=' to understand its listen or read category
     const linkIndex = currentLocation.indexOf("=");
     const linkLastIndex = currentLocation.indexOf("&");
 
@@ -44,7 +44,7 @@ const NavigationAuth = ({ authUser }) => {
         <Menu className="nav-bar-menu" borderless>
           <Menu.Menu className="main-menu">
             <Menu.Item className="logo-container">
-              <Link onClick={() => setActiveItem(ROUTES.READ)} to={ROUTES.READ}>
+              <Link onClick={() => setActiveItem(ROUTES.HOME)} to={ROUTES.HOME}>
                 <Image className="menu-logo" src={logo} />
               </Link>
             </Menu.Item>

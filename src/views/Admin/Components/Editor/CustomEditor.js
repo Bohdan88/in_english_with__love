@@ -106,22 +106,25 @@ class CustomEditor extends Component {
 
   componentDidMount() {
     const { newPostState, sectionKey } = this.props;
+
+    const postValue = newPostState.post[sectionKey];
+
+    // set editor empty if there's no any data neither in redux nor in local storage
     if (
-      !newPostState.post[sectionKey] ||
-      newPostState.post[sectionKey] === ""
+      (!postValue || postValue === "") &&
+      newPostState.postLocalStorage[sectionKey] === ""
     ) {
       this.setState({
         editorState: EditorState.createEmpty(),
       });
-    } else if (!!newPostState.post[sectionKey]._immutable) {
-      this.setState({
-        editorState: EditorState.createWithContent(
-          newPostState.post[sectionKey].getCurrentContent()
-        ),
-      });
+    }
 
-      // if typeof string after parsing it means that we received html code from db
-    } else if (typeof JSON.parse(newPostState.post[sectionKey]) === "string") {
+    // if typeof string after parsing it means that we received html code from db
+    else if (
+      postValue !== "" &&
+      newPostState.postLocalStorage[sectionKey] === "" &&
+      typeof postValue === "string"
+    ) {
       const blocksFromHtml = htmlToDraft(
         JSON.parse(newPostState.post[sectionKey])
       );
@@ -143,6 +146,13 @@ class CustomEditor extends Component {
       });
 
       this.setState({ editorState: editorState });
+      // if immutable is fresh code from redux
+    } else if (!!postValue._immutable) {
+      this.setState({
+        editorState: EditorState.createWithContent(
+          postValue.getCurrentContent()
+        ),
+      });
     } else if (newPostState.postLocalStorage[sectionKey] !== "") {
       this.fetchFromLocalStorage();
     }
@@ -236,8 +246,7 @@ class CustomEditor extends Component {
     const { editorState } = this.state;
     // const { sectionKey } = this.props;
     // const { post } = this.props.newPostState;
-    // console.log(this.props.newPostState, " this.props.newPostState");
-    // console.log(post[sectionKey], "RENDER_RENDER");
+
     // we check on blocks in case it's not editor state
     // const currentEditor =
     //   newPostState.postLocalStorage[sectionKey] === "" &&

@@ -23,6 +23,7 @@ import defaultImage from "../../assets/images/default.png";
 import { Link } from "react-router-dom";
 // style
 import "./style.scss";
+import { CATEGORY_ID } from "../../constants";
 
 class TopicList extends Component {
   state = {
@@ -81,7 +82,7 @@ class TopicList extends Component {
                 },
               });
             })
-            .catch((error) => console.log(error.text, "error"));
+            .catch((error) => error.code);
         }
       });
     }
@@ -134,12 +135,19 @@ class TopicList extends Component {
     const { currentTopicPosts } = this.state;
     const { authUser } = this.props.sessionState;
 
-    if (data.checked && !!currentTopicPosts.length) {
+    if (
+      data.checked &&
+      !!currentTopicPosts.length &&
+      authUser.lessonsCompleted
+    ) {
+      /* use Category id to remove -category- from  completed 
+        lesson id which we added when user completed his/her lesson
+      */
       this.setState({
         checkedCompleted: true,
         currentTopicPosts: currentTopicPosts.filter((topic) =>
           Object.keys(authUser.lessonsCompleted).findIndex(
-            (keyId) => keyId === topic.uid
+            (keyId) => keyId.slice(0, keyId.indexOf(CATEGORY_ID)) === topic.uid
           )
         ),
       });
@@ -192,6 +200,10 @@ class TopicList extends Component {
 
       this.getAllPostsByTopicName(allPosts);
     }
+  }
+
+  componentWillUnmount() {
+    this.props.firebase.posts().off();
   }
 
   render() {
@@ -279,9 +291,9 @@ class TopicList extends Component {
               size="massive"
               success
             >
-              <Message.Header>Good Job!</Message.Header>
+              <Message.Header>Uncompleted lessons not found!</Message.Header>
               <Message.Content>
-                <span>You completed all lessons in current category.</span>
+                <span>You finished all lessons in current category.</span>
               </Message.Content>
             </Message>
           ) : (
@@ -374,8 +386,9 @@ class TopicList extends Component {
                                 authUser.lessonsCompleted &&
                                 Object.keys(
                                   authUser.lessonsCompleted
-                                ).findIndex((keyId) => keyId === topic.uid) !==
-                                  -1 && (
+                                ).some((completedLessonId) =>
+                                  completedLessonId.includes(topic.uid)
+                                ) && (
                                   <span className="card-topic-completed">
                                     <span className="card-topic-completed-span">
                                       Completed

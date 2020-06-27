@@ -8,11 +8,10 @@ export const CONTACT = "/contact";
 export const ACCOUNT = "/account";
 export const ADMIN = "/admin";
 export const PRIVACY_POLICY = "/privacy";
-// export const LESSON_TOPIC_LIST = "/topic-list";
-export const LESSON_TOPIC_LIST = "/topic-list";
+export const LESSON_TOPIC_LIST = "/lessons-list";
 export const LESSON_TOPIC = "/topic";
 export const PASSWORD_FORGET = "/pw-forget";
-export const ADMIN_DETAILS = "/admin/:id";
-export const NON_FOOTER_PAGES = [ADMIN, LESSON_TOPIC];
+// groups of routes
+export const NON_FOOTER_PAGES = [ADMIN, LESSON_TOPIC, ACCOUNT];
 export const SHARED_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT];
 export const ROLES_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT, ACCOUNT, ADMIN];

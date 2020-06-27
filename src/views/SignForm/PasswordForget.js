@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { withFirebase } from "../Firebase";
 import * as ROUTES from "../../constants/routes";
 import { PASSWORD_FORGET_INIT } from "../../constants";
-import { Grid, Header, Form } from "semantic-ui-react";
-import { LeftGridAuth, SignButton } from "../Shared";
+import { Header, Form } from "semantic-ui-react";
+import { SignButton } from "../Shared";
 
 import { FormInput, SignLanding } from "./Components";
 

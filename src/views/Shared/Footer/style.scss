@@ -46,6 +46,15 @@
 .footer-menu-brand {
   display: flex !important;
   justify-content: center;
+
+  .item > a {
+    color: rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .item > a:hover,
+  .active > a {
+    color: rgba(0, 0, 0, 0.9) !important;
+  }
 }
 
 .footer-icon-facebook {

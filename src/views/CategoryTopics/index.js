@@ -50,8 +50,8 @@ class CategoryTopics extends Component {
         [categoryType]: {
           ...this.state[categoryType],
           names: _.filter(
-            this.state[categoryType].names,
-            (item) => item && item.toLowerCase().includes(value)
+            this.props.posts[categoryType].names,
+            (item) => item && item.toLowerCase().includes(value.toLowerCase())
           ),
         },
       });
@@ -128,12 +128,6 @@ class CategoryTopics extends Component {
         });
       }
     }
-    // this.setState({
-    //   [CATEGORY_TOPICS[categoryType]]: this.props.posts[
-    //     CATEGORY_TOPICS[categoryType]
-    //   ],
-    // });
-    // }
 
     if (!this.props.posts[CATEGORY_TOPICS[categoryType]].images.length) {
       this.fetchTopicImage(CATEGORY_TOPICS[categoryType]);
@@ -169,6 +163,10 @@ class CategoryTopics extends Component {
     this.props.firebase.posts().off();
   }
 
+  componentWillMount() {
+    this.props.firebase.posts().off();
+  }
+
   render() {
     const {
       searchTopicLoading,
@@ -183,139 +181,136 @@ class CategoryTopics extends Component {
 
     // console.log(categoryType,'categoryType')
     return categoryType ? (
-      <div>
-        {dbValuesLoading && !error ? (
-          <Segment className="loader-admin">
-            <Dimmer active>
-              <Loader size="massive">Loading </Loader>
-            </Dimmer>
-          </Segment>
-        ) : error && !dbValuesLoading ? (
-          <Message className="error-message" size="massive" negative>
-            <Message.Header>Oops! Something went wrong...</Message.Header>
-            <p>{errorText}</p>
-          </Message>
-        ) : (
-          <Grid className="topics-container">
-            <Grid.Row columns={2} className="topics-header-row">
-              <Grid.Column>
-                <Header className="topics-header" as="h1">
-                  Topics
-                </Header>
-              </Grid.Column>
-              <Grid.Column className="topics-column-search">
-                <Input
-                  className="topics-input-search"
-                  size="large"
-                  icon="search"
-                  placeholder="Search topics..."
-                  disabled={!posts[categoryType].names[0]}
-                  onChange={this.handleSearchChange}
-                />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row className="categories-cards-row">
-              {searchTopicLoading ? (
-                <Segment inverted className="segment-loading-topics">
-                  <Dimmer className="dimmer-topics" inverted active>
-                    <Loader className="loader-topics" size="big">
-                      Loading
-                    </Loader>
-                  </Dimmer>
-                </Segment>
-              ) : this.state[categoryType].names[0] ? (
-                this.state[categoryType].names.map((topic) => {
-                  const imgSrc = posts[categoryType].images.filter((imgUrl) =>
-                    imgUrl.includes(`${topic.toLowerCase()}.`)
-                  );
-                  const filteredLessons = allPosts.filter(
-                    (obj) => obj.subCategory === topic
-                  );
-                  return (
-                    <Transition
-                      visible={true}
-                      animation="fade"
-                      duration={transitionDuration}
-                      transitionOnMount={true}
-                      unmountOnHide={true}
-                      key={topic}
+      dbValuesLoading && !error ? (
+        <Segment className="loader-admin">
+          <Dimmer active>
+            <Loader size="massive">Loading </Loader>
+          </Dimmer>
+        </Segment>
+      ) : error && !dbValuesLoading ? (
+        <Message className="error-message" size="massive" negative>
+          <Message.Header>Oops! Something went wrong...</Message.Header>
+          <p>{errorText}</p>
+        </Message>
+      ) : (
+        <Grid className="topics-container">
+          <Grid.Row columns={2} className="topics-header-row">
+            <Grid.Column>
+              <Header className="topics-header" as="h1">
+                Topics
+              </Header>
+            </Grid.Column>
+            <Grid.Column className="topics-column-search">
+              <Input
+                className="topics-input-search"
+                size="large"
+                icon="search"
+                placeholder="Search topics..."
+                disabled={!posts[categoryType].names[0]}
+                onChange={this.handleSearchChange}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row className="categories-cards-row">
+            {searchTopicLoading ? (
+              <Segment inverted className="segment-loading-topics">
+                <Dimmer className="dimmer-topics" inverted active>
+                  <Loader className="loader-topics" size="big">
+                    Loading
+                  </Loader>
+                </Dimmer>
+              </Segment>
+            ) : this.state[categoryType].names[0] ? (
+              this.state[categoryType].names.map((topic) => {
+                const imgSrc = posts[categoryType].images.filter((imgUrl) =>
+                  imgUrl.includes(`${topic.toLowerCase()}.`)
+                );
+                const filteredLessons = allPosts.filter(
+                  (obj) => obj.subCategory === topic
+                );
+                return (
+                  <Transition
+                    visible={true}
+                    animation="fade"
+                    duration={transitionDuration}
+                    transitionOnMount={true}
+                    unmountOnHide={true}
+                    key={topic}
+                  >
+                    <Grid.Column
+                      widescreen={3}
+                      largeScreen={5}
+                      tablet={8}
+                      className="categories-column"
                     >
-                      <Grid.Column
-                        widescreen={3}
-                        largeScreen={5}
-                        tablet={8}
-                        className="categories-column"
+                      <Link
+                        className="card-topic-link"
+                        to={`${LESSON_TOPIC_LIST}?category=${this.props.location.pathname.slice(
+                          1
+                        )}&topic=${topic && topic.toLowerCase()}`}
                       >
-                        <Link
-                          className="card-topic-link"
-                          to={`${LESSON_TOPIC_LIST}?category=${this.props.location.pathname.slice(
-                            1
-                          )}&topic=${topic && topic.toLowerCase()}`}
-                        >
-                          <Card className="card-topic-container">
-                            <Icon
-                              className="card-topic-arrow"
-                              name="arrow right"
-                            />
-                            <Card.Content className="card-content-category">
-                              <Card.Content className="card-content-image">
-                                <Image
-                                  className="card-topic-image"
-                                  src={!!imgSrc.length ? imgSrc : defaultImage}
-                                  alt={topic}
-                                  floated="left"
-                                  size="mini"
-                                />
-                              </Card.Content>
-                              <Card.Content className="card-content-topic-text">
-                                <Card.Header
-                                  as="h2"
-                                  className="card-topic-header"
-                                >
-                                  {topic}
-                                </Card.Header>
-                                <Card.Meta className="card-topic-meta">
-                                  <div>
-                                    <Icon name="pencil alternate" />{" "}
-                                    <span className="card-lessons-length">
-                                      {filteredLessons.length || 0}
-                                      {filteredLessons.length &&
-                                      filteredLessons.length === 1
-                                        ? " Lesson "
-                                        : " Lessons "}
-                                    </span>
-                                  </div>
-                                  <div className="card-meta-time">
-                                    <Icon name="eye" />{" "}
-                                    <span className="card-lessons-length">
-                                      55 mintues
-                                    </span>
-                                  </div>
-                                </Card.Meta>
-                              </Card.Content>
+                        <Card className="card-topic-container">
+                          <Icon
+                            className="card-topic-arrow"
+                            name="arrow right"
+                          />
+                          <Card.Content className="card-content-category">
+                            <Card.Content className="card-content-image">
+                              <Image
+                                className="card-topic-image"
+                                src={!!imgSrc.length ? imgSrc : defaultImage}
+                                alt={topic}
+                                floated="left"
+                                size="mini"
+                              />
                             </Card.Content>
-                          </Card>
-                        </Link>
-                      </Grid.Column>
-                    </Transition>
-                  );
-                })
-              ) : (
-                <Message className="error-message" size="massive" negative>
-                  <Message.Header>Sorry! No data found!</Message.Header>
-                  <p>
-                    <span className="capitalize">
-                      {`${this.props.location.pathname.slice(1)} Category `}
-                    </span>
-                    doesn't have <b>{`'${this.state.value || `lessons`}' `}</b>{" "}
-                    =(
-                  </p>
-                </Message>
-              )}
-            </Grid.Row>
-          </Grid>
-        )}
-      </div>
+                            <Card.Content className="card-content-topic-text">
+                              <Card.Header
+                                as="h2"
+                                className="card-topic-header"
+                              >
+                                {topic}
+                              </Card.Header>
+                              <Card.Meta className="card-topic-meta">
+                                <div>
+                                  <Icon name="pencil alternate" />{" "}
+                                  <span className="card-lessons-length">
+                                    {filteredLessons.length || 0}
+                                    {filteredLessons.length &&
+                                    filteredLessons.length === 1
+                                      ? " Lesson "
+                                      : " Lessons "}
+                                  </span>
+                                </div>
+                                <div className="card-meta-time">
+                                  <Icon name="eye" />{" "}
+                                  <span className="card-lessons-length">
+                                    55 mintues
+                                  </span>
+                                </div>
+                              </Card.Meta>
+                            </Card.Content>
+                          </Card.Content>
+                        </Card>
+                      </Link>
+                    </Grid.Column>
+                  </Transition>
+                );
+              })
+            ) : (
+              <Message className="error-message" size="massive" negative>
+                <Message.Header>Sorry! No data found!</Message.Header>
+                <p>
+                  <span className="capitalize">
+                    {`${this.props.location.pathname.slice(1)} Category `}
+                  </span>
+                  doesn't have <b>{`'${this.state.value || `lessons`}' `}</b> =(
+                </p>
+              </Message>
+            )}
+          </Grid.Row>
+        </Grid>
+      )
     ) : (
       <Message className="error-message" size="massive" negative>
         <Message.Header>Sorry! No data found!</Message.Header>

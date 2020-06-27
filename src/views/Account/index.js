@@ -33,7 +33,7 @@ class AccountPage extends Component {
 
     const ComponentName = menuItems[activeComponent].component;
     return (
-      <Grid>
+      <Grid className="account-grid">
         <Grid.Row className="account-row">
           <Grid.Column width={4}>
             <Menu fluid pointing vertical>

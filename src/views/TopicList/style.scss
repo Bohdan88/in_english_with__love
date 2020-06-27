@@ -1,9 +1,5 @@
 @import "../../style/variables.scss";
 
-.topics-container {
-  margin: 2rem !important;
-}
-
 .topics-header-row {
   border-bottom: 2px solid $chetwode-blue;
 }
@@ -26,7 +22,15 @@
 
   .form > .fields {
     margin: 0 !important;
+
+    .field {
+      padding-right: 0 !important;
+    }
   }
+}
+
+.topic-list-card-container {
+  overflow: hidden;
 }
 
 .topics-checkbox-field {

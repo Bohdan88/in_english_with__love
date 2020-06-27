@@ -52,11 +52,11 @@ class HomePage extends PureComponent {
     let allLessons = 0;
 
     if (authUser.lessonsCompleted) {
+      // console.log(authUser.lessonsCompleted,'authUser.lessonsCompleted')
       Object.entries(authUser.lessonsCompleted).forEach(
         ([subCategory, date]) => {
           // transform from miliseconds to date
           const isoDate = new Date(date).toISOString().slice(0, 10);
-
           // area chart array-------------------------
 
           // add lesson
@@ -122,6 +122,7 @@ class HomePage extends PureComponent {
     const { dataAreaChart, dataPieChart, allLessons } = this.state;
     const { authUser } = this.props.sessionState;
 
+    // console.log(dataPieChart,'dataPieChart')
     return (
       <>
         <Segment>

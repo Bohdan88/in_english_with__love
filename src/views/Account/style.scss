@@ -1,19 +1,7 @@
 @import "../../style/variables.scss";
 
-.account-row {
-  margin: 2rem !important;
-}
-
-.home-page-message {
-  display: block;
-  margin: 1.5rem auto !important;
-  width: 500px;
-  padding: 200px;
-  text-align: center;
-
-  .content {
-    padding: 5px;
-  }
+.account-grid {
+  margin: 1.1rem 1.1rem 6.3rem 1.1rem !important;
 }
 
 // home page
@@ -53,6 +41,18 @@
     > .recharts-legend-item-text {
     position: relative !important;
     top: 22px !important;
+  }
+}
+
+.home-page-message {
+  display: block;
+  margin: 1.5rem auto !important;
+  width: 500px;
+  padding: 200px;
+  text-align: center;
+
+  .content {
+    padding: 5px;
   }
 }
 

@@ -6,7 +6,7 @@ import CategoryTopics from "../views/CategoryTopics";
 import TopicList from "../views/TopicList";
 import LessonView from "../views/LessonView";
 import About from "../views/About";
-// import PrivacyPolicy from "../views/PrivacyPolicy";
+import PrivacyPolicy from "../views/PrivacyPolicy";
 
 import * as ROUTES from "../constants/routes";
 
@@ -14,63 +14,63 @@ const routes = [
   {
     path: ROUTES.HOME,
     exact: true,
-    name: 'Home',
+    name: "Home",
     component: HomePage,
   },
   {
     path: ROUTES.READ,
-    name: 'Read',
+    name: "Read",
     component: CategoryTopics,
   },
   {
     path: ROUTES.LISTEN,
-    name: 'Listen',
+    name: "Listen",
     component: CategoryTopics,
   },
   {
     path: ROUTES.LESSON_TOPIC_LIST,
-    name: 'Topics',
+    name: "Topics",
     component: TopicList,
   },
   {
     path: ROUTES.ABOUT,
-    name: 'About',
+    name: "About",
     component: About,
   },
   {
     path: ROUTES.ACCOUNT,
-    name: 'Account',
+    name: "Account",
     component: AccountPage,
   },
   {
     path: ROUTES.ADMIN,
-    name: 'Admin',
+    name: "Admin",
     component: AdminPage,
   },
   {
     path: ROUTES.LESSON_TOPIC,
-    name: 'Lesson Topic',
+    name: "Lesson Topic",
     component: LessonView,
   },
   {
     path: ROUTES.PASSWORD_FORGET,
-    name: 'Forget Password',
+    name: "Forget Password",
     component: PasswordForgetPage,
   },
   {
     path: ROUTES.SIGN_IN,
-    name: 'Sign in',
+    name: "Sign in",
     component: SignInPage,
   },
   {
     path: ROUTES.SIGN_UP,
-    name: 'Sign up',
+    name: "Sign up",
     component: SignUpPage,
   },
-//   {
-//     path: ROUTES.PRIVACY_POLICY,
-//     component: PrivacyPolicy,
-//   },
+  {
+    path: ROUTES.PRIVACY_POLICY,
+    component: PrivacyPolicy,
+  },
 ];
 
 export default routes;
