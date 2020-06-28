@@ -33,7 +33,7 @@ const MobileMenu = ({ routes, signRoutes }) => {
     <div className="mobile-nav-bar mobile-view">
       <div className="nav-menu-icon-wrapper" onClick={() => toggleMenu(!menu)}>
         <div className="mobile-logo-container">
-          <Link to={ROUTES.READ}>
+          <Link to={ROUTES.HOME}>
             <Image src={logo} />
           </Link>
         </div>

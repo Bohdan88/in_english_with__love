@@ -1,3 +1,5 @@
+@import "../../../../style/variables.scss";
+
 .sign-grid {
   height: 100%;
   margin: 0 auto !important;
@@ -12,7 +14,7 @@
 
 @media only screen and (min-width: 1919px) {
   .sign-grid {
-    max-width: 1919px;
+    max-width: $max-main-container-width;
     margin: auto !important;
   }
 }

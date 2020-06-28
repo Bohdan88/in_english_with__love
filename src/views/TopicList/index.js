@@ -86,28 +86,6 @@ class TopicList extends Component {
         }
       });
     }
-
-    // if (!allIconImagesByTopic[DEFAULT_TOPIC_IMAGE]) {
-    //   this.props.firebase.storage
-    //     .ref()
-    //     .child(`${POSTS_BUCKET_NAME}/`)
-    //     .listAll()
-    //     .then((res) =>
-    //       res.items.forEach((item) =>
-    //         item.getDownloadURL().then((url) => {
-    //           if (url.includes(DEFAULT_TOPIC_IMAGE)) {
-    //             this.props.onGetAllPostsValues({
-    //               allIconImagesByTopic: {
-    //                 ...this.props.posts.allIconImagesByTopic,
-    //                 default: url,
-    //               },
-    //             });
-    //           }
-    //         })
-    //       )
-    //     )
-    //     .catch((error) => console.log(error, "error"));
-    // }
   };
 
   handleSearchChange = (e, { value }) => {
@@ -126,7 +104,10 @@ class TopicList extends Component {
 
       this.setState({
         isSearchingPost: false,
-        currentTopicPosts: _.filter(this.state.currentTopicPosts, isMatch),
+        currentTopicPosts: _.filter(
+          this.filterPostsList(this.props.posts.allPosts),
+          isMatch
+        ),
       });
     }, 300);
   };
@@ -143,11 +124,16 @@ class TopicList extends Component {
       /* use Category id to remove -category- from  completed 
         lesson id which we added when user completed his/her lesson
       */
+      // console.log(currentTopicPosts, "currentTopicPosts");
+      // console.log(
+      //   Object.keys(authUser.lessonsCompleted),
+      //   " Object.keys(authUser.lessonsCompleted)"
+      // );
       this.setState({
         checkedCompleted: true,
         currentTopicPosts: currentTopicPosts.filter((topic) =>
           Object.keys(authUser.lessonsCompleted).findIndex(
-            (keyId) => keyId.slice(0, keyId.indexOf(CATEGORY_ID)) === topic.uid
+            (keyId) => keyId.slice(0, keyId.indexOf(CATEGORY_ID)) !== topic.uid
           )
         ),
       });
@@ -224,12 +210,12 @@ class TopicList extends Component {
     return (
       <Grid className="topics-container">
         <Grid.Row centered className="selected-topic-header-row">
-          <Grid.Column computer="8" floated="left">
+          <Grid.Column computer={8} floated="left">
             <Header className="topics-header capitalize" as="h1">
               {currentTopic}
             </Header>
           </Grid.Column>
-          <Grid.Column computer="8" className="topics-list-column-search">
+          <Grid.Column computer={8} className="topics-list-column-search">
             <Form>
               <Form.Group>
                 {authUser && (
@@ -268,9 +254,11 @@ class TopicList extends Component {
               </Dimmer>
             </Segment>
           ) : isLoadingLessons ? (
-            <Segment className="loader-admin">
-              <Dimmer active>
-                <Loader size="massive">Loading </Loader>
+            <Segment inverted className="segment-loading-topics">
+              <Dimmer className="dimmer-topics" inverted active>
+                <Loader className="loader-topics" size="big">
+                  Loading
+                </Loader>
               </Dimmer>
             </Segment>
           ) : !currentTopicPosts.length && !checkedCompleted ? (
@@ -386,7 +374,7 @@ class TopicList extends Component {
                                 authUser.lessonsCompleted &&
                                 Object.keys(
                                   authUser.lessonsCompleted
-                                ).some((completedLessonId) =>
+                                ).filter((completedLessonId) =>
                                   completedLessonId.includes(topic.uid)
                                 ) && (
                                   <span className="card-topic-completed">

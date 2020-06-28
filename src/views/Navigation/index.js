@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { Menu, Container, Image, Sticky, Grid } from "semantic-ui-react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, Image, Sticky } from "semantic-ui-react";
 import * as ROUTES from "../../constants/routes";
 import * as ROLES from "../../constants/roles";
 import { SignOut } from "../SignForm";
@@ -13,30 +13,28 @@ import "./style.scss";
 // assets
 import logo from "../../assets/images/default.png";
 
-const identifyActiveLink = (routes) => {
-  const currentPathName = window.location.pathname;
-  const currentLocation = window.location.search;
-
-  if (routes.includes(currentPathName)) {
-    return currentPathName;
-  } else if (currentPathName === ROUTES.LESSON_TOPIC_LIST) {
+const identifyActiveLink = (basePath, searchedPath) => {
+  if (basePath !== ROUTES.LESSON_TOPIC_LIST) {
+    return basePath;
+  } else {
     // looking for the first '=' to understand its listen or read category
-    const linkIndex = currentLocation.indexOf("=");
-    const linkLastIndex = currentLocation.indexOf("&");
+    const linkIndex = searchedPath.indexOf("=");
+    const linkLastIndex = searchedPath.indexOf("&");
 
     // it could be either read or listen
-    const linkName = currentLocation.slice(linkIndex + 1, linkLastIndex);
+    const linkName = searchedPath.slice(linkIndex + 1, linkLastIndex);
     return `/${linkName}`;
   }
-  return null;
 };
 
 const NavigationAuth = ({ authUser }) => {
-  const [activeItem, setActiveItem] = useState(ROUTES.SIGN_IN);
+  const pathname = useLocation().pathname;
+  const searchedPath = useLocation().search;
+  const [activeItem, setActiveItem] = useState(pathname);
 
   useEffect(() => {
-    setActiveItem(identifyActiveLink(ROUTES.ROLES_AUTH_ROUTES));
-  }, [activeItem]);
+    setActiveItem(identifyActiveLink(pathname, searchedPath));
+  }, [pathname, searchedPath]);
 
   return (
     <Sticky className="nav-bar-sticky">
@@ -77,24 +75,20 @@ const NavigationAuth = ({ authUser }) => {
 };
 
 const NavigationNonAuth = () => {
-  const [activeItem, setActiveItem] = useState(
-    window.location.pathname || ROUTES.SIGN_IN
-  );
+  const pathname = useLocation().pathname;
+  const searchedPath = useLocation().search;
+  const [activeItem, setActiveItem] = useState(pathname);
 
   useEffect(() => {
-    setActiveItem(
-      identifyActiveLink(
-        ROUTES.SHARED_AUTH_ROUTES.concat([ROUTES.SIGN_IN, ROUTES.SIGN_UP])
-      )
-    );
-  }, [activeItem]);
+    setActiveItem(identifyActiveLink(pathname, searchedPath));
+  }, [pathname, searchedPath]);
 
   return (
     <Sticky className="nav-bar-sticky">
       <div className="nav-bar-menu-container">
         <MobileMenu
           signRoutes={[ROUTES.SIGN_IN, ROUTES.SIGN_UP]}
-          routes={ROUTES.SHARED_AUTH_ROUTES}
+          routes={ROUTES.NON_AUTH_ROUTES}
         />
         <Menu borderless className="nav-bar-menu">
           <Menu.Menu className="main-menu">
@@ -103,7 +97,7 @@ const NavigationNonAuth = () => {
                 <Image className="menu-logo" src={logo} />
               </Link>
             </Menu.Item>
-            {ROUTES.SHARED_AUTH_ROUTES.map((route) => (
+            {ROUTES.NON_AUTH_ROUTES.map((route) => (
               <Menu.Item
                 key={route}
                 active={activeItem === route}

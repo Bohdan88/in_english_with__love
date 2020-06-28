@@ -7,6 +7,7 @@ import TopicList from "../views/TopicList";
 import LessonView from "../views/LessonView";
 import About from "../views/About";
 import PrivacyPolicy from "../views/PrivacyPolicy";
+import Contact from "../views/Contact";
 
 import * as ROUTES from "../constants/routes";
 
@@ -70,6 +71,10 @@ const routes = [
   {
     path: ROUTES.PRIVACY_POLICY,
     component: PrivacyPolicy,
+  },
+  {
+    path: ROUTES.CONTACT,
+    component: Contact,
   },
 ];
 

@@ -106,7 +106,7 @@ class CategoryTopics extends Component {
                   ...this.props.posts[CATEGORY_TOPICS[categoryType]],
                   names: uniqueTopics,
                 },
-                transitionDuration: 5000,
+                transitionDuration: 4000,
               });
             }
           },
@@ -182,7 +182,7 @@ class CategoryTopics extends Component {
     // console.log(categoryType,'categoryType')
     return categoryType ? (
       dbValuesLoading && !error ? (
-        <Segment className="loader-admin">
+        <Segment className="loader-segment">
           <Dimmer active>
             <Loader size="massive">Loading </Loader>
           </Dimmer>
@@ -240,7 +240,7 @@ class CategoryTopics extends Component {
                     <Grid.Column
                       widescreen={3}
                       largeScreen={5}
-                      tablet={8}
+                      tablet={7}
                       className="categories-column"
                     >
                       <Link

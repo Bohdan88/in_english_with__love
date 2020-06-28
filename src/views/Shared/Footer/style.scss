@@ -10,7 +10,8 @@
 // }
 
 .footer-container {
-  height: auto !important;
+  max-height: 120px !important;
+  min-height: 70px !important;
   position: fixed;
   left: 0;
   bottom: 0;
@@ -21,7 +22,7 @@
   // color: $white;
 
   .row {
-    max-width: 1919px;
+    max-width: $max-main-container-width;
     margin: 0 auto !important;
     padding: 0rem 2.5rem 0 0 !important;
 
@@ -37,7 +38,7 @@
 }
 
 .footer-grid-icons {
-  margin: 1em -0.6em !important;
+  margin: 1em -1em !important;
   .menu > .item > a > i {
     opacity: 1 !important;
   }
@@ -51,8 +52,7 @@
     color: rgba(0, 0, 0, 0.6) !important;
   }
 
-  .item > a:hover,
-  .active > a {
+  .item > a:hover {
     color: rgba(0, 0, 0, 0.9) !important;
   }
 }
@@ -80,5 +80,13 @@
 
   .footer-menu-brand {
     margin: 0 !important;
+  }
+
+  .footer-grid-icons {
+    float: none !important;
+    // margin: 1em -1em !important;
+    // .menu > .item > a > i {
+    //   opacity: 1 !important;
+    // }
   }
 }

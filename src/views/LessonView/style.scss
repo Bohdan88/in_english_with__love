@@ -5,28 +5,8 @@
   // border: 1px solid black;
 }
 
-.title {
-  // padding: 8px;
-}
+// an actuall lesson
 
-// .tasks-container {
-//   padding: 10px;
-//   border: 1px solid grey;
-//   margin-bottom: 10px;
-//   margin-left: 10px;
-//   margin-right: 10px;
-//   border-radius: 2px;
-//   background-color: white;
-//   flex-grow: 1;
-//   min-height: 100px;
-// }
-
-// actuall lesson
-
-.lesson-view-menu-open {
-  // background: $white-grey!important;
-  // opacity: 0.5!important;
-}
 .lesson-view-grid {
   margin: 1rem !important;
   align-items: stretch !important;
@@ -44,7 +24,7 @@
 
 .chapter-content,
 .lesson-view-chapter-container {
-  overflow-y: scroll;
+  overflow-y: auto;
   font-size: 15px !important;
   font-family: sans-serif;
 
@@ -69,14 +49,6 @@
 
 .lesson-view-chapter-container {
   height: 70vh;
-
-  // div:nth-child(1) {
-  //   margin-left: 10px;
-  // }
-
-  div:nth-child(2) {
-    // margin-top: 10px;
-  }
 }
 
 .chapter-block {
@@ -134,10 +106,6 @@
 
 // end lesson
 
-/*menu hamburger*/
-
-// end burger
-
 .dragging {
   background-color: #deebff !important;
 }
@@ -164,7 +132,6 @@
   color: $white !important;
   font-weight: 300 !important;
   margin-bottom: 10px !important;
-  // min-width: 130px;
 
   border-radius: 0px !important;
   padding: 7px !important;

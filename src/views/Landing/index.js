@@ -20,14 +20,18 @@ const Landing = ({ children }) => {
     setFooterView(doesPathHaveFooter(pathname));
   }, [pathname]);
 
+  const headerHight = "80px";
+  const footerHeight = "70px";
+
   return (
     <div className="landing-wrapper">
       <Segment
         className="main-content-container"
         style={{
-          height: !footerView ? "calc(100% - 148px)" : "100%",
+          height: `calc(100% - ${headerHight} - ${
+            !footerView ? footerHeight : "0px"
+          })`,
         }}
-        clearing
       >
         {children}
       </Segment>

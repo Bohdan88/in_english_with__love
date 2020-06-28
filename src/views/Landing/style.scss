@@ -12,6 +12,7 @@
 }
 
 .main-content-container {
+  overflow-y: auto;
   background: none !important;
   border: none !important;
   box-shadow: none !important;
@@ -19,12 +20,15 @@
   border-radius: 0 !important;
 }
 
+.main-content-container::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
 @media only screen and (max-width: 767px) {
   .landing-wrapper {
     position: relative !important;
     z-index: 0 !important;
-    // background: $white;
-    // z-index: -1 !important;
   }
 
   .main-content-container {

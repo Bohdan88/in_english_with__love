@@ -1,7 +1,8 @@
 @import "../../style/variables.scss";
 
-.loader-admin {
-  height: 100vh;
+.loader-segment {
+  height: 100%;
+  border: none !important;
 }
 
 .grid-admin {
@@ -348,8 +349,8 @@
 .admin-reset-progress {
   position: absolute;
   right: 0px;
-  font-weight: 100!important;
-  color: $black!important;
+  font-weight: 100 !important;
+  color: $black !important;
   background: none !important;
 }
 

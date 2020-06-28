@@ -13,5 +13,10 @@ export const LESSON_TOPIC = "/topic";
 export const PASSWORD_FORGET = "/pw-forget";
 // groups of routes
 export const NON_FOOTER_PAGES = [ADMIN, LESSON_TOPIC, ACCOUNT];
-export const SHARED_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT];
-export const ROLES_AUTH_ROUTES = [HOME, READ, LISTEN, ABOUT, ACCOUNT, ADMIN];
+export const NON_AUTH_ROUTES = [HOME, READ, LISTEN];
+export const ROLES_AUTH_ROUTES = [HOME, READ, LISTEN, ACCOUNT, ADMIN];
+export const FOOTER_ROUTES = [
+  PRIVACY_POLICY,
+  CONTACT,
+  // ABOUT
+];

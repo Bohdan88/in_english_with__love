@@ -16,10 +16,7 @@ import {
   Input,
   Transition,
 } from "semantic-ui-react";
-import {
-  TOPICS_BUCKET_NAME,
-  DEFAULT_TOPIC_IMAGE,
-} from "../../constants";
+import { TOPICS_BUCKET_NAME, DEFAULT_TOPIC_IMAGE } from "../../constants";
 import { LESSON_TOPIC_LIST } from "../../constants/routes";
 import { Link } from "react-router-dom";
 // style
@@ -134,7 +131,7 @@ class ListenTopics extends Component {
     return (
       <div>
         {!allTopicsImages.length || !allListenTopics.length ? (
-          <Segment className="loader-admin">
+          <Segment className="loader-segment">
             <Dimmer active>
               <Loader size="massive">Loading </Loader>
             </Dimmer>

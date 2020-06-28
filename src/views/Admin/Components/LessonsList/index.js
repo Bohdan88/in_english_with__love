@@ -204,7 +204,7 @@ class LessonsList extends PureComponent {
     } = this.state;
 
     return isLoading && !error ? (
-      <Segment className="loader-admin">
+      <Segment className="loader-segment">
         <Dimmer active>
           <Loader size="massive">Loading </Loader>
         </Dimmer>

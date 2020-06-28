@@ -285,10 +285,6 @@ class LessonView extends Component {
           .ref(`${USERS_BUCKET_NAME}/${sessionState.authUser.uid}`)
           .update({
             ...sessionState.authUser,
-            // email: sessionState.authUser.email
-            // uid: sessionState.authUser.uid,
-            // username: sessionState.authUser.username,
-            // roles: sessionState.authUser.roles,
             lessonsCompleted: {
               ...sessionState.authUser.lessonsCompleted,
               [`${fullLeson.uid}${CATEGORY_ID}${fullLeson.category}`]: new Date().getTime(),
@@ -330,15 +326,12 @@ class LessonView extends Component {
         });
       }
     } else {
-      // console.log(sessionState,'SEK')
-
       fireAlert({
         state: true,
         type: CONFIRMATION_ALERT,
         values: SIGN_UP_SUGGESTION_CONFIRMATION,
       }).then((response) => {
         if (response.dismiss) {
-          // window.location.href = HOME;
           this.props.history.push(HOME);
         } else {
           // set completed lesson to locale storage to push in db later on
@@ -348,7 +341,6 @@ class LessonView extends Component {
               [`${fullLeson.uid}${CATEGORY_ID}${fullLeson.category}`]: new Date().getTime(),
             })
           );
-          // window.location.href = SIGN_UP;
           this.props.history.push(SIGN_UP);
         }
       });
@@ -374,207 +366,186 @@ class LessonView extends Component {
 
     const menu = isMenuOpen ? "menu-open" : "";
 
-    return (
-      <div>
-        {isLoadingLesson && !error ? (
-          <Segment className="loader-admin">
-            <Dimmer active>
-              <Loader size="massive">Loading</Loader>
-            </Dimmer>
-          </Segment>
-        ) : error && !isLoadingLesson ? (
-          <Message
-            className="lesson-view-error-message"
-            size="massive"
-            negative
-          >
-            <Message.Header>Oops! Something went wrong...</Message.Header>
-            <Message.Content>{errorText}</Message.Content>
-          </Message>
-        ) : !Object.entries(fullLeson).length ? (
-          <Message
-            className="lesson-view-error-message"
-            size="massive"
-            negative
-          >
-            <Message.Header>Oops! Something went wrong...</Message.Header>
-            <Message.Content>
-              {currentTopic === "admin"
-                ? "You have nothing to preview."
-                : `Unfortunately  ${currentTopic} can't be
+    return isLoadingLesson && !error ? (
+      <Segment className="loader-segment">
+        <Dimmer active>
+          <Loader size="massive" inverted>
+            Loading
+          </Loader>
+        </Dimmer>
+      </Segment>
+    ) : error && !isLoadingLesson ? (
+      <Message className="lesson-view-error-message" size="massive" negative>
+        <Message.Header>Oops! Something went wrong...</Message.Header>
+        <Message.Content>{errorText}</Message.Content>
+      </Message>
+    ) : !Object.entries(fullLeson).length ? (
+      <Message className="lesson-view-error-message" size="massive" negative>
+        <Message.Header>Oops! Something went wrong...</Message.Header>
+        <Message.Content>
+          {currentTopic === "admin"
+            ? "You have nothing to preview."
+            : `Unfortunately  ${currentTopic} can't be
               loaded =(`}
-            </Message.Content>
-          </Message>
-        ) : (
-          <Grid className={`lesson-view-grid lesson-view-${menu}`}>
-            <Grid.Row stretched columns={2}>
-              <Grid.Column width={8}>
-                <Container fluid>
-                  <Step.Group
-                    attached="top"
-                    widths={1}
-                    fluid
-                    stackable="tablet"
-                  >
-                    <Step>
-                      <Icon className="lesson-view-icon" name="book" />
-                      <Step.Content>
-                        <Step.Title>Learn</Step.Title>
-                      </Step.Content>
-                    </Step>
-                  </Step.Group>
-                  <Segment
-                    attached
-                    className={`lesson-view-chapter-container lesson-view-${menu}`}
-                  >
-                    <Label size="big" className="lesson-view-label capitalize">
-                      {currentChapter}
-                    </Label>
-                    <div className="chapter-block">
-                      {this.visualizeChapterContent(currentChapter) || (
-                        <Message
-                          className="lesson-view-error-message"
-                          size="massive"
-                          negative
-                        >
-                          <Message.Header>
-                            Oops! Something went wrong...
-                          </Message.Header>
-                          <Message.Content>
-                            {currentTopic === "admin"
-                              ? "You have nothing to preview."
-                              : `Unfortunately  "${currentChapter}" can't be
+        </Message.Content>
+      </Message>
+    ) : (
+      <Grid className={`lesson-view-grid lesson-view-${menu}`}>
+        <Grid.Row stretched columns={2}>
+          <Grid.Column width={8}>
+            <Container fluid>
+              <Step.Group attached="top" widths={1} fluid stackable="tablet">
+                <Step>
+                  <Icon className="lesson-view-icon" name="book" />
+                  <Step.Content>
+                    <Step.Title>Learn</Step.Title>
+                  </Step.Content>
+                </Step>
+              </Step.Group>
+              <Segment
+                attached
+                className={`lesson-view-chapter-container lesson-view-${menu}`}
+              >
+                <Label size="big" className="lesson-view-label capitalize">
+                  {currentChapter}
+                </Label>
+                <div className="chapter-block">
+                  {this.visualizeChapterContent(currentChapter) || (
+                    <Message
+                      className="lesson-view-error-message"
+                      size="massive"
+                      negative
+                    >
+                      <Message.Header>
+                        Oops! Something went wrong...
+                      </Message.Header>
+                      <Message.Content>
+                        {currentTopic === "admin"
+                          ? "You have nothing to preview."
+                          : `Unfortunately  "${currentChapter}" can't be
               loaded =(`}
-                          </Message.Content>
-                        </Message>
-                      )}
-                    </div>
-                  </Segment>
-                </Container>
-              </Grid.Column>
-              <Grid.Column width={8}>
-                <Container fluid>
-                  <Step.Group
-                    attached="top"
-                    widths={1}
-                    fluid
-                    stackable="tablet"
-                  >
-                    <Step>
-                      <Icon
-                        className="lesson-view-icon"
-                        size="mini"
-                        name="picture"
-                      />
-                      <Step.Content>
-                        <Step.Title>Content</Step.Title>
-                      </Step.Content>
-                    </Step>
-                  </Step.Group>
-                  <Segment
-                    attached
-                    className="lesson-view-chapter-container chapter-content"
-                  >
-                    {/* check whether it's editor state or stringified json */}
-                    {fullLeson.post[CREATE_LESSON_STAGES.content.key] && (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html: fullLeson.post[
-                            CREATE_LESSON_STAGES.content.key
-                          ]._immutable
-                            ? draftToHtml(
-                                convertToRaw(
-                                  fullLeson.post[
-                                    CREATE_LESSON_STAGES.content.key
-                                  ].getCurrentContent()
-                                )
-                              )
-                            : JSON.parse(
-                                fullLeson.post[CREATE_LESSON_STAGES.content.key]
-                              ),
-                        }}
-                      />
-                    )}
-                    {!fullLeson.post[CREATE_LESSON_STAGES.content.key] && (
-                      <Message
-                        className="lesson-view-error-message"
-                        size="massive"
-                        negative
-                      >
-                        <Message.Header>
-                          Oops! Something went wrong...
-                        </Message.Header>
-                        <Message.Content>
-                          {currentTopic === "admin"
-                            ? "You have nothing to preview."
-                            : `Unfortunately  "Content" can't be
-              loaded =(`}
-                        </Message.Content>
-                      </Message>
-                    )}
-                  </Segment>
-                </Container>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row className="lesson-view-fixed-container">
-              <Grid.Column>
-                <Segment className="lesson-view-footer-menu">
-                  <SideBarMenu
-                    stepsVisited={stepsVisited}
-                    currentStep={currentStep}
-                    mode={mode}
-                    filteredLessonItems={filteredLessonItems}
-                    currentChapter={currentChapter}
-                    checkMenu={this.checkMenu}
-                    setCurrentChapter={this.setCurrentChapter}
-                    addVisitedStep={this.addVisitedStep}
+                      </Message.Content>
+                    </Message>
+                  )}
+                </div>
+              </Segment>
+            </Container>
+          </Grid.Column>
+          <Grid.Column width={8}>
+            <Container fluid>
+              <Step.Group attached="top" widths={1} fluid stackable="tablet">
+                <Step>
+                  <Icon
+                    className="lesson-view-icon"
+                    size="mini"
+                    name="picture"
                   />
+                  <Step.Content>
+                    <Step.Title>Content</Step.Title>
+                  </Step.Content>
+                </Step>
+              </Step.Group>
+              <Segment
+                attached
+                className="lesson-view-chapter-container chapter-content"
+              >
+                {/* check whether it's editor state or stringified json */}
+                {fullLeson.post[CREATE_LESSON_STAGES.content.key] && (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: fullLeson.post[CREATE_LESSON_STAGES.content.key]
+                        ._immutable
+                        ? draftToHtml(
+                            convertToRaw(
+                              fullLeson.post[
+                                CREATE_LESSON_STAGES.content.key
+                              ].getCurrentContent()
+                            )
+                          )
+                        : JSON.parse(
+                            fullLeson.post[CREATE_LESSON_STAGES.content.key]
+                          ),
+                    }}
+                  />
+                )}
+                {!fullLeson.post[CREATE_LESSON_STAGES.content.key] && (
+                  <Message
+                    className="lesson-view-error-message"
+                    size="massive"
+                    negative
+                  >
+                    <Message.Header>
+                      Oops! Something went wrong...
+                    </Message.Header>
+                    <Message.Content>
+                      {currentTopic === "admin"
+                        ? "You have nothing to preview."
+                        : `Unfortunately  "Content" can't be
+              loaded =(`}
+                    </Message.Content>
+                  </Message>
+                )}
+              </Segment>
+            </Container>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row className="lesson-view-fixed-container">
+          <Grid.Column>
+            <Segment className="lesson-view-footer-menu">
+              <SideBarMenu
+                stepsVisited={stepsVisited}
+                currentStep={currentStep}
+                mode={mode}
+                filteredLessonItems={filteredLessonItems}
+                currentChapter={currentChapter}
+                checkMenu={this.checkMenu}
+                setCurrentChapter={this.setCurrentChapter}
+                addVisitedStep={this.addVisitedStep}
+              />
 
-                  <div className="lesson-view-footer-buttons">
-                    <Button
-                      icon
-                      basic
-                      color="grey"
-                      labelPosition="left"
-                      disabled={isPreviousDisabled}
-                      onClick={() => this.onPreviousChapter()}
-                    >
-                      <Icon name="left arrow" />
-                      Back
-                    </Button>
-                    <Progress
-                      className={"lesson-view-footer-progress"}
-                      value={currentStep}
-                      total={filteredLessonItems.length}
-                      progress="ratio"
-                      color={isNextDisabled ? "green" : "grey"}
-                    />
+              <div className="lesson-view-footer-buttons">
+                <Button
+                  icon
+                  basic
+                  color="grey"
+                  labelPosition="left"
+                  disabled={isPreviousDisabled}
+                  onClick={() => this.onPreviousChapter()}
+                >
+                  <Icon name="left arrow" />
+                  Back
+                </Button>
+                <Progress
+                  className={"lesson-view-footer-progress"}
+                  value={currentStep}
+                  total={filteredLessonItems.length}
+                  progress="ratio"
+                  color={isNextDisabled ? "green" : "grey"}
+                />
 
-                    <Button
-                      basic
-                      color="teal"
-                      icon
-                      labelPosition="right"
-                      onClick={() =>
-                        !isNextDisabled
-                          ? this.onNextChapter()
-                          : mode !== CREATE_LESSON_STAGES.preview &&
-                            this.sendCompletedLessonToDb()
-                      }
-                      disabled={
-                        mode === CREATE_LESSON_STAGES.preview && isNextDisabled
-                      }
-                    >
-                      {isNextDisabled ? "Finish Up" : "Next"}
-                      <Icon name="right arrow" />
-                    </Button>
-                  </div>
-                </Segment>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        )}
-      </div>
+                <Button
+                  basic
+                  color="teal"
+                  icon
+                  labelPosition="right"
+                  onClick={() =>
+                    !isNextDisabled
+                      ? this.onNextChapter()
+                      : mode !== CREATE_LESSON_STAGES.preview &&
+                        this.sendCompletedLessonToDb()
+                  }
+                  disabled={
+                    mode === CREATE_LESSON_STAGES.preview && isNextDisabled
+                  }
+                >
+                  {isNextDisabled ? "Finish Up" : "Next"}
+                  <Icon name="right arrow" />
+                </Button>
+              </div>
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     );
   }
 }

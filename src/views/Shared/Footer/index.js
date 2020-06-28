@@ -23,23 +23,18 @@ const Footer = () => {
             <Menu.Item className="footer-item-brand-name">
               © In English With Love
             </Menu.Item>
-            <Menu.Item
-              link
-              name="Privacy Policy"
-              active={activeItem === "Privacy Policy"}
-            >
-              <Link
-                onClick={() => setActiveItem("Privacy Policy")}
-                to={ROUTES.PRIVACY_POLICY}
+            {ROUTES.FOOTER_ROUTES.map((route) => (
+              <Menu.Item
+                key={route}
+                className="capitalize"
+                link
+                active={activeItem === route}
               >
-                Privacy Policy
-              </Link>
-            </Menu.Item>
-            <Menu.Item
-              link
-              name="Contact Us"
-              active={activeItem === "Contact Us"}
-            />
+                <Link onClick={() => setActiveItem(route)} to={route}>
+                  {route.slice(1)}
+                </Link>
+              </Menu.Item>
+            ))}
           </Menu>
         </Grid.Column>
 

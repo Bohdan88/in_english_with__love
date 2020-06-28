@@ -1,6 +1,7 @@
 @import "../../style/variables.scss";
 
 .nav-bar-menu-container {
+  height: 80px;
   background: $white;
   border: 1px solid rgba(34, 36, 38, 0.15);
   box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
@@ -20,11 +21,14 @@
 .sign-menu {
   font-size: 15px;
 
-  .item:hover {
-    background: $white !important;
-  }
-  .item > a {
-    color: $black !important;
+  .item {
+    padding-right: 0.9rem !important;
+    &.hover {
+      background: $white !important;
+    }
+    a {
+      color: $black !important;
+    }
   }
 
   .active.item {
@@ -44,7 +48,7 @@
 
 @media only screen and(min-width:1919px) {
   .nav-bar-menu {
-    max-width: 1919px;
+    max-width: $max-main-container-width;
     margin: 0 auto !important;
   }
 }

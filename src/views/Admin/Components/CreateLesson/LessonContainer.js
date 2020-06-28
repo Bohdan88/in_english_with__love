@@ -442,9 +442,9 @@ class CreateLesson extends Component {
     ];
 
     return isLoading ? (
-      <Segment className="loader-admin">
-        <Dimmer active>
-          <Loader size="massive"> Loading </Loader>
+      <Segment className="loader-segment">
+        <Dimmer active >
+          <Loader size="massive" inverted> Loading </Loader>
         </Dimmer>
       </Segment>
     ) : (

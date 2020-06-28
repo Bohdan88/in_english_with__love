@@ -14,7 +14,7 @@ class CompleteSentence extends Component {
     exerciseData: {},
     exerciseDescription: "",
     isShowingSolution: false,
-    checked: false,
+    isChecked: false,
     correctAnswers: [],
   };
 
@@ -40,7 +40,7 @@ class CompleteSentence extends Component {
         "column-1"
       ].taskIds,
       exerciseDescription: lessonValues.description,
-      checked: false,
+      isChecked: false,
     });
   };
 
@@ -164,30 +164,30 @@ class CompleteSentence extends Component {
   checkTask = () => {
     const { exerciseData, correctAnswers } = this.state;
     // if all words were dragged from a box of words by user
-    // if (!exerciseData.columns["column-1"].taskIds.length) {
-    // check if answer was correct
-    Object.values(exerciseData.columns)
-      .filter((obj) => obj.id !== "column-1")
-      .forEach((obj, key) => {
-        // check position of answers
-        if (correctAnswers[key] === obj.taskIds[0]) {
-          obj.isCorrect = true;
+    if (!exerciseData.columns["column-1"].taskIds.length) {
+      // check if answer was correct
+      Object.values(exerciseData.columns)
+        .filter((obj) => obj.id !== "column-1")
+        .forEach((obj, key) => {
+          // check position of answers
+          if (correctAnswers[key] === obj.taskIds[0]) {
+            obj.isCorrect = true;
 
-          this.setState({
-            ...exerciseData,
-            columns: {
+            this.setState({
               ...exerciseData,
-              [obj.id]: obj,
-            },
-          });
-        }
+              columns: {
+                ...exerciseData,
+                [obj.id]: obj,
+              },
+            });
+          }
+        });
+
+      this.setState({
+        isChecked: true,
       });
-
-    this.setState({
-      isChecked: true,
-    });
+    }
   };
-
   retryTask = () => {
     const { lessonValues } = this.props;
 
@@ -320,11 +320,11 @@ class CompleteSentence extends Component {
                   /* disabled={!!exerciseData.columns["column-1"].taskIds.length} */
                   primary
                   onClick={this.checkTask}
-                  /* className={` lesson-view-button-exercise-check ${
+                  className={` lesson-view-button-exercise-check ${
                     !!exerciseData.columns["column-1"].taskIds.length
                       ? "button-disabled"
                       : ""
-                  }  `} */
+                  }  `}
                 >
                   Check
                   <Icon
