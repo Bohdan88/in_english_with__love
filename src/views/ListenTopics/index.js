@@ -137,6 +137,7 @@ class ListenTopics extends Component {
             </Dimmer>
           </Segment>
         ) : (
+          
           <Grid className="topics-container">
             <Grid.Row columns={2} className="topics-header-row">
               <Grid.Column>
